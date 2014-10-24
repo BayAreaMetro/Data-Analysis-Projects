@@ -1,0 +1,301 @@
+---
+title: "Build Consolidated Database"
+author: "David Ory"
+runtime: shiny
+output:
+  html_document:
+    toc: true
+    theme: cosmo
+---
+
+## Administration
+
+#### Purpose
+Aggregated, anonymous FasTrak transactions by transaction date, plaza, and tag holder zip card are provided by the FasTrak project team.  This script consolidates the year-specific data files into a standardized database for easy subsequent use in Tableau or R. 
+
+#### Outputs
+1 A full database, loaded into SQL server, for use in Tableau Server
+2 A condensed database, loaded into SQL server, for use in Tableau Public
+3 In-line Shiny tables and maps
+
+#### _TODO_
+1 Build plaza ID to plaza name cross walk for 2014
+2 Add 2014 to rbind
+3 Add shiny interactive with bridge selector, table + chart
+4 Add full file to SQL when 2014
+5 Rebuild (both) Tableau 
+
+## Overhead
+```{r overhead}
+library(knitr)
+suppressMessages(library(dplyr))
+library(shiny)
+library(reshape)
+library(timeDate)
+library(ggplot2)
+library(stringr)
+```
+
+```{r config, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+
+## Year 2010 Data Read and Processing
+```{r year-2010}
+input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2010/Year 2010 FasTrak Flat File.csv", header = TRUE, sep = ",", 
+                    stringsAsFactors = FALSE)
+
+# Standardize variable names
+names(input)[names(input) == "PLAZA_NAME"] <- "Plaza"
+names(input)[names(input) == "ZIP_CODE"] <- "Zipcode"
+
+# Melt dates to rows
+reshaped.2010 <- melt(input, id = c("Plaza", "Zipcode"))
+reshaped.2010 <- select(reshaped.2010, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+
+# clean up data types and remove zero transactions
+reshaped.2010 <- reshaped.2010 %>%
+  mutate(Transactions = strtoi(Transactions_String)) %>%
+  filter(Transactions > 0) %>%
+  mutate(Date_Temp1 = paste(sub("X","",Date_Factor))) %>%
+  mutate(Date_Temp2 = paste(sub("[[:punct:]]","-",Date_Temp1))) %>%
+  mutate(Date_Temp3 = paste(Date_Temp2,"10")) %>%
+  mutate(Date = str_replace_all(Date_Temp3," ","-")) %>%
+  select(Date, Zipcode, Plaza, Transactions)
+
+head(reshaped.2010, n = 20)
+```
+
+## Year 2011 Data Read and Processing
+```{r year-2011}
+input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2011/Year 2011 FasTrak Flat File.csv", header = TRUE, sep = ",", 
+                    stringsAsFactors = FALSE)
+
+# Standardize variable names
+names(input)[names(input) == "PLAZA_NAME"] <- "Plaza"
+names(input)[names(input) == "ZIP_CODE"] <- "Zipcode"
+
+# Melt dates to rows
+reshaped.2011 <- melt(input, id = c("Plaza", "Zipcode"))
+reshaped.2011 <- select(reshaped.2011, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+
+# Clean up data types and remove zero transactions
+reshaped.2011 <- reshaped.2011 %>%
+  mutate(Transactions = strtoi(Transactions_String)) %>%
+  filter(Transactions > 0) %>%
+  mutate(Date_Temp1 = paste(sub("X","",Date_Factor))) %>%
+  mutate(Date_Temp2 = paste(sub("[[:punct:]]","-",Date_Temp1))) %>%
+  mutate(Date_Temp3 = paste(Date_Temp2,"11")) %>%
+  mutate(Date = str_replace_all(Date_Temp3," ","-")) %>%
+  select(Date, Zipcode, Plaza, Transactions)
+
+head(reshaped.2011, n = 20)
+```
+
+## Year 2012 Data Read and Processing
+```{r year-2012}
+input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2012/Year 2012 FasTrak Flat File.csv", header = TRUE, sep = ",", 
+                    stringsAsFactors = FALSE)
+
+# Standardize variable names
+names(input)[names(input) == "PLAZA"] <- "Plaza"
+names(input)[names(input) == "ZIP_CODE"] <- "Zipcode"
+
+# Melt dates to rows
+reshaped.2012 <- melt(input, id = c("Plaza", "Zipcode"))
+reshaped.2012 <- select(reshaped.2012, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+
+# Clean up data types and remove zero transactions
+reshaped.2012 <- reshaped.2012 %>%
+  mutate(Transactions = strtoi(Transactions_String)) %>%
+  filter(Transactions > 0) %>%
+  mutate(Date_Temp1 = paste(sub("X","",Date_Factor))) %>%
+  mutate(Date_Temp2 = paste(sub("[[:punct:]]","-",Date_Temp1))) %>%
+  mutate(Date_Temp3 = paste(Date_Temp2,"12")) %>%
+  mutate(Date = str_replace_all(Date_Temp3," ","-")) %>%
+  select(Date, Zipcode, Plaza, Transactions)
+
+head(reshaped.2012, n = 20)
+```
+
+## Year 2013 Data Reads and Processing
+```{r year-2013}
+# Note: data delivered in two chunks
+
+# Data read A
+input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2013/Year 2013 FasTrak Flat File Jan to Jul.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+# Standardize variable names
+names(input)[names(input) == "PLAZA"] <- "Plaza"
+names(input)[names(input) == "ZIP"] <- "Zipcode"
+
+# Melt dates to rows
+reshaped.2013.A <- melt(input, id = c("Plaza", "Zipcode"))
+reshaped.2013.A <- select(reshaped.2013.A, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+
+# Data read B
+input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2013/Year 2013 FasTrak Flat File Aug to Dec.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+# Standardize variable names
+names(input)[names(input) == "PLAZA"] <- "Plaza"
+names(input)[names(input) == "ZIP"] <- "Zipcode"
+
+# Melt dates to rows
+reshaped.2013.B <- melt(input, id = c("Plaza", "Zipcode"))
+reshaped.2013.B <- select(reshaped.2013.B, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+
+# Merge A and B
+reshaped.2013 <- rbind(reshaped.2013.A, reshaped.2013.B)
+
+# Southern California Plazas included in data -- filter for Northern California plazas
+reshaped.2013 <- reshaped.2013 %>%
+  filter(Plaza == 'Antioch Bridge' |
+           Plaza == 'Bay Bridge' |
+           Plaza == 'Benicia' |
+           Plaza == 'Carquinez Bridge' |
+           Plaza == 'Dumbarton Bridge' |
+           Plaza == 'Golden Gate Bridge' |
+           Plaza == 'I-680S Calaveras' |
+           Plaza == 'I-680S Mission' |
+           Plaza == 'Richmond' |
+           Plaza == 'San Mateo' |
+           Plaza == 'SR 237 First WB' |
+           Plaza == 'SR237/I880 ExpressEB')
+
+table(reshaped.2013$Plaza)
+
+# Clean up data types and remove zero transactions
+reshaped.2013 <- reshaped.2013 %>%
+  mutate(Transactions = strtoi(Transactions_String)) %>%
+  filter(Transactions > 0) %>%
+  mutate(Date_Temp1 = paste(sub("X","",Date_Factor))) %>%
+  mutate(Date_Temp2 = paste(sub("[[:punct:]]","-",Date_Temp1))) %>%
+  mutate(Date_Temp3 = paste(Date_Temp2,"13")) %>%
+  mutate(Date = str_replace_all(Date_Temp3," ","-")) %>%
+  select(Date, Zipcode, Plaza, Transactions)
+
+head(reshaped.2013, n = 20)
+
+```
+
+## Year 2014 Data Reads and Processing
+```{r year-2014}
+# Note: data delivered in two chunks
+
+# Data read A
+input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2014/Year 2014 FasTrak Flat File Jan to Jul.csv", header = TRUE, sep = ",",stringsAsFactors = FALSE)
+
+# Standardize variable names
+names(input)[names(input) == "EXTERN_PLAZA_ID"] <- "Plaza"
+names(input)[names(input) == "ZIP_CODE"] <- "Zipcode"
+
+# Melt dates to rows
+reshaped.2014.A <- melt(input, id = c("Plaza", "Zipcode"))
+reshaped.2014.A <- select(reshaped.2014.A, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+
+# Data read B (forthcoming)
+#input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2014/Year 2014 FasTrak Flat File Aug to Dec.csv", header = TRUE, sep = ",",stringsAsFactors = FALSE)
+
+# Standardize variable names
+#names(input)[names(input) == "PLAZA"] <- "Plaza"
+#names(input)[names(input) == "ZIP"] <- "Zipcode"
+
+# Melt dates to rows
+#reshaped.2014.B <- melt(input, id = c("Plaza", "Zipcode"))
+#reshaped.2014.B <- select(reshaped.2014.B, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+
+# Merge A and B
+reshaped.2014 <- reshaped.2014.A #rbind(reshaped.2014.A, reshaped.2014.B)
+
+## TODO Recode Plaza IDs to names when info received
+table(reshaped.2014$Plaza)
+
+# Clean up data types and remove zero transactions
+reshaped.2014 <- reshaped.2014 %>%
+  mutate(Transactions = strtoi(Transactions_String)) %>%
+  filter(Transactions > 0) %>%
+  mutate(Date_Temp1 = paste(sub("X","",Date_Factor))) %>%
+  mutate(Date_Temp2 = paste(sub("[[:punct:]]","-",Date_Temp1))) %>%
+  mutate(Date_Temp3 = paste(Date_Temp2,"14")) %>%
+  mutate(Date = str_replace_all(Date_Temp3," ","-")) %>%
+  select(Date, Zipcode, Plaza, Transactions)
+
+head(reshaped.2014, n = 20)
+
+```
+
+## Combine Datasets
+```{r combine-datasets}
+
+# Bring in county via zipcode
+input <- read.table(file = "reference_ca_zipcode.csv", header = TRUE, sep = ",")
+
+zip_details <- input %>%
+  select(Zipcode = ZIP, County = CntyName) %>%
+  mutate(Zipcode = as.character(paste(Zipcode)))
+
+reshaped = rbind(reshaped.2010, reshaped.2011, reshaped.2012, reshaped.2013)
+reshaped = left_join(reshaped, zip_details, by = "Zipcode")
+
+table(reshaped$County)
+
+# Standardize plaza names
+reshaped <- reshaped %>%
+  mutate(Plaza = ifelse(Plaza == 'CALT/Antioch Bridge',     'Antioch Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'CALT/Bay Bridge',         'Bay Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'HYBD/Bay Bridge HOV',     'Bay Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'Benicia',                 'Benicia Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'CALT/Benicia',            'Benicia Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'CALT/Carquinez Bridge',   'Carquinez Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'HYBD/Carquinez HOV',      'Carquinez Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'CALT/Dumbarton Bridge',   'Dumbarton Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'HYBD/Dumbarton HOV',      'Dumbarton Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'CALT/Richmond',           'Richmond Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'Richmond',                'Richmond Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'CALT/San Mateo',          'San Mateo Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'San Mateo',               'San Mateo Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'HYBD/San Mateo HOV',      'San Mateo Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'GGB/Golden Gate Bridge',  'Golden Gate Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'GGBD/Golden Gate Bridge', 'Golden Gate Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'I-680/I-680S Calaveras',  'Express Lanes: I-680', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'I-680/I-680S Mission',    'Express Lanes: I-680', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'I-680S Calaveras',        'Express Lanes: I-680', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'I-680S Mission',          'Express Lanes: I-680', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'I680S/I-680S Calaveras',  'Express Lanes: I-680', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'I680S/I-680S Mission',    'Express Lanes: I-680', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'SR 237 First WB',         'Express Lanes: SR 237/I-880', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'SR 237/SR 237 First WB',  'Express Lanes: SR 237/I-880', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 'SR237/I880 ExpressEB',    'Express Lanes: SR 237/I-880', Plaza))
+table(reshaped$Plaza)
+
+# Extract typical weekday data
+reshaped.typical <- reshaped %>%
+  mutate(Year = format(as.Date(Date, format = "%d-%b-%y"), "%Y")) %>%
+  mutate(Month = format(as.Date(Date, format = "%d-%b-%y"), "%B")) %>%
+  mutate(Day_of_week = weekdays(as.Date(Date, format = "%d-%b-%y"))) %>%
+  filter(Month == 'March' | Month == 'April' | Month == 'May' | Month == 'September' | Month == 'October' | Month == 'November') %>%
+  filter(Day_of_week == 'Tuesday' | Day_of_week == 'Wednesday' | Day_of_week == 'Thursday')
+
+# Take the typical weekday average and median
+typical.measures <- reshaped.typical %>%
+  select(Zipcode, Plaza, Year, Transactions, County) %>%
+  group_by(Year, Zipcode, Plaza, County) %>%
+  summarise(Avg_Transactions = mean(Transactions), Median_Transactions = median(Transactions), Count_Typical_Days = n())
+
+```
+
+## Write data to disk
+```{r data-writes}
+# Full
+write.csv(reshaped, file = "M:/Data/FasTrak/Frequency by Zipcode/FasTrak Transactions.csv", row.names = FALSE, quote = F)
+
+# Typical measures
+write.csv(typical.measures, file = "M:/Data/FasTrak/Frequency by Zipcode/Typical Weekday FasTrak Transactions Summary.csv", row.names = FALSE, quote = F)
+
+```
+
+## Interactives
+```{r shiny_bridge_shares, echo=FALSE, cache=FALSE}
+
+```
+
