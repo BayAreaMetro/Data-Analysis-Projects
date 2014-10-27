@@ -1,0 +1,94 @@
+---
+title: "Interactives"
+author: "David Ory"
+runtime: shiny
+output:
+  html_document:
+    theme: cosmo
+---
+
+
+#### Purpose
+Aggregated, anonymous FasTrak transactions by transaction date, plaza, and tag holder zip card are provided by the FasTrak project team.  `Build Consolidated Database.Rmd` consolidates the year-specific data files into a standardized database for easy subsequent use in Tableau or R.  This script presents simple plaza shares by county. 
+
+#### Outputs
+1 In-line Shiny Tables and Charts
+
+```{r overhead, echo=FALSE}
+library(knitr)
+library(shiny)
+library(ggplot2)
+library(scales)
+library(stringr)
+suppressMessages(library(dplyr))
+```
+
+```{r config, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+```
+
+
+## Share of Typical Weekday Bridge Transactions by County (2010 to 2013)
+
+```{r prepare, echo=FALSE}
+load("M:/Data/FasTrak/Frequency by Zipcode/Typical Weekday FasTrak Transactions Summary.Rdata")
+
+interactive <- typical.measures %>%
+  mutate(Bay_Area_County = "Outside of Bay Area")
+
+attach(interactive)
+interactive$Bay_Area_County[County == "ALAMEDA"] <- "Alameda"
+interactive$Bay_Area_County[County == "CONTRA COSTA"] <- "Contra Costa"
+interactive$Bay_Area_County[County == "MARIN"] <- "Marin"
+interactive$Bay_Area_County[County == "NAPA"] <- "Napa"
+interactive$Bay_Area_County[County == "SAN FRANCISCO"] <- "San Francisco"
+interactive$Bay_Area_County[County == "SAN MATEO"] <- "San Mateo"
+interactive$Bay_Area_County[County == "SANTA CLARA"] <- "Santa Clara"
+interactive$Bay_Area_County[County == "SOLANO"] <- "Solano"
+interactive$Bay_Area_County[County == "SONOMA"] <- "Sonoma"
+interactive$Bay_Area_County[County == "SACRAMENTO"] <- "Sacramento"
+interactive$Bay_Area_County[County == "STANISLAUS"] <- "Stanislaus"
+interactive$Bay_Area_County[County == "SAN JOAQUIN"] <- "San Joaquin"
+interactive$Bay_Area_County[is.na(County)] <- "Unknown or Outside of CA"
+detach(interactive)
+
+interactive.county.sum <- interactive %>% 
+  group_by(Plaza, Bay_Area_County) %>% 
+  summarise(Sum_Transactions = sum(Avg_Transactions))
+
+interactive.plaza.sum <- interactive.county.sum %>%
+  group_by(Plaza) %>%
+  summarise(Plaza_Sum = sum(Sum_Transactions))
+
+interactive.ready <- left_join(interactive.county.sum, interactive.plaza.sum, by = "Plaza")
+interactive.ready <- mutate(interactive.ready, Plaza_Share = Sum_Transactions/Plaza_Sum)
+
+```
+
+```{r shiny_bridge_shares, echo=FALSE, cache=FALSE}
+inputPanel(
+  selectInput("plaza_name", label = "Select a Plaza:", choices = unique(interactive.ready$Plaza), selected = "Bay Bridge")
+  )
+
+renderPlot({
+  
+  data <- filter(interactive.ready, Plaza == input$plaza_name)
+  
+  data$county_order <- factor(data$Bay_Area_County, 
+                                   c("Alameda","Contra Costa","Marin","Napa","San Francisco",
+                                     "San Mateo","Santa Clara","Solano","Sonoma","Sacramento",
+                                     "San Joaquin","Stanislaus","Outside of Bay Area","Unknown or Outside of CA"))
+  
+  plot <- ggplot(data, aes(x = Bay_Area_County, y = Plaza_Share, fill = Bay_Area_County)) + 
+    geom_bar(aes(x = county_order), stat = "identity") + xlab("Bay Area County") + ylab("Share of Plaza Transactions") + 
+    theme(text = element_text(size=20), axis.text.x = element_text(angle=90, vjust=1), 
+          axis.title.y = element_text(vjust=2.0), legend.position="none") +
+    scale_y_continuous(labels = percent)
+  
+  print(plot)
+  
+  
+  }, height = 900)
+
+
+```

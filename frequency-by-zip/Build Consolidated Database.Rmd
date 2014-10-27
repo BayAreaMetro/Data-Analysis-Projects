@@ -16,14 +16,13 @@ Aggregated, anonymous FasTrak transactions by transaction date, plaza, and tag h
 #### Outputs
 1 A full database, loaded into SQL server, for use in Tableau Server
 2 A condensed database, loaded into SQL server, for use in Tableau Public
-3 In-line Shiny tables and maps
+3 In-line Shiny tables and maps --> `Interactives.Rmd`
 
 #### _TODO_
 1 Build plaza ID to plaza name cross walk for 2014
 2 Add 2014 to rbind
-3 Add shiny interactive with bridge selector, table + chart
-4 Add full file to SQL when 2014
-5 Rebuild (both) Tableau 
+3 Add full file to SQL (here or off-line?) when 2014
+4 Rebuild (both) Tableau 
 
 ## Overhead
 ```{r overhead}
@@ -31,7 +30,6 @@ library(knitr)
 library(shiny)
 library(reshape)
 library(timeDate)
-library(ggplot2)
 library(stringr)
 suppressMessages(library(dplyr))
 ```
@@ -289,76 +287,11 @@ typical.measures <- reshaped.typical %>%
 # Full
 write.csv(reshaped, file = "M:/Data/FasTrak/Frequency by Zipcode/FasTrak Transactions.csv", row.names = FALSE, quote = F)
 
-# Typical measures
+# Typical measures (as CSV and .RData)
 write.csv(typical.measures, file = "M:/Data/FasTrak/Frequency by Zipcode/Typical Weekday FasTrak Transactions Summary.csv", row.names = FALSE, quote = F)
 
-```
-
-# START HERE AND WORK THIS BIT OUT (remove Mac read)
-```{r temp}
-typical.measures <- read.table(file = "~/Documents/temp/Typical Weekday FasTrak Transactions Summary.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-
-table(typical.measures$County)
-
-interactive <- typical.measures %>%
-  mutate(Bay_Area_County = "Outside of Bay Area") %>%
-  mutate(Bay_Area_County = ifelse(County == 'ALAMEDA', 'Alameda', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'CONTRA COSTA', 'Contra Costa', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'MARIN', 'Marin', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'NAPA', 'Napa', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'SAN FRANCISCO', 'San Francisco', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'SAN MATEO', 'San Mateo', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'SANTA CLARA', 'Santa Clara', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'SOLANO', 'Solano', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'SONOMA', 'Sonoma', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'SACRAMENTO', 'Sacramento', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'STANISLAUS', 'Stanislaus', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(County == 'SAN JOAQUIN', 'San Joaquin', Bay_Area_County)) %>%
-  mutate(Bay_Area_County = ifelse(is.na(County), "Unknown or Outside CA", Bay_Area_County))
-
- interactive.county.sum <- interactive %>% 
-  group_by(Plaza, Bay_Area_County) %>% 
-  summarise(Sum_Transactions = sum(Avg_Transactions))
-
-interactive.plaza.sum <- interactive.county.sum %>%
-  group_by(Plaza) %>%
-  summarise(Plaza_Sum = sum(Sum_Transactions))
-
-interactive.ready <- left_join(interactive.county.sum, interactive.plaza.sum, by = "Plaza")
-interactive.ready <- mutate(interactive.ready, Plaza_Share = Sum_Transactions/Plaza_Sum)
+save(typical.measures, file = "M:/Data/FasTrak/Frequency by Zipcode/Typical Weekday FasTrak Transactions Summary.Rdata")
 
 ```
 
-
-## Interactives
-
-### Typical Weekday Plaza Shares by County (all years)
-```{r shiny_bridge_shares, echo=FALSE, cache=FALSE}
-inputPanel(
-  selectInput("plaza_name", label = "Select a Plaza:", choices = unique(typical.measures$Plaza, selected = "Bay Bridge"))
-  )
-
-renderPlot(
-  
-  data <- interactive.ready %>%
-    filter(Plaza == input$plaza_name)
-  
-  data$county_order <- factor(data$Bay_Area_County, 
-                                   c("Alameda","Contra Costa","Marin","Napa","San Francisco",
-                                     "San Mateo","Santa Clara","Solano","Sonoma","Sacramento",
-                                     "San Joaquin","Stanislaus","Outside of Bay Area","Unknown or Outside of CA"))
-  
-  plot <- ggplot(data.plot, aes(x = Bay_Area_County, y = Plaza_Share, fill = Bay_Area_County)) + 
-    geom_bar(aes(x = county_order), stat = "identity") + xlab("Bay Area County") + ylab("Share of Plaza Transactions") + 
-    theme(text = element_text(size=20), axis.text.x = element_text(angle=90, vjust=1), 
-          axis.title.y = element_text(vjust=2.0), legend.position="none") +
-    scale_y_continuous(labels = percent)
-  
-  print(plot)
-  
-  
-  )
-
-
-```
 
