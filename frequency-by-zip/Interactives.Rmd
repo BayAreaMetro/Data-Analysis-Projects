@@ -28,7 +28,7 @@ knitr::opts_chunk$set(cache=TRUE)
 ```
 
 
-## Share of Typical Weekday Bridge Transactions by County (2010 to 2013)
+## Share of Typical Weekday Bridge Transactions by County (2010 to 2014)
 
 ```{r prepare, echo=FALSE}
 load("M:/Data/FasTrak/Frequency by Zipcode/Typical Weekday FasTrak Transactions Summary.Rdata")

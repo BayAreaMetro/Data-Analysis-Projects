@@ -19,10 +19,11 @@ Aggregated, anonymous FasTrak transactions by transaction date, plaza, and tag h
 3 In-line Shiny tables and maps --> `Interactives.Rmd`
 
 #### _TODO_
-1 Build plaza ID to plaza name cross walk for 2014
-2 Add 2014 to rbind
-3 Add full file to SQL (here or off-line?) when 2014
-4 Rebuild (both) Tableau 
+1.  Add second-half 2014 data when ready
+2.  After 1, push full data to SQL
+3.  After 2, rebuild full Tableau Server
+4.  After 1, rebuild condensed Tableau
+5.  After 5, publish condensed Tableau
 
 ## Overhead
 ```{r overhead}
@@ -189,7 +190,22 @@ names(input)[names(input) == "ZIP_CODE"] <- "Zipcode"
 
 # Melt dates to rows
 reshaped.2014.A <- melt(input, id = c("Plaza", "Zipcode"))
-reshaped.2014.A <- select(reshaped.2014.A, Plaza, Zipcode, Date_Factor = variable, Transactions_String = value)
+reshaped.2014.A <- reshaped.2014.A %>%
+  select(Plaza, Zipcode, Date_Factor = variable, Transactions_String = value) %>%
+  filter(Plaza == 2 |
+           Plaza == 3 |
+           Plaza == 4 |
+           Plaza == 5 |
+           Plaza == 6 |
+           Plaza == 7 |
+           Plaza == 8) %>%
+  mutate(Plaza = ifelse(Plaza == 2L, 'Antioch Bridge',   Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 3L, 'Richmond Bridge',  Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 4L, 'Bay Bridge',       Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 5L, 'San Mateo Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 6L, 'Dumbarton Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 7L, 'Carquinez Bridge', Plaza)) %>%
+  mutate(Plaza = ifelse(Plaza == 8L, 'Benicia Bridge',   Plaza))
 
 # Data read B (forthcoming)
 #input <- read.table(file = "M:/Data/FasTrak/Frequency by Zipcode/2014/Year 2014 FasTrak Flat File Aug to Dec.csv", header = TRUE, sep = ",",stringsAsFactors = FALSE)
@@ -204,9 +220,6 @@ reshaped.2014.A <- select(reshaped.2014.A, Plaza, Zipcode, Date_Factor = variabl
 
 # Merge A and B
 reshaped.2014 <- reshaped.2014.A #rbind(reshaped.2014.A, reshaped.2014.B)
-
-## TODO Recode Plaza IDs to names when info received
-table(reshaped.2014$Plaza)
 
 # Clean up data types and remove zero transactions
 reshaped.2014 <- reshaped.2014 %>%
@@ -232,7 +245,7 @@ zip_details <- input %>%
   select(Zipcode = ZIP, County = CntyName) %>%
   mutate(Zipcode = as.character(paste(Zipcode)))
 
-reshaped = rbind(reshaped.2010, reshaped.2011, reshaped.2012, reshaped.2013)
+reshaped = rbind(reshaped.2010, reshaped.2011, reshaped.2012, reshaped.2013, reshaped.2014)
 reshaped = left_join(reshaped, zip_details, by = "Zipcode")
 
 table(reshaped$County)
@@ -274,11 +287,28 @@ reshaped.typical <- reshaped %>%
   filter(Month == 'March' | Month == 'April' | Month == 'May' | Month == 'September' | Month == 'October' | Month == 'November') %>%
   filter(Day_of_week == 'Tuesday' | Day_of_week == 'Wednesday' | Day_of_week == 'Thursday')
 
+# Count the number of typical weekdays
+typical.count <- reshaped.typical %>%
+  select(Year, Month, Day_of_week, Date) %>%
+  group_by(Year, Date) %>%
+  summarise(temp = n()) %>%
+  select(Year, Date) %>%
+  group_by(Year) %>%
+  summarise(Count_Typical_Days = n())
+
 # Take the typical weekday average and median
 typical.measures <- reshaped.typical %>%
-  select(Zipcode, Plaza, Year, Transactions, County) %>%
+  select(Plaza, County, Zipcode, Year, Transactions) %>%
   group_by(Year, Zipcode, Plaza, County) %>%
-  summarise(Avg_Transactions = mean(Transactions), Median_Transactions = median(Transactions), Count_Typical_Days = n())
+  summarise(Count_Days_Obs = n(), Sum_Trans_on_Days_Obs = sum(Transactions))
+
+# Join with the typical day count to get mean
+typical.measures <- left_join(typical.measures, typical.count, by = c("Year"))
+
+# Note: some zip/plazas will have more observed days than there are typical days because two plazas (HOV and GP) are combined into one plaza
+typical.measures <- typical.measures %>%
+  mutate(Avg_Transactions = Sum_Trans_on_Days_Obs / Count_Typical_Days)
+
 
 ```
 
