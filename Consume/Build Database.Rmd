@@ -198,8 +198,8 @@ head(sum.typical, n = 10)
 
 #### Write to disk
 ```{r disk-writes}
-save(clean.combined, file = F_OUTPUT_FULL_R)
-write.csv(clean.combined, file = F_OUTPUT_FULL_CSV, row.names = FALSE, quote = F)
+# save(clean.combined, file = F_OUTPUT_FULL_R)
+# write.csv(clean.combined, file = F_OUTPUT_FULL_CSV, row.names = FALSE, quote = F)
 
 save(sum.typical, file = F_OUTPUT_TYP_R)
 write.csv(sum.typical, file = F_OUTPUT_TYP_CSV, row.names = FALSE, quote = F)
