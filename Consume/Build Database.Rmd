@@ -19,6 +19,8 @@ This script consumes databases provided by the Bay Area Toll Authority of (a) to
 #### TODO
 2.  Add 2014 data in a more systematic way to establish workflow
 
+#### ISSUES
+1.  Benicia 2007 data needs to be checked, fixed
 
 ## Procedure
 
@@ -194,6 +196,17 @@ sum.typical <- clean.typical %>%
   
 head(sum.typical, n = 10)
 
+# We'll eventually want to sum over the bridge lanes, so check for designations that changed mid year for which we'll get multiple records
+sum.unique_lanes <- sum.typical %>%
+  group_by(year, plaza_name, plaza_id, hour_int, lane_id) %>%
+  summarise(unique_records = n()) %>%
+  mutate(record_weight = 1 / unique_records) %>%
+  select(-unique_records)
+
+sum.typical <- left_join(sum.typical, sum.unique_lanes, by = c("year", "plaza_name", "plaza_id", "hour_int", "lane_id"))
+
+head(sum.typical, n = 10)
+
 ```
 
 #### Write to disk
@@ -205,5 +218,3 @@ save(sum.typical, file = F_OUTPUT_TYP_R)
 write.csv(sum.typical, file = F_OUTPUT_TYP_CSV, row.names = FALSE, quote = F)
 
 ```
-
-
