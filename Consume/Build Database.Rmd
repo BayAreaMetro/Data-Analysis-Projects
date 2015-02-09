@@ -17,10 +17,9 @@ This script consumes databases provided by the Bay Area Toll Authority of (a) to
 2.  A condensed database of typical weekday statistics by year 
 
 #### TODO
-2.  Add 2014 data in a more systematic way to establish workflow
+1.  Add 2014 data in a more systematic way to establish workflow
 
 #### ISSUES
-1.  Benicia 2007 data needs to be checked, fixed
 
 ## Procedure
 
@@ -41,7 +40,8 @@ knitr::opts_chunk$set(cache=TRUE)
 #### Remote I/O Locations
 ```{r remote-io}
 F_INPUT_DIRECTORY  = "M:/Data/BATA/Transactions by Lane/"
-F_OUTPUT_DIRECTORY = "D:/files/My Box Files/Share Data/bridge-transactions/" 
+F_BOX_DIRECTORY    = "D:/files/My Box Files/Share Data/bridge-transactions/" 
+
 F_INPUT_ANT = paste(F_INPUT_DIRECTORY, "antioch 2005 to 2013.csv",   sep = "")
 F_INPUT_BY1 = paste(F_INPUT_DIRECTORY, "bay 2006 to 2008.csv",       sep = "")
 F_INPUT_BY2 = paste(F_INPUT_DIRECTORY, "bay 2009 to 2013.csv",       sep = "")
@@ -53,10 +53,14 @@ F_INPUT_SAN = paste(F_INPUT_DIRECTORY, "san mateo 2005 to 2013.csv", sep = "")
 
 F_INPUT_LANES = paste(F_INPUT_DIRECTORY, "Bridge Toll Lane Type Database.csv", sep = "")
 
-F_OUTPUT_FULL_R   = paste(F_OUTPUT_DIRECTORY, "Transactions by Lane Designation.Rdata", sep = "")
-F_OUTPUT_FULL_CSV = paste(F_OUTPUT_DIRECTORY, "Transactions by Lane Designation.csv", sep = "")
-F_OUTPUT_TYP_CSV  = paste(F_OUTPUT_DIRECTORY, "Typical Weekday Transactions by Lane Designation.csv", sep = "")
-F_OUTPUT_TYP_R    = paste(F_OUTPUT_DIRECTORY, "Typical Weekday Transactions by Lane Designation.Rdata", sep = "")
+F_OUTPUT_SUM_P_CSV = paste(F_BOX_DIRECTORY, "Typical Weekday Transactions Plaza Statistics.csv", sep = "")
+F_OUTPUT_SUM_P_R   = paste(F_BOX_DIRECTORY, "Typical Weekday Transactions Plaza Statistics.Rdata", sep = "")
+
+F_OUTPUT_SUM_D_CSV = paste(F_BOX_DIRECTORY, "Typical Weekday Transactions Designation Statistics.csv", sep = "")
+F_OUTPUT_SUM_D_R   = paste(F_BOX_DIRECTORY, "Typical Weekday Transactions Designation Statistics.Rdata", sep = "")
+
+F_OUTPUT_TYP_CSV = paste(F_INPUT_DIRECTORY, "Typical Weekday Transactions by Lane Designation.csv", sep = "")
+F_OUTPUT_TYP_R   = paste(F_INPUT_DIRECTORY, "Typical Weekday Transactions by Lane Designation.Rdata", sep = "")
 
 ```
 
@@ -184,37 +188,40 @@ clean.typical <- clean.combined %>%
 
 head(clean.typical, n = 10)
 
-sum.typical <- clean.typical %>%
-  group_by(year, plaza_name, plaza_id, hour_int, lane_id, lane_designation) %>%
-  summarise(count_typical = n(),
-            sum_transactions = sum(transactions),
-            average_transactions = mean(transactions),
-            minimum_transactions = min(transactions),
-            maximum_transactions = max(transactions),
-            std_dev_transactions = sd(transactions),
-            median_transactions  = median(transactions))
-  
-head(sum.typical, n = 10)
+# Count the typical weekdays to join with sums
+sum.date <- clean.typical %>%
+  group_by(year, date, plaza_name, plaza_id, hour_int) %>%
+  summarise(count = n()) %>%
+  select(-count) %>%
+  group_by(year, plaza_name, plaza_id, hour_int) %>%
+  summarise(count_typical = n())
 
-# We'll eventually want to sum over the bridge lanes, so check for designations that changed mid year for which we'll get multiple records
-sum.unique_lanes <- sum.typical %>%
-  group_by(year, plaza_name, plaza_id, hour_int, lane_id) %>%
-  summarise(unique_records = n()) %>%
-  mutate(record_weight = 1 / unique_records) %>%
-  select(-unique_records)
+# Summary 1: year by plaza by hour
+sum.plaza <- clean.typical %>%
+  group_by(year, plaza_name, plaza_id, hour_int) %>%
+  summarise(sum_transactions = sum(transactions))
 
-sum.typical <- left_join(sum.typical, sum.unique_lanes, by = c("year", "plaza_name", "plaza_id", "hour_int", "lane_id"))
+sum.plaza <- left_join(sum.plaza, sum.date, by = c("year", "plaza_name", "plaza_id", "hour_int"))
 
-head(sum.typical, n = 10)
+# Summary 2: year by plaza by hour by lane designation
+sum.desig <- clean.typical %>%
+  group_by(year, plaza_name, plaza_id, hour_int, lane_designation) %>%
+  summarise(sum_transactions = sum(transactions))
+
+sum.desig <- left_join(sum.desig, sum.date, by = c("year", "plaza_name", "plaza_id", "hour_int"))
+
 
 ```
 
 #### Write to disk
 ```{r disk-writes}
-# save(clean.combined, file = F_OUTPUT_FULL_R)
-# write.csv(clean.combined, file = F_OUTPUT_FULL_CSV, row.names = FALSE, quote = F)
+save(sum.plaza, file = F_OUTPUT_SUM_P_R)
+write.csv(sum.plaza, file = F_OUTPUT_SUM_P_CSV, row.names = FALSE, quote = F)
 
-save(sum.typical, file = F_OUTPUT_TYP_R)
-write.csv(sum.typical, file = F_OUTPUT_TYP_CSV, row.names = FALSE, quote = F)
+save(sum.desig, file = F_OUTPUT_SUM_D_R)
+write.csv(sum.desig, file = F_OUTPUT_SUM_D_CSV, row.names = FALSE, quote = F)
+
+save(clean.typical, file = F_OUTPUT_TYP_R)
+write.csv(clean.typical, file = F_OUTPUT_TYP_CSV, row.names = FALSE, quote = F)
 
 ```
