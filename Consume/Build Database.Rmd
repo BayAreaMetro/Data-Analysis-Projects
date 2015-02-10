@@ -13,11 +13,11 @@ output:
 This script consumes databases provided by the Bay Area Toll Authority of (a) toll transactions by lane by bridge by date by hour and (b) lane designations by bridge by date by hour.  These databases are consolidated and typical weekday transaction summaries are created for consumption by Tableau. 
 
 #### Outputs
-1.  A large database of transactions by bridge by lane by date by hour
+1.  A large database of typical weekday transactions by bridge by lane by date by hour
 2.  A condensed database of typical weekday statistics by year 
 
 #### TODO
-1.  Add 2014 data in a more systematic way to establish workflow
+1. Check with MD about a source for the lane designations
 
 #### ISSUES
 
@@ -43,15 +43,6 @@ knitr::opts_chunk$set(cache=TRUE)
 F_INPUT_DIRECTORY  = "M:/Data/BATA/Transactions by Lane/"
 F_BOX_DIRECTORY    = "D:/files/My Box Files/Share Data/bridge-transactions/" 
 
-F_INPUT_ANT = paste(F_INPUT_DIRECTORY, "antioch 2005 to 2013.csv",   sep = "")
-F_INPUT_BY1 = paste(F_INPUT_DIRECTORY, "bay 2006 to 2008.csv",       sep = "")
-F_INPUT_BY2 = paste(F_INPUT_DIRECTORY, "bay 2009 to 2013.csv",       sep = "")
-F_INPUT_BEN = paste(F_INPUT_DIRECTORY, "benicia 2005 to 2013.csv",   sep = "")
-F_INPUT_CAR = paste(F_INPUT_DIRECTORY, "carquinez 2005 to 2013.csv", sep = "")
-F_INPUT_DUM = paste(F_INPUT_DIRECTORY, "dumbarton 2005 to 2013.csv", sep = "")
-F_INPUT_RCH = paste(F_INPUT_DIRECTORY, "richmond 2005 to 2013.csv",  sep = "")
-F_INPUT_SAN = paste(F_INPUT_DIRECTORY, "san mateo 2005 to 2013.csv", sep = "")
-
 F_INPUT_LANES = paste(F_INPUT_DIRECTORY, "Bridge Toll Lane Type Database.csv", sep = "")
 
 F_OUTPUT_SUM_CSV = paste(F_BOX_DIRECTORY, "Typical Weekday Transactions Statistics.csv", sep = "")
@@ -60,21 +51,19 @@ F_OUTPUT_SUM_R   = paste(F_BOX_DIRECTORY, "Typical Weekday Transactions Statisti
 F_OUTPUT_TYP_CSV = paste(F_INPUT_DIRECTORY, "Typical Weekday Transactions by Lane Designation.csv", sep = "")
 F_OUTPUT_TYP_R   = paste(F_INPUT_DIRECTORY, "Typical Weekday Transactions by Lane Designation.Rdata", sep = "")
 
+# File names are bridge name + year field
+bridge_names_array = c("antioch", "bay", "benicia", "carquinez", "dumbarton", "richmond", "san mateo")
+year_fields_array  = c("2005 to 2013", "2014")
+
 ```
 
 #### Plaza IDs and names
 ```{r plaza-id}
-ANT_ID = 2
-RCH_ID = 3
-BAY_ID = 4
-SAN_ID = 5
-DUM_ID = 6
-CAR_ID = 7
-BEN_ID = 8
+# Must be in same order as bridge_names array
+plaza_id   = c(2, 4, 8, 7, 6, 3, 5)
+plaza_name = c("Antioch Bridge", "Bay Bridge", "Benicia Bridge", "Carquinez Bridge", "Dumbarton Bridge", "Richmond Bridge", "San Mateo Bridge")
 
-plaza.convert = data.frame(plaza_id = c(ANT_ID, RCH_ID, BAY_ID, SAN_ID, DUM_ID, CAR_ID, BEN_ID),
-                           plaza_name = c("Antioch Bridge", "Richmond Bridge", "Bay Bridge", "San Mateo Bridge",
-                                          "Dumbarton Bridge", "Carquinez Bridge", "Benicia Bridge"))
+plaza.convert = data.frame(plaza_id, plaza_name)
 
 ```
 
@@ -97,51 +86,35 @@ holiday_dates <- dates(as.character(holiday(2000:2020, holiday_list)), format = 
 
 ```
 
-
 #### Data reads
 ```{r data-reads}
-input.ant <- read.table(file = F_INPUT_ANT, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-input.by1 <- read.table(file = F_INPUT_BY1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-input.by2 <- read.table(file = F_INPUT_BY2, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-input.ben <- read.table(file = F_INPUT_BEN, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-input.car <- read.table(file = F_INPUT_CAR, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-input.dum <- read.table(file = F_INPUT_DUM, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-input.rch <- read.table(file = F_INPUT_RCH, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-input.san <- read.table(file = F_INPUT_SAN, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+# Bridge-specific transacitons
+for (bridge_index in 1:length(bridge_names_array)) {
+  for (year_index in 1:length(year_fields_array)) {
+    
+    input_file_name = paste(F_INPUT_DIRECTORY, bridge_names_array[bridge_index]," ", year_fields_array[year_index], ".csv", sep = "")
+    input <- read.table(file = input_file_name, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+    
+    input <- mutate(input, Plaza_ID = plaza_id[bridge_index])
+    
+    if(bridge_index == 1 & year_index == 1) {
+      data <- input
+    }
+    else{
+      data <- rbind(data, input)
+    }
+  } # year
+} # bridge
 
+
+# Read lane designation database
 input.lanes <- read.table(file = F_INPUT_LANES, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
 ```
 
 #### Combine and clean transaction data
 ```{r combine-clean}
-# Overwrite ATCAS tests with Plaza_ID integers
-input.ant <- input.ant %>%
-  mutate(Plaza_ID = ANT_ID)
-
-input.bay <- rbind(input.by1, input.by2)
-input.bay <- input.bay %>%
-  mutate(Plaza_ID = BAY_ID)
-
-input.ben <- input.ben %>%
-  mutate(Plaza_ID = BEN_ID)
-
-input.car <- input.car %>%
-  mutate(Plaza_ID = CAR_ID)
-
-input.dum <- input.dum %>%
-  mutate(Plaza_ID = DUM_ID) 
-
-input.rch <- input.rch %>%
-  mutate(Plaza_ID = RCH_ID)
-
-input.san <- input.san %>%
-  mutate(Plaza_ID = SAN_ID)
-
-# Combine data and rename variables
-clean.transactions <- rbind(input.ant, input.bay, input.ben, input.car, input.dum, input.rch, input.san)
-
-clean.transactions <- clean.transactions %>%
+clean.transactions <- data %>%
   select(plaza_id = Plaza_ID, lane_id = Lane.ID, date_string = Date, hour_string = Col5, transactions = Col6)
 
 # Join with parameter databases to get hour_int and plaza_name
