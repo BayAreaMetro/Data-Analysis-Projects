@@ -31,7 +31,7 @@ knitr::opts_chunk$set(cache=TRUE)
 ## Share of Typical Weekday Bridge Transactions by County (2010 to 2014)
 
 ```{r prepare, echo=FALSE}
-load("M:/Data/FasTrak/Frequency by Zipcode/Typical Weekday FasTrak Transactions Summary.Rdata")
+load("D:/files/Box Sync/Share Data/aggregate-fastrak/Typical Weekday FasTrak Transactions Summary.Rdata")
 
 interactive <- typical.measures %>%
   mutate(Bay_Area_County = "Outside of Bay Area")
