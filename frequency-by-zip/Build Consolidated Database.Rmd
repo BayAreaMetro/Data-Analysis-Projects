@@ -20,7 +20,7 @@ Aggregated, anonymous FasTrak transactions by transaction date, plaza, and tag h
 
 #### _TODO_
 1.  Add second-half 2014 data when ready
-2.  Try and get Golden Gate and Express Lane data for 2014, 2015
+2.  Try and get Golden Gate data for 2014, 2015
 
 ## Overhead
 ```{r overhead}
@@ -39,9 +39,26 @@ knitr::opts_chunk$set(cache=TRUE)
 
 ## Paramaters
 ```{r parameters}
+
+# Bridge ID database
 Plaza_ID = c(2, 3, 4, 5, 6, 7, 8)
-Plaza = c("Antioch Bridge", "Richmond Bridge", "Bay Bridge", "San Mateo Bridge", "Dumbarton Bridge", "Carquinez Bridge", "Benicia Bridge")
+Plaza = c("Antioch Bridge", 
+          "Richmond Bridge", 
+          "Bay Bridge", 
+          "San Mateo Bridge", 
+          "Dumbarton Bridge", 
+          "Carquinez Bridge", 
+          "Benicia Bridge")
 plaza_names <- data.frame(Plaza_ID, Plaza)
+
+# Express lane ID database
+Plaza_ID = c(5010, 5011, 5012, 5110, 5118)
+Plaza = c("Express Lanes: I-680",
+          "Express Lanes: I-680",
+          "Express Lanes: I-680",
+          "Express Lanes: SR 237/I-880",
+          "Express Lanes: SR 237/I-880")
+express_lane_names <- data.frame(Plaza_ID, Plaza)
 ```
 
 
@@ -61,6 +78,8 @@ F_2014_B = "not yet delivered"
   
 F_2015_A = "M:/Data/FasTrak/Frequency by Zipcode/2015/Year 2015 FasTrak Flat File Jan to Jul.csv"
 F_2015_B = "not yet delivered"
+
+F_2014_2015_EXP = "M:/Data/FasTrak/Frequency by Zipcode/2014/Express Lane ZIP Code Query 2014 and half 2015.csv" 
 
 F_ZIP_REFERENCE = "reference_ca_zipcode.csv"
 
@@ -298,6 +317,30 @@ head(reshaped.2015, n = 20)
 remove(input, reshaped.2015.A)
 ```
 
+## Year 2014 and First Half 2015 Express Lane Data
+```{r express-2014-2015}
+# Note: data delivered in different format than the others
+
+input <- read.table(file = F_2014_2015_EXP, header = TRUE, sep = ",",stringsAsFactors = FALSE)
+
+# Standardize variable names
+input <- input %>%
+  rename(Plaza_ID = ENTRY_PLAZA, Zipcode = ZIP_CODE, Date = TX_DATE, Transactions = CountOfZIP_CODE) %>%
+  select(-PLAZA_AGENCY)
+
+working <- left_join(input, express_lane_names, by = c("Plaza_ID"))
+
+ready.express.201415 <- working %>%
+  select(-Plaza_ID) %>%
+  filter(Transactions > 0) %>%
+  select(Date, Zipcode, Plaza, Transactions)
+
+head(ready.express.201415, n = 20)
+  
+remove(input, working)
+```
+
+
 ## Combine Datasets
 ```{r combine-datasets}
 
@@ -308,7 +351,13 @@ zip_details <- input %>%
   select(Zipcode = ZIP, County = CntyName) %>%
   mutate(Zipcode = as.character(paste(Zipcode)))
 
-reshaped <- rbind(reshaped.2010, reshaped.2011, reshaped.2012, reshaped.2013, reshaped.2014, reshaped.2015)
+reshaped <- rbind(reshaped.2010, 
+                  reshaped.2011, 
+                  reshaped.2012, 
+                  reshaped.2013, 
+                  reshaped.2014, 
+                  reshaped.2015,
+                  ready.express.201415)
 reshaped <- left_join(reshaped, zip_details, by = "Zipcode")
 
 table(reshaped$County)
