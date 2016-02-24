@@ -19,8 +19,7 @@ Aggregated, anonymous FasTrak transactions by transaction date, plaza, and tag h
 3. In-line Shiny tables and maps --> `Interactives.Rmd`
 
 #### _TODO_
-1.  Add second-half 2014 data when ready
-2.  Try and get Golden Gate data for 2014, 2015
+1. Right now we have express lane data for 2014, but toll plaza data for just the first part of 2014.  Mixing this data causes some problems with the typical weekday calculations, i.e. the code currently assumes that all the transactions are recorded for the dates present.  Leave the express lane data out until we get the full plaza data for 2014 and 2015. See in-line comments.
 
 ## Overhead
 ```{r overhead}
@@ -318,30 +317,32 @@ remove(input, reshaped.2015.A)
 ```
 
 ## Year 2014 and First Half 2015 Express Lane Data
+### TODO: turn back on once full 2014 and 2015 plaza data are available
 ```{r express-2014-2015}
-# Note: data delivered in different format than the others
-
-input <- read.table(file = F_2014_2015_EXP, header = TRUE, sep = ",",stringsAsFactors = FALSE)
-
-# Standardize variable names
-input <- input %>%
-  rename(Plaza_ID = ENTRY_PLAZA, Zipcode = ZIP_CODE, Date = TX_DATE, Transactions = CountOfZIP_CODE) %>%
-  select(-PLAZA_AGENCY)
-
-working <- left_join(input, express_lane_names, by = c("Plaza_ID"))
-
-ready.express.201415 <- working %>%
-  select(-Plaza_ID) %>%
-  filter(Transactions > 0) %>%
-  select(Date, Zipcode, Plaza, Transactions)
-
-head(ready.express.201415, n = 20)
-  
-remove(input, working)
+# # Note: data delivered in different format than the others
+# 
+# input <- read.table(file = F_2014_2015_EXP, header = TRUE, sep = ",",stringsAsFactors = FALSE)
+# 
+# # Standardize variable names
+# input <- input %>%
+#   rename(Plaza_ID = ENTRY_PLAZA, Zipcode = ZIP_CODE, Date = TX_DATE, Transactions = CountOfZIP_CODE) %>%
+#   select(-PLAZA_AGENCY)
+# 
+# working <- left_join(input, express_lane_names, by = c("Plaza_ID"))
+# 
+# ready.express.201415 <- working %>%
+#   select(-Plaza_ID) %>%
+#   filter(Transactions > 0) %>%
+#   select(Date, Zipcode, Plaza, Transactions)
+# 
+# head(ready.express.201415, n = 20)
+#   
+# remove(input, working)
 ```
 
 
 ## Combine Datasets
+### TODO: add express lane data when full 2014 and 2015 plaza data are ready
 ```{r combine-datasets}
 
 # Bring in county via zipcode
@@ -356,8 +357,7 @@ reshaped <- rbind(reshaped.2010,
                   reshaped.2012, 
                   reshaped.2013, 
                   reshaped.2014, 
-                  reshaped.2015,
-                  ready.express.201415)
+                  reshaped.2015)
 reshaped <- left_join(reshaped, zip_details, by = "Zipcode")
 
 table(reshaped$County)
@@ -443,5 +443,4 @@ write.csv(typical.measures, file = F_TYPICAL_OUTPUT_CSV, row.names = FALSE, quot
 save(typical.measures, file = F_TYPICAL_OUTPUT_R)
 
 ```
-
 
