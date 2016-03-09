@@ -10,14 +10,14 @@ output:
 ## Administration
 
 #### Purpose
-This script consumes databases provided by the Bay Area Toll Authority of (a) toll transactions by lane by bridge by date by hour and (b) lane designations by bridge by date by hour.  These databases are consolidated and typical weekday transaction summaries are created for consumption by Tableau. 
+This script consumes databases, provided by the Bay Area Toll Authority, of (a) toll transactions by lane by bridge by date by hour and (b) lane designations by bridge by date by hour.  These databases are consolidated and typical weekday transaction summaries are created for consumption by Tableau. 
 
 #### Outputs
 1.  A large database of typical weekday transactions by bridge by lane by date by hour
 2.  A condensed database of typical weekday statistics by year 
 
 #### TODO
-1. Check with MD about a source for the lane designations
+1. None right now
 
 #### ISSUES
 
@@ -41,7 +41,7 @@ knitr::opts_chunk$set(cache=TRUE)
 #### Remote I/O Locations
 ```{r remote-io}
 F_INPUT_DIRECTORY  = "M:/Data/BATA/Transactions by Lane/"
-F_BOX_DIRECTORY    = "D:/files/My Box Files/Share Data/bridge-transactions/" 
+F_BOX_DIRECTORY    = "D:/files/Box Sync/Share Data/bridge-transactions/" 
 
 F_INPUT_LANES = paste(F_INPUT_DIRECTORY, "Bridge Toll Lane Type Database.csv", sep = "")
 
@@ -53,7 +53,7 @@ F_OUTPUT_TYP_R   = paste(F_INPUT_DIRECTORY, "Typical Weekday Transactions by Lan
 
 # File names are bridge name + year field
 bridge_names_array = c("antioch", "bay", "benicia", "carquinez", "dumbarton", "richmond", "san mateo")
-year_fields_array  = c("2005 to 2013", "2014")
+year_fields_array  = c("2005 to 2013", "2014", "2015")
 
 ```
 
@@ -88,11 +88,17 @@ holiday_dates <- dates(as.character(holiday(2000:2020, holiday_list)), format = 
 
 #### Data reads
 ```{r data-reads}
-# Bridge-specific transacitons
+# Bridge-specific transactions
 for (bridge_index in 1:length(bridge_names_array)) {
   for (year_index in 1:length(year_fields_array)) {
     
-    input_file_name = paste(F_INPUT_DIRECTORY, bridge_names_array[bridge_index]," ", year_fields_array[year_index], ".csv", sep = "")
+    input_file_name = paste(F_INPUT_DIRECTORY, 
+                            bridge_names_array[bridge_index],
+                            " ", 
+                            year_fields_array[year_index], 
+                            ".csv", 
+                            sep = "")
+    
     input <- read.table(file = input_file_name, header = TRUE, sep = ",", stringsAsFactors = FALSE)
     
     input <- mutate(input, Plaza_ID = plaza_id[bridge_index])
@@ -103,6 +109,7 @@ for (bridge_index in 1:length(bridge_names_array)) {
     else{
       data <- rbind(data, input)
     }
+    
   } # year
 } # bridge
 
