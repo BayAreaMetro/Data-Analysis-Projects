@@ -72,6 +72,4 @@ https://mtcdrive.box.com/s/wkc4zjko67qq0epesbw2z4dlgxv6i4s2
 
 Docs: https://gist.github.com/tombuckley/693ba397c4b03564b3689c2219b95e52  
 
-ETL: https://gist.github.com/tombuckley/b17b549d0d7010b3bbfd61e6aec9413b   
-
 Processing: https://gist.github.com/tombuckley/4e405d87d23eafd51fa48cfb8ebfc3cd  
