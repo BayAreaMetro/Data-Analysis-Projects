@@ -1,8 +1,6 @@
 # vital-signs-traffic-data
 Scripts for traffic data
 
-# TomTom/INRIX TMCID/Geometry Documentation  
-
 ## Problem Statement  
 
 Use TMC codes to fetch geometries for spreadsheets of congestion and traffic data.
