@@ -66,6 +66,12 @@ Average Highway Speeds Shapefile:
 
 https://mtcdrive.box.com/s/wkc4zjko67qq0epesbw2z4dlgxv6i4s2  
 
+###Data Dictionary 
+
+tmc|h0|h1|...   
+--|-----|-------|---    
+tmc code|hour 0 speed|hour 1 speed   
+
 ## Background Docs  
 
 Docs: https://gist.github.com/tombuckley/693ba397c4b03564b3689c2219b95e52  
