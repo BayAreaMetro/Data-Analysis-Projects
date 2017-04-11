@@ -9,8 +9,6 @@ Use TMC codes to fetch geometries for spreadsheets of congestion and traffic dat
 
 INRIX traffic data, TomTom Geometry Data  
 
-On the TomTom 2016 DVD (Kearey Smith has this).  
-
 Relevant shapefiles and tables for this project are on the California Shapefiles DVD in the folder: `nam2016_12\shpd\mn\usa\uc3`  
 
 #### table names  
