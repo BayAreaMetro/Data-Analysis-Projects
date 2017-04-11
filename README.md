@@ -56,19 +56,25 @@ ID|RDSTMC|TMCPATHID
 
 Drop the `Direction of Road Element (from start Junction to end Junction) compared with the TMC chain direction` from the `TMC Location Reference Code` on the tomtom `rd` table and then we can join the tomtom geometries to the speed and congestion data.  
   
-## Results
+## Results  
 
 Congested Segments Shapefile:  
 
 https://mtcdrive.box.com/s/t6dmvpogp428wrvwj3juxx95k6qllaqm  
 
+table join success rate: 1134/1139  
 
+data that failed to join: (data/cs_no_geom...csv)  
 
 Average Highway Speeds Shapefile:  
 
 https://mtcdrive.box.com/s/wkc4zjko67qq0epesbw2z4dlgxv6i4s2  
 
-### Average Speeds Data Dictionary 
+table join success rate: 2640/2757  
+
+data that failed to join: (data/hs_no_geom...csv)  
+
+### Average Speeds Data Dictionary   
 
 tmc|h0|h1|...   
 --|-----|-------|---    
