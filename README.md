@@ -24,15 +24,11 @@ Above taken from the UML diagram [here](https://mtcdrive.app.box.com/file/651883
 
 A full set of table names is [here](https://gist.github.com/tombuckley/2648c8fe9a776e2658d03a76769b07c4)    
 
-#### variables  
+#### Variables  
 
 A full set of variable names is [here](https://gist.github.com/tombuckley/130773fd00026069ed4565eb40e1d88f):   
 
-## TMC Codes:   
-
-### From TomTom Docs:     
-
-#### TMC Location Structure in MultiNet Shapefile Data    
+#### TMC Codes:   
 
 "...Level 1 RD attribute of a Road or Ferry Element. This attribute can be retrieved from the rd table's RDSTMC field. This field stores the TMC Location Reference Code as `ABCCDEEEEE.`..."   
 
