@@ -22,7 +22,7 @@ Above taken from the UML diagram [here](https://mtcdrive.app.box.com/file/651883
 
 A full set of table names is [here](https://gist.github.com/tombuckley/2648c8fe9a776e2658d03a76769b07c4)    
 
-#### variable names  
+#### variables  
 
 A full set of variable names is [here](https://gist.github.com/tombuckley/130773fd00026069ed4565eb40e1d88f):   
 
@@ -54,14 +54,10 @@ ID|RDSTMC|TMCPATHID
 --|-----|-------  
 15280000693470|+817-45896|15280801601246   
 
-## Methodology applied to solve problem
+## Methodology
 
 Drop the `Direction of Road Element (from start Junction to end Junction) compared with the TMC chain direction` from the `TMC Location Reference Code` on the tomtom `rd` table and then we can join the tomtom geometries to the speed and congestion data.  
   
-## Expected Outcomes  
-
-Geometries for multiple datasets on congested lanes and average speeds.    
-
 ## Results
 
 Congested Segments Shapefile:  
