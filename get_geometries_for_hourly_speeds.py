@@ -68,7 +68,7 @@ hs_g = gpd.GeoDataFrame(hs_g)
 #and has a mix of multilinestring and linestring
 #that is specific to the shapefile format
 
-hs_g_shp = hs_g.iloc[:,["tmc","geometry"]]
+hs_g_shp = hs_g.loc[:,["tmc","geometry"]]
 hs_g_shp.to_file('hs.shp', layer='hs')
 hs_g_csv = hs_g.iloc[:,0:26]
 hs_g_csv.drop('geometry',axis=1,inplace=True)
