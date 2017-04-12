@@ -29,7 +29,7 @@ tt_rd = tt_rd[tt_rd.tmc.isin(cs.tmc)]
 
 ########
 #read the tomtom network
-#filter it by hourly speed ID's
+#filter it by congested ID's
 ########
 
 from cs_hs_functions import filter_by_tmcid, read_network
