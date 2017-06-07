@@ -9,7 +9,7 @@ Source: Transit Operators
 Input: [Google Transit Feed Specification](https://developers.google.com/transit/gtfs/) Text Files    
 Output: Bus Frequency by Geometry    
 
-[Traffic](https://github.com/MetropolitanTransportationCommission/vital-signs-traffic-data):     
+[Traffic](https://github.com/MetropolitanTransportationCommission/vital-signs-traffic-data)     
 Source: INRIX, TomTom     
 Input: Excel Spreadsheets of Traffic Data, Road Geometries     
 Output: Traffic by Geometry      
