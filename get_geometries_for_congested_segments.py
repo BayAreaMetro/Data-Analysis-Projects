@@ -11,7 +11,7 @@ from simpledbf import Dbf5
 #read in congested segments spreadsheet
 ###
 #download data: https://mtcdrive.box.com/s/0fdhlrqeqrnebvawsgx83y86920b9bre
-cs = pd.read_excel("2016_CS_List.xlsx")
+cs = pd.read_excel("2016_CS_List_06_13_2017.xlsx")
 
 ###
 #read tomtom tmc lookup table
@@ -24,6 +24,9 @@ tt_rd = dbf.to_dataframe()
 from cs_hs_functions import to_inrix
 tt_rd["tmc"] = to_inrix(tt_rd.RDSTMC)
 
+tt_rd.to_csv("usauc3_rd_inrix_tmc.csv")
+
+cs.tmc = cs["TMC ID"]
 #filter data to just those that we have congestion data for
 tt_rd = tt_rd[tt_rd.tmc.isin(cs.tmc)]
 
