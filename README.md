@@ -15,7 +15,9 @@ https://mtcdrive.box.com/s/is8cfworljgmau9wp97dmy4rj0cr14gy
 
 Relevant shapefiles and tables for this project are on the California Shapefiles DVD in the folder: `nam2016_12\shpd\mn\usa\uc3` 
 
-https://mtcdrive.box.com/s/rqod8oybpqpnx6ym0osi2h0hoo4znbmb
+TomTom source shapefile and dbf [here](https://mtcdrive.box.com/s/rqod8oybpqpnx6ym0osi2h0hoo4znbmb)   
+
+[This csv](https://mtcdrive.box.com/s/hlxi38dsr7v6z5rzubhny85vvtol90a5) contains a tmc id with the first integer sliced off, so can be used to join inputs with the tomtom shapefiles. in the future we should just write out one table with these tmc codes and the geoms but that would be a big join.   
 
 #### table names  
 
