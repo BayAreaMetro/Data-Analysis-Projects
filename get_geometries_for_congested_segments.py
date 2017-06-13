@@ -26,7 +26,7 @@ tt_rd["tmc"] = to_inrix(tt_rd.RDSTMC)
 
 tt_rd.to_csv("usauc3_rd_inrix_tmc.csv")
 
-cs.tmc = cs["TMC ID"]
+cs["tmc"] = cs["TMC ID"]
 #filter data to just those that we have congestion data for
 tt_rd = tt_rd[tt_rd.tmc.isin(cs.tmc)]
 

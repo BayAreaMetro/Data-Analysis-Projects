@@ -66,7 +66,7 @@ Drop the `Direction of Road Element (from start Junction to end Junction) compar
 
 Congested Segments Shapefile:  
 
-https://mtcdrive.box.com/s/t6dmvpogp428wrvwj3juxx95k6qllaqm  
+https://mtcdrive.box.com/s/eevjet5mc67ikc226fjwqbexlll7gqxi
 
 table join success rate: 1134/1139  
 
