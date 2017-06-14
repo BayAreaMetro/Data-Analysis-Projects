@@ -68,7 +68,7 @@ Congested Segments Shapefile:
 
 https://mtcdrive.box.com/s/eevjet5mc67ikc226fjwqbexlll7gqxi
 
-table join success rate: 1265/1270  
+table join success rate: 1269/1270  
 
 data that failed to join: (data/cs_no_geom...csv)  
 
