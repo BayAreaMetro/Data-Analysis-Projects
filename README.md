@@ -54,7 +54,7 @@ Source: Stanford
 Input: School Quality,    
 Output: School Quality Scores by School District Geometry   
 
-[Climate Change Opinion Survey](https://github.com/MetropolitanTransportationCommission/motm/tree/7848b8404605b0dc64b5f29516dca7da0e9c1e68/2017_07#data-sources)
+[Climate Change Opinion Survey](https://github.com/MetropolitanTransportationCommission/motm/tree/7848b8404605b0dc64b5f29516dca7da0e9c1e68/2017_07#data-sources)   
 Source: Yale School of Forestry    
 Input: Climate Change Opinions (csv), Census Counties (2015)     
 Output: Climate Change opinions by Census Tract     
