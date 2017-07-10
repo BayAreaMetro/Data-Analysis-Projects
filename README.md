@@ -47,7 +47,7 @@ Source: Redfin
 Input: Census Places Geometries (TomTom), CSV Export of [Tableau Data file](https://www.redfin.com/blog/data-center)    
 Output: Residential Sale Prices by Place Geometry      
 
-#### Demographic
+#### Demographics
 
 [School Quality](https://github.com/MetropolitanTransportationCommission/motm/tree/master/2017_04#stanford-schools-project)   
 Source: Stanford   
