@@ -60,16 +60,3 @@ Input: Climate Change Opinions (csv), Census Counties (2015)
 Output: Climate Change opinions by Census Tract     
 
 **where year is not specifically mentioned, the tool is intended (though not necessarily tested on) any year for which data are available.   
-
-#### Need Documentation Improvements:   
-
-[Demographics (Environmental Justice)](https://github.com/MetropolitanTransportationCommission/ej)   
-Source: US Census   
-Input: JSON retrieved from the US Census   
-Output: Census Tracts Geometries & Demographics for 2000, 2010, and Change in Population of communities of Veterans, various Minorities, Disabled, Low Income, Over 65, and more.    
-
-[Environmental Impacts](https://github.com/MetropolitanTransportationCommission/UrbanSim_Spatial_Analysis)   
-Source: [Multiple](https://app.smartsheet.com/b/home?lx=kxHiygtZYYFSoNxKdR-2Ww&mt=21)   
-Inputs: [Multiple](https://app.smartsheet.com/b/home?lx=kxHiygtZYYFSoNxKdR-2Ww&mt=21)   
-Outputs: Tables on Environment Impacts of Transportation Projects and Land Use Forecasts by State, County, and Impact Type   
-
