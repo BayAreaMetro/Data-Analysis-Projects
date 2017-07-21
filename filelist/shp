@@ -1,0 +1,5 @@
+./travel-housing-map/data/input/taz1454_clipurb2002.shp
+./travel-housing-map/data/simplify/taz1454-simplified.shp
+./travel-housing-map/data/simplify/taz1454_clipurb2002-simplified.shp
+./travel-model-one/utilities/geographies/bayarea_rtaz1454_rev1_WGS84.shp
+./travel-model-one/utilities/VMT Shares/data/mtc_taz_boundaries_1454_zone_system.shp
