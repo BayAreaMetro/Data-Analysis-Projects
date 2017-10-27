@@ -2,8 +2,6 @@
 
 ### Purpose
 
-A list of script repositories used to transform data (mostly spatial).**
-
 [Transportation](#transportation)   
 [Land](#land)  
 [Demographics](#demographics)  
