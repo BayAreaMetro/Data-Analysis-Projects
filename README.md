@@ -9,14 +9,14 @@
 #### Transportation:
 
 [Transit](https://github.com/MetropolitanTransportationCommission/RegionalTransitDatabase)   
-Source: Transit Operators    
+Source: Transit Operators (via MTC 511)    
 Input: [Google Transit Feed Specification](https://developers.google.com/transit/gtfs/) Text Files    
 Output: Multiple, Bus Frequency by Geometry    
 
 ##### Sub-Projects 
-- [Transit Priority Areas](https://github.com/MetropolitanTransportationCommission/RegionalTransitDatabase/blob/master/docs/transit_priority_areas.md) 
+- [Transit Priority Areas](transit_priority_areas.md)
 
-- [Routes, Stops, and Frequencies by Transit Provider from 2008 to 2017](https://github.com/MetropolitanTransportationCommission/RegionalTransitDatabase/blob/master/docs/historical_transit_data.md) 
+- [Routes, Stops, and Frequencies by Transit Provider from 2008 to 2017](historical_transit_data.md) 
 
 [Traffic](https://github.com/MetropolitanTransportationCommission/vital-signs-traffic-data)     
 Source: INRIX, TomTom     
