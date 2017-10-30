@@ -26,8 +26,11 @@ The data set was developed using several data sources that include Planned Trans
 
 ### Data
 
-[Major Bus Stops](http://mtc.maps.arcgis.com/home/item.html?id=1937588fdce446559a5a6de9af3f1900)  
+[Major Bus Stops](http://mtc.maps.arcgis.com/home/item.html?id=1937588fdce446559a5a6de9af3f1900)
+[Feature Service URL](http://services3.arcgis.com/i2dkYWmb4wHvYPda/arcgis/rest/services/High_Frequency_Bus_Stops/FeatureServer/0)
+
 [Major Rail and Ferry Stops](http://mtc.maps.arcgis.com/home/item.html?id=f998f0940316431b99ab5e4ca826133f)
+[Feature Service URL](https://services3.arcgis.com/i2dkYWmb4wHvYPda/arcgis/rest/services/TPA_Non_Bus_Eligible_Stops_2017/FeatureServer/0)
 
 ## High-Quality Transit Corridors 2017  
 
@@ -76,7 +79,7 @@ The data set was developed using several data sources that include Planned Trans
 [Infill Opportunity Zone-Eligible Areas 2017](http://mtc.maps.arcgis.com/home/item.html?id=67cd7a362d364e0190a9566279c61ae4)  
 
 ## Transit Priority Project-Eligible Areas 2017 (SB375) (Plan Bay Area 2040 - Official)**
-This dataset includes geographic areas that meet _location_ eligibility criteria for Transit Priority Projects, as defined in [California Public Resources Code (PRC) - Section 21155.1](](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=21155.1.&lawCode=PRC), consistent with Senate Bill 375 and Plan Bay Area 2040:
+This dataset includes geographic areas that meet _location_ eligibility criteria for Transit Priority Projects, as defined in [California Public Resources Code (PRC) - Section 21155.1](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=21155.1.&lawCode=PRC), consistent with Senate Bill 375 and Plan Bay Area 2040:
 
 - Within ½ mile of a **Major Transit stop** , defined as any of the following:
   - Existing rail stations
@@ -92,7 +95,9 @@ This data set was developed using several data sources that include Planned Tran
 
 ### Data 
 
-Please see: [Major Transit Stops 2017](#Major-Transit-Stops-2017)  
+[Transit Priority Project-Eligible Areas 2017 on AGOL](http://mtc.maps.arcgis.com/home/item.html?id=fc78e589479c442c982ef8acc4fcb2a4)   
+
+[Transit Priority Project-Feature Service URL](https://services3.arcgis.com/i2dkYWmb4wHvYPda/arcgis/rest/services/TransitPriorityProjectEligibleAreas_2017_SB375_PlanBayArea2040_Official/FeatureServer/0?token=kztANiOgPaSgh8-1Br2tABYqZpqlOOKB0XIhxegZWyAVVsK9feGcniuA58irryQRj0YRm5xmxkRjshvGZYvliljISShr_9n0YEw31qQ2xuJANMn-8mQcW_1UikVY2K8W8hnM59BAjQV-peOG3ZLv1fWTdDDZb82UIWpq-MI4KkAeBeBiRDok-lw0_lxRgcsj4a2LGYNk51d_y2BchgxNIrHs8u2pwUMNRolp9CmI6Y1gy_eFHP0bgfKsNdYEffEv)  
 
 ## Transit Priority Areas 2017
 This dataset contains Transit Priority Areas in the nine-county San Francisco Bay Area as defined in the [California Public Resources Code, Section 21099](https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=PRC&amp;division=13.&amp;title=&amp;part=&amp;chapter=2.7.&amp;article=):
