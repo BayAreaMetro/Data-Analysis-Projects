@@ -76,7 +76,7 @@ The data set was developed using several data sources that include Planned Trans
 [Infill Opportunity Zone-Eligible Areas 2017](http://mtc.maps.arcgis.com/home/item.html?id=67cd7a362d364e0190a9566279c61ae4)  
 
 ## Transit Priority Project-Eligible Areas 2017 (SB375) (Plan Bay Area 2040 - Official)**
-This dataset includes geographic areas that meet _location_ eligibility criteria for Transit Priority Projects, as defined in [California Public Resources Code (PRC)](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=PRC&amp;sectionNum=21155.&amp;highlight=true&amp;keyword=Transit%20Priority%20Project) [Section 21155](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=PRC&amp;sectionNum=21155.&amp;highlight=true&amp;keyword=Transit%20Priority%20Project), consistent with Senate Bill 375 and Plan Bay Area 2040:
+This dataset includes geographic areas that meet _location_ eligibility criteria for Transit Priority Projects, as defined in [California Public Resources Code (PRC) - Section 21155.1](](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=21155.1.&lawCode=PRC), consistent with Senate Bill 375 and Plan Bay Area 2040:
 
 - Within ½ mile of a **Major Transit stop** , defined as any of the following:
   - Existing rail stations
