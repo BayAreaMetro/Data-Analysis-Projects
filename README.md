@@ -14,7 +14,7 @@ Input: [Google Transit Feed Specification](https://developers.google.com/transit
 Output: Multiple, Bus Frequency by Geometry    
 
 ##### Sub-Projects 
-- [Transit Priority Areas](transit_priority_areas.md)
+- [legislative_transit_data](legislative_transit_data.md)
 
 - [Routes, Stops, and Frequencies by Transit Provider from 2008 to 2017](historical_transit_data.md) 
 
