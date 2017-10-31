@@ -1,6 +1,6 @@
 ## Data Workflows
 
-### Purpose
+### Category
 
 [Transportation](#transportation)   
 [Land](#land)  
