@@ -52,11 +52,11 @@ Scan the db table and find records that do not have a gmap_lat gmap_long and geo
 
 ### Outcome  
 
-| description                            | count |   |
-|----------------------------------------|-------|---|
-| total_permits                          | 19497 |   |
-| total_permits_located                  | 19496 |   |
-| total_permits_located_outside_bay_area | 1030  |   |
+| description                            | count |
+|----------------------------------------|-------|
+| total_permits                          | 19497 |
+| total_permits_located                  | 19496 |
+| total_permits_located_outside_bay_area | 1030  |
 
 The outcome of Phase 1 is in the housing database on the following tables:  
 
