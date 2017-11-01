@@ -50,19 +50,13 @@ Scan the db table and find records that do not have a gmap_lat gmap_long and geo
 
 [Script here](https://gist.github.com/tombuckley/312f130a87e398f0a2c8af4bb587e02e)
 
-##### Summary metrics on success of each process
-
-[SQL here](https://gist.github.com/tombuckley/7342be0d33fe86b46a58af92f7e58ae4), views in DB
-
-#### Phase 2  
-
-Anything that does not have an address, does it have a parcel, if so, match it to the parcel (with the APN) and use the centroid of the parcel. 
-
-#### Phase 3  
-
-Deploy the geocoding script as a web service to manage geocoding requests in the future.   
-
 ### Outcome  
+
+| description                            | count |   |
+|----------------------------------------|-------|---|
+| total_permits                          | 19497 |   |
+| total_permits_located                  | 19496 |   |
+| total_permits_located_outside_bay_area | 1030  |   |
 
 The outcome of Phase 1 is in the housing database on the following tables:  
 
