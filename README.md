@@ -30,7 +30,7 @@ Dependencies: Python, Pandas
 
 #### Policy:  
 
-[Housing Permit Geocoding (2017)](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/housing_geocoding.md)
+[Housing Permit Geocoding (2017)](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/housing_geocoding.md)  
 Source: Various   
 Input: Housing Permits   
 Output: Geocoded Housing Permits   
