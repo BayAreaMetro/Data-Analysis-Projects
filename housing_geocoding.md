@@ -68,34 +68,25 @@ The outcome of Phase 1 is in the housing database on the following tables:
 
 #### Outcome Table Summary   
 
-schema_name|table_name|description
+schema_name|table_or_view|description
 ------|-----------|------------
-geocode_results|gmaps_allyears|a view of both gmaps and gmaps_2016 tables
-geocode_results|mapzen_allyears|a view of both mapzen and mapzen_2016 tables
-geocode_results|permitFeature_gmaps|match schema of permitFeature with gmaps lat long for Shape field
-geocode_results|gmaps|location results by service for `address` field in the `permit` table
-geocode_results|mapzen|location results by service for `address` field in the `permit` table
-geocode_results|address_quality_review|location results by service for `address` field in the `permit` table with geocoding results
-geocode_results|old_permits_not_already_geocoded|housing permit records from 2015 or before that didn't previously (before phase 1) have a latitude or longitude
-geocode_results|gmaps_2016|location results by service for `address` field in the `permit_2016_update` table
-geocode_results|mapzen_2016|location results by service for `address` field in the `permit_2016_update` table
+geocoding_summary|all_permits_all_sources|for every permit in `import.Permits_10_18_2017` an xy from each source  
+geocoding_summary|main|a summary of the number of geocoded permits 
+geocode_spatial_tables|main|`import.Permits_10_18_2017` with best guesses for lat/long  
+geocode_spatial_tables|outside_bay_area|view of `main` that is outside the bay area  
+import|Permits_10_18_2017|housing permits as processed by KS to add the 2016 collection spreadsheets  
+import|rhna_2007_2014|summary of RHNA numbers by jurisdiction for 2007-2014  
+import|rhna_2015_2035|summary of RHNA numbers by jurisdiction for 2015-2035  
+geocode_results|gmaps_allyears|a view of both gmaps and gmaps_2016 tables  
+geocode_results|mapzen_allyears|a view of both mapzen and mapzen_2016 tables  
+geocode_results|permitFeature_gmaps|match schema of permitFeature with gmaps lat long for Shape field  
+geocode_results|gmaps|location results by service for `address` field in the `permit` table  
+geocode_results|mapzen|location results by service for `address` field in the `permit` table  
+geocode_results|address_quality_review|location results by service for `address` field in the `permit` table with geocoding results  
+geocode_results|old_permits_not_already_geocoded|housing permit records from 2015 or before that didn't previously (before phase 1) have a latitude or longitude  
+geocode_results|gmaps_2016|location results by service for `address` field in the `permit_2016_update` table  
+geocode_results|mapzen_2016|location results by service for `address` field in the `permit_2016_update` table  
 
-#### Outcome Table Details
-
-`gmaps`  
-column names:  
-joinid,latitude,longitude,location_type,partial_addr  
-
-`mapzen`   
-columns:
-joinid,latitude,longitude  
-
-`address_quality_review`  
-columns:
-
-`old_permits_not_already_geocoded`  
-columns:  
-joinid, Shape
 
 
 
