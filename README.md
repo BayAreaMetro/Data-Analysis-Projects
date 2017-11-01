@@ -1,6 +1,6 @@
 ### Category
 
-[General](#general)
+[General](#general)  
 [Transportation](#transportation)   
 [Policy](#Policy)  
 [Demographic](#demographic)  
