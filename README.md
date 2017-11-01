@@ -29,12 +29,12 @@ Output: Traffic by Geometry
 Dependencies: Python, Pandas  
 
 *Two Bridge Users Study*  
-[Scripts](https://github.com/BayAreaMetro/bridge-transactions/tree/master/Two-Bridge-Users)  
-[Readme](https://mtcdrive.app.box.com/notes/226792245627)
-Source: MTC FasTrak data
-Input: Bridge Transactions
-Output: An estimate of users crossing 2 or more distinct bridges per day
-Dependencies: R  
+[Scripts](https://github.com/BayAreaMetro/bridge-transactions/tree/master/Two-Bridge-Users)    
+[Readme](https://mtcdrive.app.box.com/notes/226792245627)  
+Source: MTC FasTrak data  
+Input: Bridge Transactions  
+Output: An estimate of users crossing 2 or more distinct bridges per day  
+Dependencies: R   
 
 #### Policy:  
 
