@@ -28,7 +28,7 @@ Input: Excel Spreadsheets of Traffic Data, Road Geometries
 Output: Traffic by Geometry      
 Dependencies: Python, Pandas  
 
-Two Bridge Users Study
+*Two Bridge Users Study*  
 [Scripts](https://github.com/BayAreaMetro/bridge-transactions/tree/master/Two-Bridge-Users)  
 [Readme](https://mtcdrive.app.box.com/notes/226792245627)
 Source: MTC FasTrak data
