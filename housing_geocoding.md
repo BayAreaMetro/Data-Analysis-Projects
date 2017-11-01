@@ -1,0 +1,101 @@
+## Housing Permit Geocoding
+
+[Problem Statement](#problem-statement)   
+[Data Sources](#data-sources)   
+[Methodology](#methodology)   
+[Outcome](#outcome)   
+
+### Problem Statement  
+
+Improve the accuracy of the mapped locations for the housing permit database.  
+
+### Data Sources
+
+#### Tables in DB
+
+Housing database (SQL Server).  
+
+The housing permit database is used for the display of information about housing on [this website](http://housing-test.us-west-2.elasticbeanstalk.com/)   
+
+schema_name|table_name|description
+------|-----------|------------
+dbo|feature_HOLD|temporary table for cartographic checks
+dbo|parcels_2015|a table of bay area parcels
+dbo|permit|pre-2016 permits
+import|Permits_10_18_2017|post 2016 permits
+
+##### table details:  
+
+table: `feature_HOLD`  
+Lat,Long,WKT,Shape,gmap_long,gmap_lat,gmap_score
+geocoding method: unknownπ
+
+table: `parcels_2015`  
+OBJECTID,PARCEL_ID,ACRES,COUNTY_ID,ZONE_ID,APN,X,Y
+
+table: `permit`  
+joinid,permyear,permdate,county,jurisdictn,apn,address,zip,projname,hcategory,verylow,low,moderate,abovemod,totalunit,infill,affrdunit,deedaffrd,asstaffrd,opnaffrd,tenure,rpa,rhna,rhnacyc,pda,pdaid,tpa,hoa,occertiss,occertyr,occertdt,mapped,notes
+
+#### Excel Spreadsheets  
+
+[On Box](https://mtcdrive.box.com/s/95h562kecwliig0yp9dkav1neoqw8zbx)  
+
+### Methodology
+
+#### phase 1
+
+Start by updating the geocode results for all addresses (in `permit` table in DB) using Google Maps. 
+
+Scan the db table and find records that do not have a gmap_lat gmap_long and geocode that address and place the results of that match in the table, including its location type. 
+
+[Script here](https://gist.github.com/tombuckley/312f130a87e398f0a2c8af4bb587e02e)
+
+##### Summary metrics on success of each process
+
+[SQL here](https://gist.github.com/tombuckley/7342be0d33fe86b46a58af92f7e58ae4), views in DB
+
+#### Phase 2  
+
+Anything that does not have an address, does it have a parcel, if so, match it to the parcel (with the APN) and use the centroid of the parcel. 
+
+#### Phase 3  
+
+Deploy the geocoding script as a web service to manage geocoding requests in the future.   
+
+### Outcome  
+
+The outcome of Phase 1 is in the housing database on the following tables:  
+
+#### Outcome Table Summary   
+
+schema_name|table_name|description
+------|-----------|------------
+geocode_results|gmaps_allyears|a view of both gmaps and gmaps_2016 tables
+geocode_results|mapzen_allyears|a view of both mapzen and mapzen_2016 tables
+geocode_results|permitFeature_gmaps|match schema of permitFeature with gmaps lat long for Shape field
+geocode_results|gmaps|location results by service for `address` field in the `permit` table
+geocode_results|mapzen|location results by service for `address` field in the `permit` table
+geocode_results|address_quality_review|location results by service for `address` field in the `permit` table with geocoding results
+geocode_results|old_permits_not_already_geocoded|housing permit records from 2015 or before that didn't previously (before phase 1) have a latitude or longitude
+geocode_results|gmaps_2016|location results by service for `address` field in the `permit_2016_update` table
+geocode_results|mapzen_2016|location results by service for `address` field in the `permit_2016_update` table
+
+#### Outcome Table Details
+
+`gmaps`  
+column names:  
+joinid,latitude,longitude,location_type,partial_addr  
+
+`mapzen`   
+columns:
+joinid,latitude,longitude  
+
+`address_quality_review`  
+columns:
+
+`old_permits_not_already_geocoded`  
+columns:  
+joinid, Shape
+
+
+
