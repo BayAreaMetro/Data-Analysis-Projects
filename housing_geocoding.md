@@ -64,11 +64,12 @@ The outcome of Phase 1 is in the housing database on the following tables:
 
 schema_name|table_or_view|description
 ------|-----------|------------
+import|Permits_10_18_2017|housing permits as processed by KS to add the 2016 collection spreadsheets  
+dbo|permits_db|view of `import.Permits_10_18_2017` with spatial features from `geocode_spatial_tables.main`
+geocode_spatial_tables|main|`import.Permits_10_18_2017` joinid's with best guesses for lat/long from `geocoding_summary.all_permits_all_sources`  
 geocoding_summary|all_permits_all_sources|for every permit in `import.Permits_10_18_2017` an xy from each source  
 geocoding_summary|main|a summary of the number of geocoded permits 
-geocode_spatial_tables|main|`import.Permits_10_18_2017` with best guesses for lat/long  
 geocode_spatial_tables|outside_bay_area|view of `main` that is outside the bay area  
-import|Permits_10_18_2017|housing permits as processed by KS to add the 2016 collection spreadsheets  
 import|rhna_2007_2014|summary of RHNA numbers by jurisdiction for 2007-2014  
 import|rhna_2015_2035|summary of RHNA numbers by jurisdiction for 2015-2035  
 geocode_results|gmaps_allyears|a view of both gmaps and gmaps_2016 tables  
