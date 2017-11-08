@@ -1,7 +1,5 @@
 # Legislative Transit Data
 
-*Draft*
-
 ## Purpose
 
 This is a list of links to data specified in [this document](https://mtcdrive.box.com/s/0cl7de5uy6nqqcjafhe6zoqhzl6xyg41)   
