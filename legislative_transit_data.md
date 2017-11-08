@@ -56,23 +56,13 @@ Bus|RTP|1/2 mile|route|[planned_route_1_2_mile](http://www.arcgis.com/home/item.
 
 ### Description
 
-This dataset contains locations that meet _location_ eligibility criteria for Infill Opportunity Zones in the nine-county San Francisco Bay Area as defined in the California Government Code, [Section 65088.1(e)](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=65088.1&amp;lawCode=GOV):
+This dataset contains locations that meet _location_ eligibility criteria for Infill Opportunity Zones in the nine-county San Francisco Bay Area as defined in the California Government Code.
 
-- Within ½ mile of a **Major Transit stop** , defined as any of the following:
-  - Existing rail stations
-  - Planned rail stations in an adopted RTP
-  - Existing ferry terminals with bus or rail service
-  - Planned ferry terminals with bus or rail service in an adopted RTP
-  - Intersection of at least two existing or planned bus routes with headways of 15 minutes or better during both the morning and evening peak periods; or
-- Within a ½ mile of a **High-Quality transit corridor** , defined as an existing or planned fixed-route bus corridor with headway of 15 minutes or better during both the morning and evening peak periods
-
-_Note that to become an Infill Opportunity Zone, an area must be adopted through local government resolution, consistent with_ [_Section 65088.4(c)_](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=65088.4&amp;lawCode=GOV) _of the California Government Code. For the purposes of that process, the applicable Sustainable Communities Strategy is Plan Bay Area 2040, and the relevant underlying geographic areas are those in this dataset._
-
-The data set was developed using several data sources that include Planned Transit Systems identified in the Plan Bay Area 2040 Regional Transportation Plan, Existing Transit locations extracted from the 511 Regional Transit Database, and manual editing conducted by the Spatial Modeling team at MTC.
+Please see the metada in the link to Data below for more detailed metadata. 
 
 ### Data  
 
-[Infill Opportunity Zone-Eligible Areas 2017](http://mtc.maps.arcgis.com/home/item.html?id=2a0a2aee0039410bb973eb5d51541473)  
+[Infill Opportunity Zone-Eligible Areas 2017](http://mtc.maps.arcgis.com/home/item.html?id=7913dfff7a8140dbbd30ab436e6db87c)  
 
 ## Transit Priority Project-Eligible Areas 2017 (SB375) (Plan Bay Area 2040 - Official)**
 This dataset includes geographic areas that meet _location_ eligibility criteria for Transit Priority Projects, as defined in [California Public Resources Code (PRC) - Section 21155.1](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=21155.1.&lawCode=PRC), consistent with Senate Bill 375 and Plan Bay Area 2040:
