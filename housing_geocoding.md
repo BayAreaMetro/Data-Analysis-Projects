@@ -7,81 +7,65 @@
 
 ### Problem Statement  
 
-Improve the accuracy of the mapped locations for the housing permit database.  
+Locate permitted affordable housing.  
 
 ### Data Sources
 
-#### Tables in DB
+#### Permits
 
-Housing database (SQL Server).  
+Metadata details are in the permitDataDictionary table on the web application database.   
 
-The housing permit database is used for the display of information about housing on [this website](http://housing-test.us-west-2.elasticbeanstalk.com/)   
+##### 2016 Collection
 
-schema_name|table_name|description
-------|-----------|------------
-dbo|feature_HOLD|temporary table for cartographic checks
-dbo|parcels_2015|a table of bay area parcels
-dbo|permit|pre-2016 permits
-import|Permits_10_18_2017|post 2016 permits
+- [Source Data by County](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl)  
 
-##### table details:  
+##### 2015 Collection
 
-table: `feature_HOLD`  
-Lat,Long,WKT,Shape,gmap_long,gmap_lat,gmap_score
-geocoding method: unknownπ
+- [Location Data](http://mtc.maps.arcgis.com/home/item.html?id=6b7c7052ef46421ca4054cf9f32ed074)  
+- [Attribute Data](http://mtc.maps.arcgis.com/home/item.html?id=711a0f06cfd84b8fbe226cc6917d0765)  
 
-table: `parcels_2015`  
-OBJECTID,PARCEL_ID,ACRES,COUNTY_ID,ZONE_ID,APN,X,Y
+#### Location Data Sources
 
-table: `permit`  
-joinid,permyear,permdate,county,jurisdictn,apn,address,zip,projname,hcategory,verylow,low,moderate,abovemod,totalunit,infill,affrdunit,deedaffrd,asstaffrd,opnaffrd,tenure,rpa,rhna,rhnacyc,pda,pdaid,tpa,hoa,occertiss,occertyr,occertdt,mapped,notes
+- Assessor's Parcels 2010 & 2015 - Available on gisdb3 under schema 'parcl'   
+- Assessors websites   
+- Geocoder of choice   
 
-#### Excel Spreadsheets  
+#### Administrative Data Sources   
 
-[On Box](https://mtcdrive.box.com/s/95h562kecwliig0yp9dkav1neoqw8zbx)  
+- [Transit Priority Areas](http://mtc.maps.arcgis.com/home/item.html?id=1166cf1467404cf38d0fd6f587f2295f)
+- [Priority Development Areas](http://mtc.maps.arcgis.com/home/item.html?id=09e8dbc3a1284acba6340cbdf9ac88d1) 
+- [Housing Element Sites 2015-2023](http://mtc.maps.arcgis.com/home/item.html?id=1b452ceb06dd426984665dadefa16e33) 
+- [Housing Element Sites 2007-2014](http://mtc.maps.arcgis.com/home/item.html?id=4f8a1d2c0cfd4c878dc3435b27c4a624) 
 
 ### Methodology
 
-#### phase 1
+In practice, we actually did Phase 2 first, but we don't recommend that going forward.  
 
-Start by updating the geocode results for all addresses (in `permit` table in DB) using Google Maps. 
+#### Phase 1 - APN/Parcel Search
 
-Scan the db table and find records that do not have a gmap_lat gmap_long and geocode that address and place the results of that match in the table, including its location type. 
+Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stpointonsurface-geometry-data-type) for every permit. 
 
-[Script here](https://gist.github.com/tombuckley/312f130a87e398f0a2c8af4bb587e02e)
+We did this on gisdb3 using a script like [this](/sql/find_point_on_surface_with_apn_search.sql), for both 2010 and 2015 parcel data. 
 
-### Outcome  
+#### Phase 2 - Address Search   
 
-| description                            | count |
-|----------------------------------------|-------|
-| total_permits                          | 19497 |
-| total_permits_located                  | 19496 |
-| total_permits_located_outside_bay_area | 1030  |
+Update the location for all permit addresses using Google Maps. 
 
-The outcome of Phase 1 is in the housing database on the following tables:  
+Use the functions in [this script](/gcpd/gcpd.py) to geocode records in the SQL server tables, and pull out whatever information you might want from the geocoder such as accuracy or formatted addresses. These scripts assume you have already set up a local adapter for SQL Server and that your python environment is setup to interact with it. Some limited notes on this can be found at the top of [this script](/gcpd/gcpd.py). 
 
-#### Outcome Table Summary   
+There are a number of examples for how to use the functions in [the examples directory](/gcpd/examples/). Pull requests welcome! :)
 
-schema_name|table_or_view|description
-------|-----------|------------
-import|Permits_10_18_2017|housing permits as processed by KS to add the 2016 collection spreadsheets  
-dbo|permits_db|view of `import.Permits_10_18_2017` with spatial features from `geocode_spatial_tables.main`
-geocode_spatial_tables|main|`import.Permits_10_18_2017` joinid's with best guesses for lat/long from `geocoding_summary.all_permits_all_sources`  
-geocoding_summary|all_permits_all_sources|for every permit in `import.Permits_10_18_2017` an xy from each source  
-geocoding_summary|main|a summary of the number of geocoded permits 
-geocode_spatial_tables|outside_bay_area|view of `main` that is outside the bay area  
-import|rhna_2007_2014|summary of RHNA numbers by jurisdiction for 2007-2014  
-import|rhna_2015_2035|summary of RHNA numbers by jurisdiction for 2015-2035  
-geocode_results|gmaps_allyears|a view of both gmaps and gmaps_2016 tables  
-geocode_results|mapzen_allyears|a view of both mapzen and mapzen_2016 tables  
-geocode_results|permitFeature_gmaps|match schema of permitFeature with gmaps lat long for Shape field  
-geocode_results|gmaps|location results by service for `address` field in the `permit` table  
-geocode_results|mapzen|location results by service for `address` field in the `permit` table  
-geocode_results|address_quality_review|location results by service for `address` field in the `permit` table with geocoding results  
-geocode_results|old_permits_not_already_geocoded|housing permit records from 2015 or before that didn't previously (before phase 1) have a latitude or longitude  
-geocode_results|gmaps_2016|location results by service for `address` field in the `permit_2016_update` table  
-geocode_results|mapzen_2016|location results by service for `address` field in the `permit_2016_update` table  
+#### Phase 3 - Assessor Website search  
 
+Asessor websites will contain many of the locations for the most recently permitted sites. For all unlocated permits, we located them by combing through Assessor's websites end entering the XY on a map. We used our own tool do enter the XY's. 
 
+#### Phase 4 - Put the APN, Address and Manual results together in 1 table  
 
+We did this using SQL Views. Since we did multiple rounds of review, our views are more complicated than you need, but they are available [here](/sql/location.sql)
+
+#### Phase 5 - Write summary tables
+
+We wrote some views to make table-making in Tableau easier--casting (int) years to dates, for example.  
+
+See [here](/sql/analysis.sql)   
 
