@@ -299,3 +299,6 @@ def geocode_mapzen_df(permits_df, apikey, rate_limit=25000):
 						index=mapzen_response_s.index)
 	return(mapzen_response_df)
 
+@handle_exception
+def ends_with_ca(address):
+	return(address[-2:] == "CA")
