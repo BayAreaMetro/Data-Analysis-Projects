@@ -47,6 +47,29 @@ Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft
 
 We did this on gisdb3 using a script like [this](/housing_geocoding/sql/find_point_on_surface_with_apn_search.sql), for both 2010 and 2015 parcel data. 
 
+In the future, we recommend using a docker container instead. 
+
+Here's how to set up a docker container with postgis:
+
+```
+docker pull mdillon/postgis
+#os x bash:
+docker run --name postgis1 -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 mdillon/postgis
+
+#get the container id
+docker ps
+
+docker exec -it container_id bash
+
+--then, in container bash:
+psql -U postgres
+CREATE DATABASE analysis_scratch;
+CREATE USER tom;
+ALTER USER "tom" WITH PASSWORD '******';
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO myuser;
+\q
+```
+
 #### Phase 2 - Address Search   
 
 Update the location for all permit addresses using Google Maps. 
