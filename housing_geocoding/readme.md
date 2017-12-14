@@ -45,15 +45,15 @@ In practice, we actually did Phase 2 first, but we don't recommend that going fo
 
 Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stpointonsurface-geometry-data-type) for every permit. 
 
-We did this on gisdb3 using a script like [this](/sql/find_point_on_surface_with_apn_search.sql), for both 2010 and 2015 parcel data. 
+We did this on gisdb3 using a script like [this](/housing_geocoding/sql/find_point_on_surface_with_apn_search.sql), for both 2010 and 2015 parcel data. 
 
 #### Phase 2 - Address Search   
 
 Update the location for all permit addresses using Google Maps. 
 
-Use the functions in [this script](/gcpd/gcpd.py) to geocode records in the SQL server tables, and pull out whatever information you might want from the geocoder such as accuracy or formatted addresses. These scripts assume you have already set up a local adapter for SQL Server and that your python environment is setup to interact with it. Some limited notes on this can be found at the top of [this script](/gcpd/gcpd.py). 
+Use the functions in [this script](/housing_geocoding/gcpd/gcpd.py) to geocode records in the SQL server tables, and pull out whatever information you might want from the geocoder such as accuracy or formatted addresses. These scripts assume you have already set up a local adapter for SQL Server and that your python environment is setup to interact with it. Some limited notes on this can be found at the top of [this script](/housing_geocoding/gcpd/gcpd.py). 
 
-There are a number of examples for how to use the functions in [the examples directory](/gcpd/examples/). Pull requests welcome! :)
+There are a number of examples for how to use the functions in [the examples directory](/housing_geocoding/gcpd/examples/). Pull requests welcome! :)
 
 #### Phase 3 - Assessor Website search  
 
@@ -61,11 +61,11 @@ Asessor websites will contain many of the locations for the most recently permit
 
 #### Phase 4 - Put the APN, Address and Manual results together in 1 table  
 
-We did this using SQL Views. Since we did multiple rounds of review, our views are more complicated than you need, but they are available [here](/sql/location.sql)
+We did this using SQL Views. Since we did multiple rounds of review, our views are more complicated than you need, but they are available [here](/housing_geocoding/sql/location.sql)
 
 #### Phase 5 - Write summary tables
 
 We wrote some views to make table-making in Tableau easier--casting (int) years to dates, for example.  
 
-See [here](/sql/analysis.sql)   
+See [here](/housing_geocoding/sql/analysis.sql)   
 
