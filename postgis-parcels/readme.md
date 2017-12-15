@@ -2,10 +2,6 @@
 
 This is a guide to setting up a local parcel database. 
 
-## Goal 
-
-Setup up a local Parcel database
-
 ## Requirements
 
 This guide is based around MacOS Sierra
