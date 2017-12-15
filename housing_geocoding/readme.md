@@ -49,26 +49,7 @@ We did this on gisdb3 using a script like [this](/housing_geocoding/sql/find_poi
 
 In the future, we recommend using a docker container instead. 
 
-Here's how to set up a docker container with postgis:
-
-```
-docker pull mdillon/postgis
-#os x bash:
-docker run --name postgis1 -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 mdillon/postgis
-
-#get the container id
-docker ps
-
-docker exec -it container_id bash
-
---then, in container bash:
-psql -U postgres
-CREATE DATABASE analysis_scratch;
-CREATE USER tom;
-ALTER USER "tom" WITH PASSWORD '******';
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO myuser;
-\q
-```
+[Here](/postgis-parcels/readme.md) we describe how to set up a docker container with postgis.
 
 #### Phase 2 - Address Search   
 
