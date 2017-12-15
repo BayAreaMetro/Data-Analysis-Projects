@@ -20,7 +20,23 @@ def main():
 	jurisdctn_s = permits_df.jurisdictn
 	zip_s = zip_s.replace('NULL','')
 
+	#######
+	#review attribute domains
+	######
+
+ 	#these dont end with CA
+	a_s[needs_review]
+
+	# permits_df = get_uncoded_gmaps_records(engine)
+
+	# addresses_s = permits_df.address
+	# zip_s = permits_df.zip
+	# jurisdctn_s = permits_df.jurisdictn
+	# zip_s = zip_s.replace('NULL','')
+
 	permits_df['full_address'] = addresses_s + ", " + jurisdctn_s + ", CA " + zip_s
+
+
 
 	gmaps_response_s = gmaps_geocode_df(permits_df, 
 		engine, 
