@@ -48,3 +48,7 @@ psql -h localhost -p 5432 -U tom -W --dbname=analysis_scratch /postgis_parcels/s
 psql -h localhost -p 5432 -U tom -W --dbname=analysis_scratch < parcel.sql
 psql -h localhost -p 5432 -U tom -W --dbname=analysis_scratch /postgis_parcels/add_spatial_index.sql
 ```
+
+## 3) Connect to the database
+
+The database should now be available at the localhost address
