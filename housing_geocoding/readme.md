@@ -21,27 +21,30 @@ Metadata details are in the permitDataDictionary table on the web application da
 
 ##### 2015 Collection
 
-- [Location Data](http://mtc.maps.arcgis.com/home/item.html?id=6b7c7052ef46421ca4054cf9f32ed074)  
-- [Attribute Data](http://mtc.maps.arcgis.com/home/item.html?id=711a0f06cfd84b8fbe226cc6917d0765)  
+- [Location Data](http://opendata.mtc.ca.gov/datasets/residential-building-permits-features)  
+- [Attribute Data](http://opendata.mtc.ca.gov/datasets/residential-building-permits-attributes)  
 
 #### Location Data Sources
 
 - [Assessor's Parcels 2010 & 2015](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/postgis-parcels/readme.md)
-- Assessors websites   
-- [Geocoder](https://github.com/DenisCarriere/geocoder)      
+- Assessors websites  
 
 #### Administrative Data Sources   
 
-- [Transit Priority Areas](http://mtc.maps.arcgis.com/home/item.html?id=1166cf1467404cf38d0fd6f587f2295f)
-- [Priority Development Areas](http://mtc.maps.arcgis.com/home/item.html?id=09e8dbc3a1284acba6340cbdf9ac88d1) 
-- [Housing Element Sites 2015-2023](http://mtc.maps.arcgis.com/home/item.html?id=1b452ceb06dd426984665dadefa16e33) 
-- [Housing Element Sites 2007-2014](http://mtc.maps.arcgis.com/home/item.html?id=4f8a1d2c0cfd4c878dc3435b27c4a624) 
+- [Transit Priority Areas](http://opendata.mtc.ca.gov/datasets/transit-priority-areas-2017)
+- [Priority Development Areas](http://opendata.mtc.ca.gov/datasets/priority-development-areas-current) 
+- [Housing Element Sites 2015-2023](http://opendata.mtc.ca.gov/datasets/regional-housing-need-assessment-2015-2023-housing-element-sites) 
+- [Housing Element Sites 2007-2014](http://opendata.mtc.ca.gov/datasets/regional-housing-need-assessment-2007-2014-housing-element-sites) 
 
 ### Methodology
 
-In practice, we actually did Phase 2 first, but we don't recommend that going forward.  
+The headings below are listed in the order of processing that makes the most sense based on going through this process, although we did some of them in different orders the first time around.  
 
-#### Phase 1 - Data Cleanup  
+#### Download Data
+
+Download all the data listed above. We use a subdirectory in this folder called 'data'.  
+
+#### Data Cleanup  
 
 [Housing_Permit_Data_Exploration.R](/housing_geocoding/R/Housing_Permit_Data_Exploration.R) is how we cleaned and combined all data before starting anything else.  
 
@@ -49,7 +52,7 @@ That script takes the [9 County spreadsheets](https://mtcdrive.box.com/s/8u764gl
 
 It also combines the 2015 Collection data with the 2016 Collection data.  
 
-#### Phase 2 - APN/Parcel Search
+#### APN/Parcel Search
 
 Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stpointonsurface-geometry-data-type) for every permit. 
 
@@ -59,7 +62,7 @@ In the future, we recommend using another database.
 
 [Here](/postgis-parcels/readme.md) we describe how to set up a docker container with postgis that provides the same functionality. 
 
-#### Phase 3 - Address Search   
+#### Address Search   
 
 Update the location for all permit addresses using Google Maps. 
 
@@ -67,15 +70,15 @@ Use the functions in [this script](/housing_geocoding/gcpd/gcpd.py) to geocode r
 
 There are a number of examples for how to use the functions in [the examples directory](/housing_geocoding/gcpd/examples/). Pull requests welcome! :)
 
-#### Phase 4 - Assessor Website search  
+#### Assessor Website search  
 
 Asessor websites will contain many of the locations for the most recently permitted sites. For all unlocated permits, we located them by combing through Assessor's websites end entering the XY on a map. We used our own tool do enter the XY's. 
 
-#### Phase 5 - Put the APN, Address and Manual results together in 1 table  
+#### Put the APN, Address and Manual results together in 1 table  
 
 We did this using SQL Views. Since we did multiple rounds of review, our views are more complicated than you need, but they are available [here](/housing_geocoding/sql/location.sql)
 
-#### Phase 6 - Write summary tables
+#### Write summary tables
 
 We wrote some views to make table-making in Tableau easier--casting (int) years to dates, for example.  
 
