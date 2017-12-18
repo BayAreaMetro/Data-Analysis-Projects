@@ -60,7 +60,9 @@ Environment: R Studio/tidyverse
 
 Input: `Permits2016.csv` scrubbed by the R script. Parcel data. 
 
-Output: `apn_centroids.csv` - about 2763 records with parcel APN's found in 2010 or 2015.  
+Outputs: 
+- `apn_centroids.csv` - about 2763 records with parcel APN's found in 2010 or 2015.  
+- `to_geocode.csv` - about 4441 records with no APN match, needing geocode. 
 
 Script: Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stpointonsurface-geometry-data-type) for every permit. 
 

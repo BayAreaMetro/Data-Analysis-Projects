@@ -170,3 +170,6 @@ SELECT d.joinid,
  WHERE d.rk = 1;
 
 
+CREATE VIEW to_geocode AS
+SELECT * from permits2016
+  WHERE joinid not in (select joinid from apn_centroids_deduped);
