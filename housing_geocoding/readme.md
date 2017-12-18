@@ -46,21 +46,27 @@ Download all the data listed above. We use a subdirectory in this folder called 
 
 #### Data Cleanup  
 
-Use [scrub_2016_permits.R](/housing_geocoding/R/scrub_2016_permits.R) to clean the 2016 data.  
+Input: That script takes the [9 County spreadsheets](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl) and places columns in the same order as well as fixing a few apparent cut and paste errors in important fields like Zip code and/or Address.  
 
-That script takes the [9 County spreadsheets](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl) and places columns in the same order as well as fixing a few apparent cut and paste errors in important fields like Zip code and/or Address.  
+Output: `Permits2016.csv`. 
 
-Optionally, use [summarize_2015_and_2016_permits.R](/housing_geocoding/R/summarize_2015_and_2016_permits.R) to join the 2015 and 2016 data and summarize it.  
+Script: Use [scrub_2016_permits.R](/housing_geocoding/R/scrub_2016_permits.R) to clean the 2016 data.    
+
+Optionally, use [summarize_2015_and_2016_permits.R](/housing_geocoding/R/summarize_2015_and_2016_permits.R) to join the 2015 and 2016 data and summarize it.   
+
+Environment: R Studio/tidyverse  
 
 #### APN/Parcel Search
 
-Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stpointonsurface-geometry-data-type) for every permit. 
+Input: `Permits2016.csv` scrubbed by the R script. Parcel data. 
 
-We did this on gisdb3 using a script like [this](/housing_geocoding/sql/find_point_on_surface_with_apn_search.sql), for both 2010 and 2015 parcel data. 
+Output: `apn_centroids.csv` - about 2763 records with parcel APN's found in 2010 or 2015.  
 
-In the future, we recommend using another database.  
+Script: Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stpointonsurface-geometry-data-type) for every permit. 
 
-[Here](/postgis-parcels/readme.md) we describe how to set up a docker container with postgis that provides the same functionality. 
+You can use [this](/housing_geocoding/sql/find_point_on_surface_with_apn_search.sql) script to do so.
+
+Environment: PostGIS. [Here](/postgis-parcels/readme.md) we describe how to set up a docker container with postgis that provides the same functionality.   
 
 #### Address Search   
 

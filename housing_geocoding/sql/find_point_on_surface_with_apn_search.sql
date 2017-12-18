@@ -47,8 +47,6 @@ CREATE INDEX apn2_2010_idx ON all_2010_parcels_apn_indexed (apn2);
 CREATE INDEX apn3_2010_idx ON all_2010_parcels_apn_indexed (apn3);
 CREATE INDEX apn4_2010_idx ON all_2010_parcels_apn_indexed (apn4);
 
-
-
 -----------------------
 CREATE VIEW all_2015_parcels AS
 SELECT county, apn1, apn2, apn3, apn4, gacres, shape
