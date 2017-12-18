@@ -68,7 +68,7 @@ Script: Use the APN on the permits to locate a [Point on Surface](https://docs.m
 
 You can use [this](/housing_geocoding/sql/find_point_on_surface_with_apn_search.sql) script to do so.
 
-Environment: PostGIS. [Here](/postgis-parcels/readme.md) we describe how to set up a docker container with postgis that provides the same functionality.   
+Environment: PostGIS. [Here](/postgis-parcels/readme.md) we describe how to set up a docker container with parcels. 
 
 #### Address Search   
 
