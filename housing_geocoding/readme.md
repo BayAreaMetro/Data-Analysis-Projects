@@ -48,7 +48,7 @@ Download all the data listed above. We use a subdirectory in this folder called 
 
 Input: That script takes the [9 County spreadsheets](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl) and places columns in the same order as well as fixing a few apparent cut and paste errors in important fields like Zip code and/or Address.  
 
-Output: `Permits2016.csv`. 
+Output: [Permits2016.csv](/housing_geocoding/data/Permits2016.csv) 
 
 Script: Use [scrub_2016_permits.R](/housing_geocoding/R/scrub_2016_permits.R) to clean the 2016 data.    
 
@@ -58,11 +58,11 @@ Environment: R Studio/tidyverse
 
 #### APN/Parcel Search
 
-Input: `Permits2016.csv` scrubbed by the R script. Parcel data. 
+Input: [Permits2016.csv](/housing_geocoding/data/Permits2016.csv) scrubbed by the R script. Parcel data. 
 
 Outputs: 
-- `apn_centroids.csv` - about 2763 records with parcel APN's found in 2010 or 2015.  
-- `to_geocode.csv` - about 4441 records with no APN match, needing geocode. 
+- [apn_centroids.csv](/housing_geocoding/data/apn_centroids.csv) - about 2763 records with parcel APN's found in 2010 or 2015.  
+- [to_geocode.csv](/housing_geocoding/data/to_geocode.csv) - about 4441 records with no APN match, needing geocode. 
 
 Script: Use the APN on the permits to locate a [Point on Surface](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stpointonsurface-geometry-data-type) for every permit. 
 
