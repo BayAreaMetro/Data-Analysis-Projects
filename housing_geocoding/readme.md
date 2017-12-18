@@ -50,7 +50,7 @@ Use [scrub_2016_permits.R](/housing_geocoding/R/scrub_2016_permits.R) to clean t
 
 That script takes the [9 County spreadsheets](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl) and places columns in the same order as well as fixing a few apparent cut and paste errors in important fields like Zip code and/or Address.  
 
-Optionally, use [summarize_2015_and_2016_permits.R](/housing_geocoding/R/summarize_2015_and_2016_permits.R) to join the 205 and 2016 data and summarize it.  
+Optionally, use [summarize_2015_and_2016_permits.R](/housing_geocoding/R/summarize_2015_and_2016_permits.R) to join the 2015 and 2016 data and summarize it.  
 
 #### APN/Parcel Search
 
