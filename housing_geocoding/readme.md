@@ -46,7 +46,7 @@ Download all the data listed above. We use a subdirectory in this folder called 
 
 #### Data Cleanup  
 
-Input: That script takes the [9 County spreadsheets](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl) and places columns in the same order as well as fixing a few apparent cut and paste errors in important fields like Zip code and/or Address.  
+Input: The [9 County spreadsheets](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl). 
 
 Output: [Permits2016.csv](/housing_geocoding/data/Permits2016.csv) 
 
