@@ -46,11 +46,11 @@ Download all the data listed above. We use a subdirectory in this folder called 
 
 #### Data Cleanup  
 
-[Housing_Permit_Data_Exploration.R](/housing_geocoding/R/Housing_Permit_Data_Exploration.R) is how we cleaned and combined all data before starting anything else.  
+Use [scrub_2016_permits.R](/housing_geocoding/R/scrub_2016_permits.R) to clean the 2016 data.  
 
 That script takes the [9 County spreadsheets](https://mtcdrive.box.com/s/8u764glqse2ktnwxkqse9n6cw6tp3hcl) and places columns in the same order as well as fixing a few apparent cut and paste errors in important fields like Zip code and/or Address.  
 
-It also combines the 2015 Collection data with the 2016 Collection data.  
+Optionally, use [summarize_2015_and_2016_permits.R](/housing_geocoding/R/summarize_2015_and_2016_permits.R) to join the 205 and 2016 data and summarize it.  
 
 #### APN/Parcel Search
 
