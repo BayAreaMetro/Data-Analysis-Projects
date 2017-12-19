@@ -1,7 +1,7 @@
 CREATE VIEW analysis.regional_units_and_permits_by_affordability AS
 SELECT
-	joinid,
-	CASE
+  joinid,
+  CASE
     WHEN (verylow > 0 AND low > 0)
     OR (low > 0 AND moderate > 0)
     OR (moderate > 0 AND abovemod > 0)
@@ -9,10 +9,10 @@ SELECT
     OR (verylow > 0 AND abovemod > 0)
     OR (low > 0 AND abovemod > 0)
     THEN 'multiple permit categories'
-		WHEN verylow>0 THEN 'very low'
-		WHEN low>0 THEN 'low'
-		WHEN moderate>0 THEN 'moderate'
-		WHEN abovemod>0 THEN 'above moderate'
+    WHEN verylow>0 THEN 'very low'
+    WHEN low>0 THEN 'low'
+    WHEN moderate>0 THEN 'moderate'
+    WHEN abovemod>0 THEN 'above moderate'
     ELSE 'unknown'
   END AS permit_affordability_category,
   verylow as verylow_units,
@@ -43,14 +43,14 @@ go
 
 
 CREATE VIEW analysis.housing_categories_by_year AS
-	WITH HC_CTE (hcategory, permit_year) AS (
-		SELECT CAST(hcategory as varchar(256)) as hcategory,
-		  CAST(
-		      CAST(permyear AS
-		      	VARCHAR(4)) + '-01-01'
-		      AS date
-	      ) as [permit_year]
-	     FROM import.Permits_10_18_2017)
+  WITH HC_CTE (hcategory, permit_year) AS (
+    SELECT CAST(hcategory as varchar(256)) as hcategory,
+      CAST(
+          CAST(permyear AS
+            VARCHAR(4)) + '-01-01'
+          AS date
+        ) as [permit_year]
+       FROM import.Permits_10_18_2017)
 SELECT hcategory, [permit_year], count(*) as count
 FROM HC_CTE
 GROUP BY hcategory, [permit_year]

@@ -104,18 +104,18 @@ st_astext(st_pointonsurface(st_transform(p.shape, 4326))) as point_on_surface_wk
 st_astext(st_centroid(st_transform(p.shape, 4326))) as centroid_wkt_4326
 FROM (select * from permits2016 hp where apn NOT LIKE 'NULL') hp
 LEFT JOIN all_2010_parcels_apn_indexed p
-			ON hp.apn = p.apn1
-			OR hp.apn = p.apn2
-			OR hp.apn = p.apn3
-			OR hp.apn = p.apn4
-			OR REPLACE(hp.apn, ' ', '') = p.apn1
-			OR REPLACE(hp.apn, ' ', '') = p.apn2
-			OR REPLACE(hp.apn, ' ', '') = p.apn3
-			OR REPLACE(hp.apn, ' ', '') = p.apn4
-			OR REPLACE(hp.apn, ' ', '-') = p.apn1
-			OR REPLACE(hp.apn, ' ', '-') = p.apn2
-			OR REPLACE(hp.apn, ' ', '-') = p.apn3
-			OR REPLACE(hp.apn, ' ', '-') = p.apn4
+      ON hp.apn = p.apn1
+      OR hp.apn = p.apn2
+      OR hp.apn = p.apn3
+      OR hp.apn = p.apn4
+      OR REPLACE(hp.apn, ' ', '') = p.apn1
+      OR REPLACE(hp.apn, ' ', '') = p.apn2
+      OR REPLACE(hp.apn, ' ', '') = p.apn3
+      OR REPLACE(hp.apn, ' ', '') = p.apn4
+      OR REPLACE(hp.apn, ' ', '-') = p.apn1
+      OR REPLACE(hp.apn, ' ', '-') = p.apn2
+      OR REPLACE(hp.apn, ' ', '-') = p.apn3
+      OR REPLACE(hp.apn, ' ', '-') = p.apn4
 WHERE p.shape is not NULL;
 
 CREATE VIEW permits_2015_parcels AS
@@ -126,18 +126,18 @@ st_astext(st_pointonsurface(st_transform(p.shape, 4326))) as point_on_surface_wk
 st_astext(st_centroid(st_transform(p.shape, 4326))) as centroid_wkt_4326
 FROM (select * from permits_12_8_2017 hp where apn NOT LIKE 'NULL') hp
 LEFT JOIN all_2015_parcels_apn_indexed p
-			ON hp.apn = p.apn1
-			OR hp.apn = p.apn2
-			OR hp.apn = p.apn3
-			OR hp.apn = p.apn4
-			OR REPLACE(hp.apn, ' ', '') = p.apn1
-			OR REPLACE(hp.apn, ' ', '') = p.apn2
-			OR REPLACE(hp.apn, ' ', '') = p.apn3
-			OR REPLACE(hp.apn, ' ', '') = p.apn4
-			OR REPLACE(hp.apn, ' ', '-') = p.apn1
-			OR REPLACE(hp.apn, ' ', '-') = p.apn2
-			OR REPLACE(hp.apn, ' ', '-') = p.apn3
-			OR REPLACE(hp.apn, ' ', '-') = p.apn4
+      ON hp.apn = p.apn1
+      OR hp.apn = p.apn2
+      OR hp.apn = p.apn3
+      OR hp.apn = p.apn4
+      OR REPLACE(hp.apn, ' ', '') = p.apn1
+      OR REPLACE(hp.apn, ' ', '') = p.apn2
+      OR REPLACE(hp.apn, ' ', '') = p.apn3
+      OR REPLACE(hp.apn, ' ', '') = p.apn4
+      OR REPLACE(hp.apn, ' ', '-') = p.apn1
+      OR REPLACE(hp.apn, ' ', '-') = p.apn2
+      OR REPLACE(hp.apn, ' ', '-') = p.apn3
+      OR REPLACE(hp.apn, ' ', '-') = p.apn4
 WHERE p.shape is not NULL;
 
 
