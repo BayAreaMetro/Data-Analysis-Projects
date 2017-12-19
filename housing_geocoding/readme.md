@@ -96,3 +96,14 @@ See [here](/housing_geocoding/sql/analysis.sql)
 
 It would be ideal for this process to be executed via 1 script, whether thats a Makefile, an R script, or a Python script. R is probably the easiest. 
 
+#### Analytical work
+
+##### Housing Elements Analysis
+
+load the data into the db:
+
+```
+shp2pgsql -s EPSG:4326 data/Regional_Housing_Need_Assessment_20072014__Housing_Element_Sites/Regional_Housing_Need_Assessment_20072014__Housing_Element_Sites.shp | psql -h localhost -d analysis_scratch -U tom
+shp2pgsql -s EPSG:4326 data/Regional_Housing_Need_Assessment_20152023__Housing_Element_Sites/Regional_Housing_Need_Assessment_20152023__Housing_Element_Sites.shp | psql -h localhost -d analysis_scratch -U tom
+```
+
