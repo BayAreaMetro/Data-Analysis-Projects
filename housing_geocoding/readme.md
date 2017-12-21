@@ -80,7 +80,16 @@ There are a number of examples for how to use the functions in [the examples dir
 
 #### Assessor Website search  
 
-Asessor websites will contain many of the locations for the most recently permitted sites. For all unlocated permits, we located them by combing through Assessor's websites end entering the XY on a map. We used our own tool do enter the XY's. 
+To locate permitted projects not located through afforementioned geocoding processes, we relied on Assessor websites, or Planning and Development Department websites to obtain information. All county sites offered interactive parcel lookup tools which provided the spatial information necessary to manually geocode remaining permitted projects using our in-house mapping tool called [Project Mapper](http://project-mapper.us-west-2.elasticbeanstalk.com/). The interactive parcel lookup tools are listed below by county. 
+
+[Alameda County Parcel Lookup](http://gis.acgov.org/Html5Viewer/index.html?viewer=parcel_viewer)
+[Contra Costa County Parcel Lookup](https://ccmap.cccounty.us/Html5/index.html?viewer=CCMAP)
+[Marin County Parcel Lookup](https://www.marinmap.org/Html5Viewer/Index.html?viewer=smmdataviewer) 
+[Napa County Parcel Lookup](http://gis.napa.ca.gov/Html5Viewer/Index.html?viewer=Public_HTML)
+[San Francisco County Parcel Lookup](http://propertymap.sfplanning.org/)
+[San Mateo County Parcel Lookup](http://maps.smcgov.org/GE_4_4_0_Html5Viewer_2_5_0_public/?viewer=raster)
+[Santa Clara County Parcel Lookup](http://www.sccpropertyinfo.org/)
+[Sonoma County Parcel Lookup](http://imsportal.sonoma-county.org/ActiveMap/)
 
 #### Put the APN, Address and Manual results together in 1 table  
 
