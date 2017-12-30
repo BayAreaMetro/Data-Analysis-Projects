@@ -99,4 +99,4 @@ The dataset was developed using several sources that include Planned Transit Sys
 
 ## Background    
 
-For further information on any of the above, please read the detailed documentation [here](https://github.com/BayAreaMetro/RegionalTransitDatabase/blob/b5c40a30e3a2bf03e0f758e73cc10419048ca41c/docs/transit_priority_areas.md)
+For further information on any of the above, please read the detailed documentation [here](https://github.com/BayAreaMetro/RegionalTransitDatabase/blob/master/docs/transit_priority_areas.md)
