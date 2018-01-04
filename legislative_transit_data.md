@@ -95,7 +95,7 @@ The dataset was developed using several sources that include Planned Transit Sys
 
 ### Data  
 
-[Transit Priority Areas 2017](http://mtc.maps.arcgis.com/home/item.html?id=1166cf1467404cf38d0fd6f587f2295f)    
+[Transit Priority Areas 2017](http://mtc.maps.arcgis.com/home/item.html?id=bb05b16a46274e3bb69f71ad4df0fbd5)    
 
 ## Background    
 
