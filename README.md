@@ -1,3 +1,7 @@
+### Description
+
+This is a collection of links to projects to extract, transform, and load data. 
+
 ### Category
 
 [General](#general)  
@@ -18,7 +22,7 @@ Output: Multiple, Bus Frequency by Geometry
 Dependencies: ~SQL Server~, Python, R, GDAL
 
 ##### Sub-Projects  
-- [State of California Code Transit Service Definition Data](legislative_transit_data.md) 
+- [State of California Code Transit Service Definition Areas](legislative_transit_data.md) 
 - [Routes, Stops, and Frequencies by Transit Provider from 2008 to 2017](historical_transit_data.md) 
 
 ##### Vehicles
@@ -29,13 +33,11 @@ Input: Excel Spreadsheets of Traffic Data, Road Geometries
 Output: Traffic by Geometry      
 Dependencies: Python, Pandas  
 
-###### Two Bridge Users Study
-[Scripts](https://github.com/BayAreaMetro/bridge-transactions/tree/master/Two-Bridge-Users)    
-[Readme](https://mtcdrive.app.box.com/notes/226792245627)  
-Source: MTC FasTrak data  
-Input: Bridge Transactions  
-Output: An estimate of users crossing 2 or more distinct bridges per day  
-Dependencies: R   
+###### [bridge-transactions](bridge-transactions/)    
+Source: BATA  
+Input: Transactions    
+Output: Various Summaries  
+Dependencies: R, Python, Tableau  
 
 #### Policy:  
 
@@ -51,19 +53,20 @@ Input: Zoning/GP, Parcel Geometry
 Output: Zoning by Parcel Geometry   
 Dependencies: *nix, PostGIS, GDAL, Make
 
-[Parcels (2010)](https://github.com/MetropolitanTransportationCommission/bayarea_urbansim/blob/c3b249c54e8bae14737c6840dc8ff70a858a887f/data_regeneration/Makefile)   
+[Parcels (2010,2015)](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/postgis-parcels)   
 Source: County Governments   
-Input: 9 Tables of Parcel Geometries by County   
-Output: 1 Table of Parcel Geometries by Region   
-Dependencies: *nix, PostGIS, GDAL, *nix, Make
+Input: Edited PGDump from @msmithMTC's parcl schema on GISDB3   
+Output: Docker machine running PostGIS with parcels by county    
+Dependencies: Docker, Ubuntu, PostGIS
 
-[Affordable Housing Locations (2016)](https://github.com/MetropolitanTransportationCommission/housing/tree/master/ahs)   
+[Affordable Housing Locations (2016)](https://github.com/MetropolitanTransportationCommission/housing/)   
 Input: Multiple Spreadsheets  
 Output: Records Deduplicated and Located by Address  
-Dependencies: Python, Pandas  
+Dependencies: Python, Pandas, R  
 
 [Residential Real Estate Prices](https://github.com/MetropolitanTransportationCommission/motm/tree/master/2017_04#redfinplaces)    
 Source: Redfin    
 Input: Census Places Geometries (TomTom), CSV Export of [Tableau Data file](https://www.redfin.com/blog/data-center)    
 Output: Residential Sale Prices by Place Geometry      
 Dependencies: Python, Pandas
+

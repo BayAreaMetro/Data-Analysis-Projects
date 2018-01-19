@@ -6,3 +6,10 @@ Lane designations for the bridges through time is constructed using this [Python
 The `Consume` directory processes the data and then combines the data into summaries of typical weekdays.  The `Summaries` directory contains a [Tableau workbook](https://github.com/MetropolitanTransportationCommission/bridge-transactions/blob/6974c83e4c44afa05cd1a0f92e59392e9db84775/Summaries/Bridge%20Transactions%20by%20Lane%20Designation.twb) which presents the data; an interactive version of the Tableau workbook is [here](http://analytics.mtc.ca.gov/foswiki/Main/TypicalWeekdayBridgeTransactions). The data is available in the 'bridge-transactions' folder [here](https://mtcdrive.box.com/share-data).
 
 
+###### Two Bridge Users Study  
+[Scripts](https://github.com/BayAreaMetro/bridge-transactions/tree/master/Two-Bridge-Users)    
+[Readme](https://mtcdrive.app.box.com/notes/226792245627)  
+Source: MTC FasTrak data  
+Input: Bridge Transactions  
+Output: An estimate of users crossing 2 or more distinct bridges per day  
+Dependencies: R   
