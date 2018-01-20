@@ -22,6 +22,17 @@ setwd("~/Box/DataViz Projects/Data Analysis and Visualization/Fastrak Users")
 ###########################################################################################
 #FUNCTIONS
 ###########################################################################################
+#from https://stackoverflow.com/questions/12945687/read-all-worksheets-in-an-excel-workbook-into-an-r-list-with-data-frames#12945838
+read_excel_allsheets <- function(filename, column_types) {
+  sheets <- readxl::excel_sheets(filename)
+  x <-    lapply(sheets, 
+                 function(X) readxl::read_excel(filename, 
+                                                sheet = X, 
+                                                col_types = column_types))
+  names(x) <- sheets
+  return(x)
+}
+
 
 multidate <- function(data, formats){
   a<-list()
@@ -68,54 +79,21 @@ names(us_zips) <- c("POSTCODE", "County")
 # Read in Data from Spreadsheets for FY 16/17
 ###########################################################################################
 
-
-x2017_Jan <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2017-Jan", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2017_Feb <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2017-Feb", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2017_Mar <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2017-Mar", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2017_Apr <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2017-Apr", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2017_May <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2017-May", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2017_Jun <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2017-Jun", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2016_Jul <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2016-Jul", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2016_Aug <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2016-Aug", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2016_Sep <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2017-Sep", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2016_Oct <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2016-Oct", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2016_Nov <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2016-Nov", col_types = c("text", "numeric", "date", "text", "numeric"))
-x2016_Dec <- read_excel("unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx", sheet = "2016-Dec", col_types = c("text", "numeric", "date", "text", "numeric"))
-
-
-BridgeTransactions2017 <- rbind(x2017_Jan,x2017_Feb,x2017_Mar,
-                                x2017_Apr,x2017_May,x2017_Jun)
-
-
+column_types = c("text", "numeric", "date", "text", "numeric")
+filename <- "unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx"
+mysheets <- read_excel_allsheets(filename,column_types)
+#from https://stackoverflow.com/questions/2851327/convert-a-list-of-data-frames-into-one-data-frame#2851434
+library(plyr)
+BridgeTransactionsFY16_17 <- ldply(mysheets, data.frame)
+rm(mysheets)
 
 # Rename Columns for consistency across all years
-names(BridgeTransactions2017) <- c("Plaza","Bridge","Date","POSTCODE", "Transactions")
-BridgeTransactions2017 <- BridgeTransactions2017[,-1]
+names(BridgeTransactionsFY16_17) <- c("month_sheet","Plaza Name","Bridge","Date","POSTCODE", "Transactions")
+
+BridgeTransactionsFY16_17 <- BridgeTransactionsFY16_17[,-2]
 # Reorder Columns to common structure for consistency across all years
 # POSTCODE, Bridge, Date, Transactions
-BridgeTransactions2017 <- BridgeTransactions2017[c(3,2,1,4)]
-
-
-
-BridgeTransactions2016 <- rbind(x2016_Jul,x2016_Aug,x2016_Sep,
-                                x2016_Oct,x2016_Nov,x2016_Dec)
-
-BridgeTransactions2016 <- BridgeTransactions2016[,-1]
-names(BridgeTransactions2016) <- c("Bridge","Date","POSTCODE", "Transactions")
-
-# Reorder Columns to common structure for consistency across all years
-# POSTCODE, Bridge, Date, Transactions
-BridgeTransactions2016 <- BridgeTransactions2016[c(3,2,1,4)]
-
-
-BridgeTransactionsFY16_17 <- rbind(BridgeTransactions2016, BridgeTransactions2017)
-
-# Cleanup dfs
-rm(BridgeTransactions2016, BridgeTransactions2017)
-rm(x2017_Jan,x2017_Feb,x2017_Mar,
-   x2017_Apr,x2017_May,x2017_Jun)
-rm(x2016_Jul,x2016_Aug,x2016_Sep,
-   x2016_Oct,x2016_Nov,x2016_Dec)
+BridgeTransactionsFY16_17 <- BridgeTransactionsFY16_17[c('POSTCODE', 'Bridge', 'Date', 'Transactions')]
 
 BridgeTransactionsFY16_17$FiscalYear <- "FY16/17"
 
@@ -124,78 +102,31 @@ BridgeTransactionsFY16_17$FiscalYear <- "FY16/17"
 ###########################################################################################
 # Read in Data from Spreadsheets for FY 15/16
 ###########################################################################################
-x2016_Jan <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx", sheet = "2016-JAN", col_types = c("date", "text", "numeric", "text", "numeric"))
-x2016_Feb <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx", sheet = "2016-FEB", col_types = c("date", "text", "numeric", "text", "numeric"))
-x2016_Mar <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx", sheet = "2016-Mar", col_types = c("date", "text", "numeric", "text", "numeric"))
-x2016_Apr <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx", sheet = "2016-Apr", col_types = c("date", "text", "numeric", "text", "numeric"))
-x2016_May <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx", sheet = "2016-May", col_types = c("date", "text", "numeric", "text", "numeric"))
-x2016_Jun <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx", sheet = "2016-Jun", col_types = c("date", "text", "numeric", "text", "numeric"))
+column_types = c("date", "text", "numeric", "text", "numeric")
+filename <- "unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx"
+mysheets2 <- read_excel_allsheets(filename,column_types)
+#from https://stackoverflow.com/questions/2851327/convert-a-list-of-data-frames-into-one-data-frame#2851434
+library(plyr)
+BridgeTransactionsFY15_16_1 <- ldply(mysheets2, data.frame)
+rm(mysheets2)
 
-BridgeTransactionsFY15_16_1 <- rbind(x2016_Jan,x2016_Feb,x2016_Mar,
-                                     x2016_Apr,x2016_May,x2016_Jun)
+#thought: we should consider renaming from existing names explicitly, 
+#and maybe do it on the excel sheet read to be more robust against random headers
+names(BridgeTransactionsFY15_16_1) <- c("month_sheet","Date","Plaza Agency","Bridge","POSTCODE", "Transactions")
+BridgeTransactionsFY15_16_1 <- BridgeTransactionsFY15_16_1[-3]
 
-
-names(BridgeTransactionsFY15_16_1) <- c("Date","Plaza","Bridge","POSTCODE", "Transactions")
-BridgeTransactionsFY15_16_1 <- BridgeTransactionsFY15_16_1[,-2]
-
-#BridgeTransactionsFY15_16_1[is.na(BridgeTransactionsFY15_16_1$Date),]
-x2015_Jul <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", sheet = "2015-JUL", col_types = c("date", "text", "numeric", "text", "numeric"))
+column_types <- c("date", "text", "numeric", "text", "numeric")
+mysheets3 <- read_excel_allsheets("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", column_types)
+library(plyr)
+BridgeTransactionsFY15_16 <- ldply(mysheets3, data.frame)
 #Column Fixes
-x2015_Jul <- x2015_Jul[c(4,1,3,5,2)]
-x2015_Jul <- x2015_Jul[-5]
-names(x2015_Jul) <- c("POSTCODE","Date","Bridge", "Transactions")
-# x2015_Jul$Date <- as.character(x2015_Jul$Date)
-# x2015_Jul$POSTCODE <- as.character(x2015_Jul$POSTCODE)
+setnames(BridgeTransactionsFY15_16, old=c(".id","Txn.Date","Plaza.Agency","Plaza.Id","Zip.Code","Count"), 
+         new=c("month_sheet","Date","Plaza Agency","Bridge","POSTCODE","Transactions"))
 
-x2015_Aug <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", sheet = "2015-AUG", col_types = c("date", "text", "numeric", "text", "numeric"))
-#Column Fixes
-x2015_Aug <- x2015_Aug[c(4,1,3,5,2)]
-x2015_Aug <- x2015_Aug[-5]
-names(x2015_Aug) <- c("POSTCODE","Date","Bridge", "Transactions")
-# x2015_Aug$Date <- as.character(x2015_Aug$Date)
-# x2015_Aug$POSTCODE <- as.character(x2015_Aug$POSTCODE)
+BridgeTransactionsFY15_16 <- BridgeTransactionsFY15_16[-3]
 
-x2015_Sep <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", sheet = "2015-Sep", col_types = c("date", "text", "numeric", "text", "numeric"))
-#Column Fixes
-x2015_Sep <- x2015_Sep[c(4,1,3,5,2)]
-x2015_Sep <- x2015_Sep[-5]
-names(x2015_Sep) <- c("POSTCODE","Date","Bridge", "Transactions")
-# x2015_Sep$Date <- as.character(x2015_Sep$Date)
-# x2015_Sep$POSTCODE <- as.character(x2015_Sep$POSTCODE)
-
-x2015_Oct <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", sheet = "2015-Oct", col_types = c("date", "text", "numeric", "text", "numeric"))
-#Column Fixes
-x2015_Oct <- x2015_Oct[c(4,1,3,5,2)]
-x2015_Oct <- x2015_Oct[-5]
-names(x2015_Oct) <- c("POSTCODE","Date","Bridge", "Transactions")
-# x2015_Oct$Date <- as.character(x2015_Oct$Date)
-# x2015_Oct$POSTCODE <- as.character(x2015_Oct$POSTCODE)
-
-x2015_Nov <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", sheet = "2015-Nov", col_types = c("date", "text", "numeric", "text", "numeric"))
-#Column Fixes
-x2015_Nov <- x2015_Nov[c(4,1,3,5,2)]
-x2015_Nov <- x2015_Nov[-5]
-names(x2015_Nov) <- c("POSTCODE","Date","Bridge", "Transactions")
-# x2015_Nov$Date <- as.character(x2015_Nov$Date)
-# x2015_Nov$POSTCODE <- as.character(x2015_Nov$POSTCODE)
-
-x2015_Dec <- read_excel("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", sheet = "2015-Dec", col_types = c("date", "text", "numeric", "text", "numeric"))
-#Column Fixes
-x2015_Dec <- x2015_Dec[c(4,1,3,5,2)]
-x2015_Dec <- x2015_Dec[-5]
-names(x2015_Dec) <- c("POSTCODE","Date","Bridge", "Transactions")
-# x2015_Dec$Date <- as.character(x2015_Dec$Date)
-# x2015_Dec$POSTCODE <- as.character(x2015_Dec$POSTCODE)
-
-BridgeTransactionsFY15_16 <- rbind(x2015_Jul,x2015_Aug,x2015_Sep,
-                                   x2015_Oct,x2015_Nov,x2015_Dec,
+BridgeTransactionsFY15_16 <- rbind(BridgeTransactionsFY15_16,
                                    BridgeTransactionsFY15_16_1)
-#Cleanup DF
-rm(x2015_Jul,x2015_Aug,x2015_Sep,
-   x2015_Oct,x2015_Nov,x2015_Dec,
-   BridgeTransactionsFY15_16_1,
-   x2016_Jan,x2016_Feb,x2016_Mar,
-   x2016_Apr,x2016_May,x2016_Jun)
 
 BridgeTransactionsFY15_16$FiscalYear <- "FY15/16"
 #End of FY15/16
