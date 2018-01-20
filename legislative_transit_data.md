@@ -43,8 +43,8 @@ Below we provide the relevant "corridors" as 1/4 mile and 1/2 mile from the rout
 
 Some legislation (e.g. [Transit Priority Project-Eligible Areas 2017](#Transit-Priority-Project-Eligible-Areas-2017)) refers to a 'corridor' as a 1/4 mile and some as a 1/2 mile (e.g [Infill Opportunity Zone-Eligible Areas 2017](#Infill-Opportunity-Zone-Eligible-Areas-2017)). 
 
-- [High Quality Transit Corridors - 1/4 Mile (2017)(Draft)](http://mtc.maps.arcgis.com/home/item.html?id=3ed055a3cff0415384bf4ce744b6f52b)   
-- [High Quality Transit Corridors - 1/2 Mile (2017)(Draft)](http://mtc.maps.arcgis.com/home/item.html?id=6b9d4597489d451187f49525f1a7b6cf)  
+- [High Quality Transit Corridors - 1/2 Mile (2017)(Draft)](http://mtc.maps.arcgis.com/home/item.html?id=3ed055a3cff0415384bf4ce744b6f52b)   
+- [High Quality Transit Corridors - 1/4 Mile (2017)(Draft)](http://mtc.maps.arcgis.com/home/item.html?id=6b9d4597489d451187f49525f1a7b6cf)  
 
 ## Infill Opportunity Zone-Eligible Areas 2017
 
