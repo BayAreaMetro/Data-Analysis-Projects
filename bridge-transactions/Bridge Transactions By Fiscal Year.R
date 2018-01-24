@@ -3,25 +3,66 @@
 #put everything else in an archived folder
 
 
-library(dplyr)
-library(sqldf)
-library(tidyr)
-library(data.table)
-library(lubridate)
-library(WriteXLS)
-library(lettercase)
-library(stringi)
-library(reshape2)
-library(readr)
-library(readxl)
-library(anytime)
-library(janitor)
+# library(dplyr)
+# library(sqldf)
+# library(tidyr)
+# library(data.table)
+# library(lubridate)
+# library(WriteXLS)
+# library(lettercase)
+# library(stringi)
+# library(reshape2)
+# library(readr)
+# library(readxl)
+# library(anytime)
+# library(janitor)
 
 setwd("~/Box/DataViz Projects/Data Analysis and Visualization/Fastrak Users")
+
+########
+##Global Variables
+########
+
+bridges <- c("Golden Gate Bridge",
+             "Antioch Bridge",
+             "Richmond-San Rafael Bridge",
+             "San Francisco-Oakland Bay Bridge",
+             "San Mateo-Hayward Bridge",
+             "Dumbarton Bridge",
+             "Carquinez Bridge",
+             "Benicia-Martinez Bridge")
+
+names(bridges) <- c("1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8")
 
 ###########################################################################################
 #FUNCTIONS
 ###########################################################################################
+###rename bay area counties by geoid
+
+# Simple Negate Function
+'%ni%' <- Negate('%in%')
+
+#takes a dataframe with columns county and state and renames the GEOID integer to something more human readable 
+county_geoid_to_name <- function(df1) {
+  df1 %>% mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "001", "Alameda", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "013", "Contra Costa", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "041", "Marin", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "055", "Napa", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "075", "San Francisco", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "081", "San Mateo", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "085", "Santa Clara", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "095", "Solano", COUNTY)) %>%
+          mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "097", "Sonoma", COUNTY)) %>%
+          mutate(COUNTY = ifelse(GEOID %ni% ba_county_geoid, "Out of Region", COUNTY))
+}
+
 #from https://stackoverflow.com/questions/12945687/read-all-worksheets-in-an-excel-workbook-into-an-r-list-with-data-frames#12945838
 read_excel_allsheets <- function(filename, column_types) {
   sheets <- readxl::excel_sheets(filename)
@@ -43,38 +84,31 @@ multidate <- function(data, formats){
   a[[1]]
 }
 
-# Simple Negate Function
-'%ni%' <- Negate('%in%')
+
 
 ###########################################################################################
-#DATA
+# DATA
 ###########################################################################################
 # County Boundaries
 ###########################################################################################
 # Import County / Postcode table for County to Zip Matches
-# ADD: out of region totals
-# and classify people that are coming from out of region
 ba_county_geoid <- c('6041','6055','6095','6097','6081','6001','6085','6013','6075')
-us_zips <- read_csv("processed/zcta_county_rel_10.csv", col_names = TRUE)
+
+library(readr)
+us_zips <- read_csv("processed/zcta_county_rel_10.csv", col_names = TRUE, warning=FALSE)
 us_zips <- us_zips[,c('STATE','GEOID','ZCTA5','COUNTY','ZPOPPCT')]
 
+library(dplyr)
 #take row with top zpop value 
 us_zips <- us_zips %>% group_by(ZCTA5) %>% top_n(1, ZPOPPCT)
 
-us_zips %>% 
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "001", "Alameda", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "013", "Contra Costa", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "041", "Marin", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "055", "Napa", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "075", "San Francisco", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "081", "San Mateo", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "085", "Santa Clara", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "095", "Solano", COUNTY)) %>%
-  mutate(COUNTY = ifelse(STATE == 6 && COUNTY == "097", "Sonoma", COUNTY)) %>%
-  mutate(COUNTY = ifelse(GEOID %ni% ba_county_geoid, "Out of Region", COUNTY)) -> us_zips
+#set county to a human readable string value
+#name non-bay-area counties "Out of Region"
+us_zips %>% county_geoid_to_name -> us_zips
 
 us_zips <- us_zips[,3:4]
 names(us_zips) <- c("POSTCODE", "County")
+
 ###########################################################################################
 # Read in Data from Spreadsheets for FY 16/17
 ###########################################################################################
@@ -83,6 +117,7 @@ column_types = c("text", "numeric", "date", "text", "numeric")
 filename <- "unprocessed/Sylvia/FY16-17 Query/Data_Jul-2016_To_Jun-2017.xlsx"
 mysheets <- read_excel_allsheets(filename,column_types)
 #from https://stackoverflow.com/questions/2851327/convert-a-list-of-data-frames-into-one-data-frame#2851434
+
 library(plyr)
 BridgeTransactionsFY16_17 <- ldply(mysheets, data.frame)
 rm(mysheets)
@@ -90,43 +125,50 @@ rm(mysheets)
 # Rename Columns for consistency across all years
 names(BridgeTransactionsFY16_17) <- c("month_sheet","Plaza Name","Bridge","Date","POSTCODE", "Transactions")
 
-BridgeTransactionsFY16_17 <- BridgeTransactionsFY16_17[,-2]
 # Reorder Columns to common structure for consistency across all years
 # POSTCODE, Bridge, Date, Transactions
+# also drops Plaza Name
 BridgeTransactionsFY16_17 <- BridgeTransactionsFY16_17[c('POSTCODE', 'Bridge', 'Date', 'Transactions')]
 
 BridgeTransactionsFY16_17$FiscalYear <- "FY16/17"
 
 #BridgeTransactionsFY16_17[is.na(BridgeTransactionsFY16_17$Date),]
 #End of FY 16/17
+
 ###########################################################################################
 # Read in Data from Spreadsheets for FY 15/16
 ###########################################################################################
 column_types = c("date", "text", "numeric", "text", "numeric")
 filename <- "unprocessed/Sylvia/FY15-16 Query/Query_2016_Jan-Jun.xlsx"
 mysheets2 <- read_excel_allsheets(filename,column_types)
-#from https://stackoverflow.com/questions/2851327/convert-a-list-of-data-frames-into-one-data-frame#2851434
+
 library(plyr)
 BridgeTransactionsFY15_16_1 <- ldply(mysheets2, data.frame)
 rm(mysheets2)
 
-#thought: we should consider renaming from existing names explicitly, 
-#and maybe do it on the excel sheet read to be more robust against random headers
-names(BridgeTransactionsFY15_16_1) <- c("month_sheet","Date","Plaza Agency","Bridge","POSTCODE", "Transactions")
-BridgeTransactionsFY15_16_1 <- BridgeTransactionsFY15_16_1[-3]
+library(data.table)
+setnames(BridgeTransactionsFY15_16_1, old=c(".id","Txn.Date","Plaza.Agency","Plaza.Id","Zip.Code","Count"), 
+         new=c("month_sheet","Date","Plaza Agency","Bridge","POSTCODE","Transactions"))
+
+# Reorder Columns to common structure for consistency across all years
+# POSTCODE, Bridge, Date, Transactions
+# also drops Plaza Agency
+BridgeTransactionsFY15_16_1 <- BridgeTransactionsFY15_16_1[c('POSTCODE', 'Bridge', 'Date', 'Transactions')]
 
 column_types <- c("date", "text", "numeric", "text", "numeric")
 mysheets3 <- read_excel_allsheets("unprocessed/Sylvia/FY15-16 Query/Query 2015-Jul-Dec.xlsx", column_types)
 library(plyr)
 BridgeTransactionsFY15_16 <- ldply(mysheets3, data.frame)
-#Column Fixes
+
 setnames(BridgeTransactionsFY15_16, old=c(".id","Txn.Date","Plaza.Agency","Plaza.Id","Zip.Code","Count"), 
          new=c("month_sheet","Date","Plaza Agency","Bridge","POSTCODE","Transactions"))
 
-BridgeTransactionsFY15_16 <- BridgeTransactionsFY15_16[-3]
+BridgeTransactionsFY15_16 <- BridgeTransactionsFY15_16[,c("POSTCODE","Date","Bridge", "Transactions")]
 
 BridgeTransactionsFY15_16 <- rbind(BridgeTransactionsFY15_16,
                                    BridgeTransactionsFY15_16_1)
+
+rm(BridgeTransactionsFY15_16_1)
 
 BridgeTransactionsFY15_16$FiscalYear <- "FY15/16"
 #End of FY15/16
@@ -289,6 +331,7 @@ length(which(is.na(BridgeTransactionsFY16_17$Date)))
 ###########################################################################################
 # Reassign Bridge attribute from Code to Name
 ###########################################################################################
+
 BridgeTransactions$Bridge[BridgeTransactions$Bridge == "02" | BridgeTransactions$Bridge == "2"] <- "Antioch Bridge"
 BridgeTransactions$Bridge[BridgeTransactions$Bridge == "03" | BridgeTransactions$Bridge == "3"] <- "Richmond-San Rafael Bridge"
 BridgeTransactions$Bridge[BridgeTransactions$Bridge == "04" | BridgeTransactions$Bridge == "4"] <- "San Francisco-Oakland Bay Bridge"
