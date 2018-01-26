@@ -18,7 +18,7 @@ racevars <- c(Total = "B03002_001",
 
 sfdf1 <- get_acs(geography = "tract", variables = racevars,
              state = "CA", county=counties,
-             year=2016, keep_geo_vars=TRUE,
+             year=2016,
              output="wide",
              survey = "acs5", geometry=TRUE)
 
