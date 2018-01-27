@@ -25,8 +25,3 @@ spelled_right <- hunspell_check(housing_jurisdiction_names,
 city_names_to_review <- unique(df1$jurisdictn[!spelled_right])
 print(city_names_to_review)
 
-#these all seem fine.
-#so add them into the dictionary and check again
-
-spelled_right <- hunspell_check(df1$jurisdictn, dict = dictionary(add_words = pldf$NAME))
-
