@@ -71,6 +71,8 @@ tracts <- rename(tracts,tract = TRACTCE00)
 tracts <- sf::st_transform(tracts, crs=26910)
 detach("package:tigris", unload=TRUE)
 
+knitr::kable(table(st_is_valid(tracts)))
+
 #
 #
 # Script
