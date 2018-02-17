@@ -45,9 +45,8 @@ knitr::kable(table(st_is_valid(taz)))
 
 plot(taz[!st_is_valid(taz),], max.plot=1)
 
-# geom looks like visually
-# lets make note of the taz_id to later
-# whether it intersects
+# geom looks OK visually
+# lets make note of the taz_id to review later
 
 invalid_taz_id <- taz1454[!st_is_valid(taz1454),]$TAZ1454
 
