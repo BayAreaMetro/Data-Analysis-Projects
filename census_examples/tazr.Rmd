@@ -5,15 +5,11 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 ## Goal
 
-Our goal will be to reproduce an equivalence table relating year 2000 Bay Area Census Tracts to MTC's Transportation Analysis Zones (TAZ). 
+Our goal will be to reproduce an equivalence table relating year 2000 Bay Area Census Tracts to MTC's
+Transportation Analysis Zones (TAZ).
 
-The long-term goal is to be able to reproduce this lookup table for any census geographies. It may also be useful to reproduce the table for other kinds of geographies (e.g. jurisdictions).
-
-For convenience, we've packaged the year 2000 tract-taz lookup table and the TAZ geometries in this R package. 
-
-If you'd like to look at the raw data please check out the data-raw/ directory for this project on github. We've generally tried to follow the guidelines for building data in R packages outlined here: http://r-pkgs.had.co.nz/data.html
-
-### Lookup Table
+The long-term goal is to be able to reproduce this lookup table for any census geographies.
+It may also be useful to reproduce the table for other kinds of geographies (e.g. jurisdictions).
 
 Lets inspect the lookup table that we want to reproduce. 
 
