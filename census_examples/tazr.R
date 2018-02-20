@@ -165,11 +165,21 @@ plot(tazs1,
      col = sf.colors(categorical = TRUE, alpha = .5),
      add=TRUE)
 
-intersection <- st_intersection(tract1,tazs1)
-intersection$area <- st_area(intersection)
-
-st_geometry(intersection) <- NULL
-
-knitr::kable(intersection)
-
 ##when we plot it, its clear that the taz extends slightly into nearby tracts
+
+intersection_df <- st_intersection(tract1,tazs1)
+intersection_df$area <- st_area(intersection_df)
+
+st_geometry(intersection_df) <- NULL
+
+knitr::kable(intersection_df)
+# here's what that intersection looks like in meters squared
+# how do we want to resolve these intersections?
+# just have each tract get the 6 taz's with the largest areas of intersection?
+# |       |tract  | taz|            area|
+#   |:------|:------|---:|---------------:|
+#   |4649   |010100 |  23|    897.9859 m^2|
+#   |4649.1 |010100 |  41| 779385.7507 m^2|
+#   |4649.2 |010100 |  39|  11020.0877 m^2|
+#   |4649.3 |010100 |  40|   4619.3630 m^2|
+#   |4649.4 |010100 |  38|  12370.7476 m^2|
