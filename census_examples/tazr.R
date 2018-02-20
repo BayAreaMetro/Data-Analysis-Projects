@@ -35,7 +35,7 @@ library(sf)
 
 taz1454 <- st_read("https://opendata.arcgis.com/datasets/b85ba4d43f9843128d3542260d9a2f1f_0.geojson")
 
-knitr::kable(table(st_is_valid(taz)))
+knitr::kable(table(st_is_valid(taz1454)))
 # |Var1  | Freq|
 # |:-----|----:|
 # |FALSE |    1|
@@ -44,7 +44,7 @@ knitr::kable(table(st_is_valid(taz)))
 # one of the TAZ geometries is "invalid".
 # this is probably not important but could be, so lets look into it
 
-plot(taz[!st_is_valid(taz),], max.plot=1)
+plot(taz1454[!st_is_valid(taz1454),], max.plot=1)
 
 # geom looks OK visually
 # lets make note of the taz_id to review later
