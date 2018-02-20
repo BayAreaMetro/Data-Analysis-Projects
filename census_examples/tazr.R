@@ -67,7 +67,7 @@ library(tigris)
 counties=c("01","13","41","55","75","81","85","95","97")
 tracts <- tigris::tracts("CA", counties, class="sf", year=2000)
 tracts <- dplyr::select(tracts,TRACTCE00)
-tracts <- rename(tracts,tract = TRACTCE00)
+tracts <- dplyr::rename(tracts,tract = TRACTCE00)
 tracts <- sf::st_transform(tracts, crs=26910)
 detach("package:tigris", unload=TRUE)
 
@@ -83,8 +83,10 @@ knitr::kable(table(st_is_valid(tracts)))
 #clean up the headers and data
 ## ------------------------------------------------------------------------
 taz1454 <- dplyr::select(taz1454,TAZ1454)
-taz <- dplyr::rename(taz1454, taz = TAZ1454)
+taz1454 <- dplyr::rename(taz1454, taz = TAZ1454)
 print(head(taz1454))
+
+taz1454 <- sf::st_transform(taz1454, crs=26910)
 
 ## ------------------------------------------------------------------------
 tt <- sf::st_join(tracts,taz1454)
@@ -93,7 +95,7 @@ tt <- dplyr::select(tt,-geometry)
 print(head(tt))
 
 #check the problem geom
-knitr::kable(tt[tt$TAZ1454==invalid_taz_id,])
+knitr::kable(tt[tt$taz==invalid_taz_id,])
 
 #still intersects so seems fine
 #   |        |tract  | TAZ1454|
@@ -116,40 +118,17 @@ knitr::kable(tt[tt$TAZ1454==invalid_taz_id,])
 #Ok so its now time to format the tt table
 #in the sparse matrix style format from the 2000 data
 
-#
-#Functions
-#----------
-#This function is an optional way to format the table more easily
-#we could easily re-write the script without it.
-#its included because it simplifies
-#the weird syntax of tidyr a bit and
-#because it allows us to build lookup tables
-#in the same style with other similar tables
-#or, in reverse, for example.
-#
-#' Get a sparse equivalence table for a dense equivalence table as output by st_join (sf)
-#'
-#' @param df a dataframe as output by st_join()
-#' @param index_col the column that you want to use as the row-based index
-#' @param lookup_value the column that you want to use as the row-based index
-#' @param header_string the column that you want to use as the row-based index
-#' @return a dataframe. the first column is the id of data set 1 and the rest of the columns are every other geography thats related to it
-#' @examples
-#' df2 <- sparse_equivalence(df, index_col = "taz", lookup_value = "tract", header_string = "rtaz")
-sparse_equivalence <- function(df, index_col = "taz", lookup_value = "tract", header_string = "rtaz") {
-  df$num <- ave(df[[index_col]], df[[lookup_value]], FUN = seq_along)
-  df$header_string <- header_string
-  df2 <- df %>% tidyr::unite("header_string", header_string, num) %>% tidyr::spread(header_string, index_col)
-  return(df2)
-}
+tt$num <- ave(tt[['taz']], 
+              tt[['tract']], 
+              FUN = seq_along)
 
+tt$header_string <- 'rtaz'
 
-## usage:
-## ------------------------------------------------------------------------
-et <- sparse_equivalence(tt,
-                         index_col="TAZ1454",
-                         lookup_value="tract",
-                         header_string="rtaz")
+et <- tt %>% 
+  tidyr::unite("header_string", 
+                   header_string, 
+                   num) %>% 
+    tidyr::spread(header_string, taz)
 
 #inspect the results:
 knitr::kable(head(et[,c(1:10)]))
@@ -174,9 +153,9 @@ knitr::kable(head(et[,c(1:10)]))
 #   |-----:|-----:|-----:|-----:|-----:|-----:|
 #   | 10100|    41|    NA|    NA|    NA|    NA|
 
-plot(tracts[tracts$tract=="010100",], col="red", max.plot=1)
-
-tazs <- tt[tt$tract=="010100",]$TAZ1454
-plot(taz[taz$taz %in% tazs,], col = sf.colors(categorical = TRUE, alpha = .5), add= TRUE)
+# plot(tracts[tracts$tract=="010100",], col="red", max.plot=1)
+# 
+# tazs <- taz1454[taz1454$tract=="010100",]$taz
+# plot(taz1454[taz1454$taz %in% tazs,], col = sf.colors(categorical = TRUE, alpha = .5))
 
 ##when we plot it, its clear that the taz extends slightly into nearby tracts
