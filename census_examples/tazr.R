@@ -11,6 +11,7 @@
 #
 # Lets inspect the lookup table that we want to reproduce.
 
+library(readr)
 Tract_zone_2000 <- read_csv("https://s3-us-west-2.amazonaws.com/equivalence/Tract_zone_2000.csv")
 
 print(head(Tract_zone_2000))
