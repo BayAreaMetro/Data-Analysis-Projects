@@ -154,9 +154,11 @@ knitr::kable(head(et[,c(1:10)]))
 #   |-----:|-----:|-----:|-----:|-----:|-----:|
 #   | 10100|    41|    NA|    NA|    NA|    NA|
 
-# plot(tracts[tracts$tract=="010100",], col="red", max.plot=1)
-# 
-# tazs <- taz1454[taz1454$tract=="010100",]$taz
-# plot(taz1454[taz1454$taz %in% tazs,], col = sf.colors(categorical = TRUE, alpha = .5))
+plot(tracts[tracts$tract=="010100",], col="red", max.plot=1)
+
+tazs <- tt[tt$tract=="010100",]$taz
+plot(taz1454[taz1454$taz %in% tazs,], 
+     col = sf.colors(categorical = TRUE, alpha = .5),
+     add=TRUE)
 
 ##when we plot it, its clear that the taz extends slightly into nearby tracts
