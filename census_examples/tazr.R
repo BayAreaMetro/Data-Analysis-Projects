@@ -154,11 +154,22 @@ knitr::kable(head(et[,c(1:10)]))
 #   |-----:|-----:|-----:|-----:|-----:|-----:|
 #   | 10100|    41|    NA|    NA|    NA|    NA|
 
-plot(tracts[tracts$tract=="010100",], col="red", max.plot=1)
+tract1 <- tracts[tracts$tract=="010100",]
 
-tazs <- tt[tt$tract=="010100",]$taz
-plot(taz1454[taz1454$taz %in% tazs,], 
+tazs1 <- taz1454[taz1454$taz %in% 
+                   tt[tt$tract=="010100",]$taz,]
+
+plot(tract1, col="red", max.plot=1)
+
+plot(tazs1, 
      col = sf.colors(categorical = TRUE, alpha = .5),
      add=TRUE)
+
+intersection <- st_intersection(tract1,tazs1)
+intersection$area <- st_area(intersection)
+
+st_geometry(intersection) <- NULL
+
+knitr::kable(intersection)
 
 ##when we plot it, its clear that the taz extends slightly into nearby tracts
