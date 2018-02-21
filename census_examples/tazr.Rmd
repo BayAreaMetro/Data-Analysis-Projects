@@ -243,7 +243,37 @@ topojson_write(slivers_2000_as_sf,file="slivers_2000_as_sf.topojson",convert_wgs
 ```
 
 ```{r}
+slivers_2000_as_sf$intersection_area <- as.numeric(st_area(slivers_2000_as_sf))
+replicate_2000_as_sf$intersection_area <- as.numeric(st_area(replicate_2000_as_sf))
+
+slivers_2000_as_sf$intersection_proportion <- as.numeric(slivers_2000_as_sf$intersection_area/slivers_2000_as_sf$tract_area)
+replicate_2000_as_sf$intersection_proportion <- as.numeric(replicate_2000_as_sf$intersection_area/replicate_2000_as_sf$tract_area)
+
+library(ggplot2)
+
+ggplot(slivers_2000_as_sf, aes(intersection_proportion)) +
+  geom_density() +
+    labs(title = "Year 2000 Non-Accepted Intersections")
+
+ggplot(replicate_2000_as_sf, aes(intersection_proportion)) +
+  geom_density() +
+  labs(title = "Year 2000 Accepted Intersections")
 
 ```
 
+It seems like the proportion of intersection is a good starting point. 
 
+However, it may also be useful to consider area for some edge cases. 
+
+Lets look at the rejected intersections from y2k with a high proportion of intersection. 
+
+```{r}
+rejected_more_than_10 <- (slivers_2000_as_sf[slivers_2000_as_sf$intersection_proportion>.10,])
+
+topojson_write(rejected_more_than_10 ,file="rejected_more_than_10.topojson",convert_wgs84 = TRUE)
+
+accepted_less_than_75 <- (slivers_2000_as_sf[replicate_2000_as_sf$intersection_proportion<.75,])
+
+topojson_write(accepted_less_than_75 ,file="accepted_less_than_75.topojson",convert_wgs84 = TRUE)
+
+```
