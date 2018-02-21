@@ -272,8 +272,8 @@ rejected_more_than_10 <- (slivers_2000_as_sf[slivers_2000_as_sf$intersection_pro
 
 topojson_write(rejected_more_than_10 ,file="rejected_more_than_10.topojson",convert_wgs84 = TRUE)
 
-accepted_less_than_75 <- (slivers_2000_as_sf[replicate_2000_as_sf$intersection_proportion<.75,])
+accepted_less_than_75 <- (replicate_2000_as_sf[replicate_2000_as_sf$intersection_proportion<.75,])
 
-topojson_write(accepted_less_than_75 ,file="accepted_less_than_75.topojson",convert_wgs84 = TRUE)
+topojson_write(accepted_less_than_x ,file="accepted_less_than_75.topojson",convert_wgs84 = TRUE)
 
 ```
