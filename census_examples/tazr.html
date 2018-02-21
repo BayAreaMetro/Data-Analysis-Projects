@@ -822,45 +822,62 @@ knitr::kable(head(intersection_df))</code></pre>
 </tr>
 </tbody>
 </table>
-<p>So lets try setting 0.95 as our reasonable ratio and see how close we get to the year 2000 data</p>
-<pre class="r"><code>
-intersection_df95 &lt;- intersection_df[as.numeric(intersection_df$intersection_ratio)&gt;0.95,]
+<p>Another, better way to do this is to plot the difference visually between y2k and full intersection.</p>
+<pre class="r"><code>intersection_df_s &lt;- intersection_df[,c('tract','taz')]
 
-print(dim(intersection_df95))
-## [1] 979   5
+tract_zone_2000_dense &lt;- reshape2::melt(Tract_zone_2000, id.vars = &quot;Tract&quot;)
 
-print(dim(Tract_zone_2000))
-## [1] 1405    6</code></pre>
-<p>Looks like we now have a lot fewer tracts than y2k data. Lets see what ratio gets us to 1405.</p>
-<pre class="r"><code>intersection_df95 &lt;- intersection_df[as.numeric(intersection_df$intersection_ratio)&gt;0.80,]
-print(dim(intersection_df95))
-## [1] 1366    5
-intersection_df95 &lt;- intersection_df[as.numeric(intersection_df$intersection_ratio)&gt;0.75,]
-print(dim(intersection_df95))
-## [1] 1372    5
-intersection_df95 &lt;- intersection_df[as.numeric(intersection_df$intersection_ratio)&gt;0.60,]
-print(dim(intersection_df95))
-## [1] 1383    5
-intersection_df95 &lt;- intersection_df[as.numeric(intersection_df$intersection_ratio)&gt;0.40,]
-print(dim(intersection_df95))
-## [1] 1412    5</code></pre>
-<p>Looks like the minimum ratio might be as low as .4, but its probably lower, because this is still a dense matrix.</p>
-<p>We should probably melt the 2000 data back to a dense matrix and check the length and then match that.</p>
-<pre class="r"><code>dft &lt;- reshape2::melt(Tract_zone_2000, id.vars = &quot;Tract&quot;)
+print(dim(tract_zone_2000_dense))
+## [1] 7025    3
 
-print(dim(dft))
-## [1] 7025    3</code></pre>
-<p>So we should be looking for a dense matrix with about 7k rows. That makes the overlap ratio much smaller than .4</p>
-<pre class="r"><code>intersection_df_lower &lt;- intersection_df[as.numeric(intersection_df$intersection_ratio)&gt;0.00013,]
+intersection_df_s$tract &lt;- as.integer(intersection_df_s$tract)
 
-print(dim(intersection_df_lower))
-## [1] 6995    5
+names(tract_zone_2000_dense) &lt;- c('tract','string','taz')
 
-intersection_df_lower &lt;- intersection_df[as.numeric(intersection_df$intersection_ratio)&gt;0.00011,]
+compare_intersection_df &lt;- left_join(intersection_df_s, tract_zone_2000_dense, by=c('tract','taz'),suffix=c('full_intersection','tz2000'))
 
-print(dim(intersection_df_lower))
-## [1] 7070    5</code></pre>
-<p>Looks like its between 0.00013 and 0.00011. Of course that assumes around all the same tract matches as well.</p>
+table(compare_intersection_df$string)
+## 
+## rtaz1 rtaz2 rtaz3 rtaz4 rtaz5 
+##  1405    29    11     5     3
+
+sum(as.vector((table(compare_intersection_df$string))))
+## [1] 1453</code></pre>
+<p>So there are 3 tracts with 5 intersecting TAZ’s and there are a total of 1453 intersections.</p>
+<p>Lets take just the joins from 2000 and then replicate them and push them as topojson to github so we can inspect them.</p>
+<pre class="r"><code>intersection_df_s$tract &lt;- as.integer(intersection_df_s$tract)
+intersection_df_sf &lt;- st_intersection(tracts,taz1454)
+## Warning: attribute variables are assumed to be spatially constant
+## throughout all geometries
+intersection_df_sf$tract &lt;- as.integer(intersection_df_sf$tract)
+intersection_df$intersection_area &lt;- st_area(intersection_df_sf)
+
+
+just_2000_joins &lt;- compare_intersection_df[!is.na(compare_intersection_df$string),]
+not_2000_joins &lt;- compare_intersection_df[is.na(compare_intersection_df$string),]
+
+replicate_2000_as_sf &lt;- right_join(intersection_df_sf,just_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','just_2000'))
+slivers_2000_as_sf &lt;- right_join(intersection_df_sf,not_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','just_2000'))
+
+library(geojsonio)
+## 
+## Attaching package: 'geojsonio'
+## The following object is masked from 'package:base':
+## 
+##     pretty
+#st_write(replicate_2000_as_sf,path=&quot;Tract_zone_2000.geojson&quot;)
+topojson_write(replicate_2000_as_sf,file=&quot;replicate_2000_as_sf.topojson&quot;,convert_wgs84 = TRUE)
+## Success! File at replicate_2000_as_sf.topojson
+## &lt;topojson-file&gt;
+##   Path:       replicate_2000_as_sf.topojson
+##   From class: sfc
+
+#st_write(replicate_2000_as_sf,path=&quot;Tract_zone_2000.geojson&quot;)
+topojson_write(slivers_2000_as_sf,file=&quot;slivers_2000_as_sf.topojson&quot;,convert_wgs84 = TRUE)
+## Success! File at slivers_2000_as_sf.topojson
+## &lt;topojson-file&gt;
+##   Path:       slivers_2000_as_sf.topojson
+##   From class: sfc</code></pre>
 </div>
 </div>
 

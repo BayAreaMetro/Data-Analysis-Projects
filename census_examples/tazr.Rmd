@@ -233,11 +233,12 @@ not_2000_joins <- compare_intersection_df[is.na(compare_intersection_df$string),
 replicate_2000_as_sf <- right_join(intersection_df_sf,just_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','just_2000'))
 slivers_2000_as_sf <- right_join(intersection_df_sf,not_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','just_2000'))
 
+library(geojsonio)
 #st_write(replicate_2000_as_sf,path="Tract_zone_2000.geojson")
-topojson_write(replicate_2000_as_sf,path="replicate_2000_as_sf.topojson",convert_wgs84 = TRUE)
+topojson_write(replicate_2000_as_sf,file="replicate_2000_as_sf.topojson",convert_wgs84 = TRUE)
 
 #st_write(replicate_2000_as_sf,path="Tract_zone_2000.geojson")
-topojson_write(slivers_2000_as_sf,path="slivers_2000_as_sf.topojson",convert_wgs84 = TRUE)
+topojson_write(slivers_2000_as_sf,file="slivers_2000_as_sf.topojson",convert_wgs84 = TRUE)
 
 ```
 
