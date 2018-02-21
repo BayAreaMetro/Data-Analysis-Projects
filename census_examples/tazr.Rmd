@@ -195,56 +195,46 @@ intersection_df$intersection_ratio <- intersection_df$intersection_area/intersec
 knitr::kable(head(intersection_df))
 ```
 
-So lets try setting 0.95 as our reasonable ratio and see how close we get to the year 2000 data
+Another, better way to do this is to plot the difference visually between y2k and full intersection.  
 
 ```{r}
+intersection_df_s <- intersection_df[,c('tract','taz')]
 
-intersection_df95 <- intersection_df[as.numeric(intersection_df$intersection_ratio)>0.95,]
+tract_zone_2000_dense <- reshape2::melt(Tract_zone_2000, id.vars = "Tract")
 
-print(dim(intersection_df95))
+print(dim(tract_zone_2000_dense))
 
-print(dim(Tract_zone_2000))
+intersection_df_s$tract <- as.integer(intersection_df_s$tract)
+
+compare_intersection_df <- left_join(intersection_df_s, tract_zone_2000_dense, by=c('tract','taz'),suffix=c('full_intersection','tz2000'))
+
+table(compare_intersection_df$string)
+
+sum(as.vector((table(compare_intersection_df$string))))
+```
+
+So there are 3 tracts with 5 intersecting TAZ's and there are a total of 1453 intersections. 
+
+Lets take just the joins from 2000 and then replicate them and push them as topojson to github so we can inspect them. 
+
+```{r}
+library(sf)
+just_2000_joins <- compare_intersection_df[is.na(compare_intersection_df$string),]
+
+intersection_df_s$tract <- as.integer(intersection_df_s$tract)
+  
+intersection_df_sf <- st_intersection(tracts,taz1454)
+
+intersection_df_sf$tract <- as.integer(intersection_df_sf$tract)
+
+intersection_df$intersection_area <- st_area(intersection_df_sf)
+
+st_write(replicate_2000_as_sf,path="Tract_zone_2000.geojson")
 
 ```
 
-Looks like we now have a lot fewer tracts than y2k data. Lets see what ratio gets us to 1405. 
-
 ```{r}
-intersection_df95 <- intersection_df[as.numeric(intersection_df$intersection_ratio)>0.80,]
-print(dim(intersection_df95))
-intersection_df95 <- intersection_df[as.numeric(intersection_df$intersection_ratio)>0.75,]
-print(dim(intersection_df95))
-intersection_df95 <- intersection_df[as.numeric(intersection_df$intersection_ratio)>0.60,]
-print(dim(intersection_df95))
-intersection_df95 <- intersection_df[as.numeric(intersection_df$intersection_ratio)>0.40,]
-print(dim(intersection_df95))
+
 ```
-
-Looks like the minimum ratio might be as low as .4, but its probably lower, because this is still a dense matrix. 
-
-We should probably melt the 2000 data back to a dense matrix and check the length and then match that. 
-
-```{r}
-dft <- reshape2::melt(Tract_zone_2000, id.vars = "Tract")
-
-print(dim(dft))
-```
-
-So we should be looking for a dense matrix with about 7k rows. That makes the overlap ratio much smaller than .4
-
-```{r}
-intersection_df_lower <- intersection_df[as.numeric(intersection_df$intersection_ratio)>0.00013,]
-
-print(dim(intersection_df_lower))
-
-intersection_df_lower <- intersection_df[as.numeric(intersection_df$intersection_ratio)>0.00011,]
-
-print(dim(intersection_df_lower))
-```
-
-Looks like its between 0.00013 and 0.00011. Of course that assumes around all the same tract matches as well. 
-
-
-
 
 
