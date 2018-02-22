@@ -1,0 +1,104 @@
+---
+title: "Make 2010 TAZ Zone Table"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Goal
+
+Our goal will be to reproduce an equivalence table relating year 2010 Bay Area Census Tracts to MTC's
+Transportation Analysis Zones (TAZ).
+
+## Methods
+
+This script is only for outputting a lookup table. For a more detailed review of methods see 'reverse_engineer_tract_zone_2000_methods.Rmd"
+
+## Data
+
+We download and read TAZ Data from MTC's open data portal.
+
+### TAZ Data
+
+```{r}
+library(sf)
+library(dplyr)
+library(readr)
+
+taz1454 <- st_read("https://opendata.arcgis.com/datasets/b85ba4d43f9843128d3542260d9a2f1f_0.geojson")
+
+taz1454 <- dplyr::select(taz1454,TAZ1454)
+taz1454 <- dplyr::rename(taz1454, taz = TAZ1454)
+
+taz1454 <- sf::st_transform(taz1454, crs=26910)
+
+```
+
+See methods for more detail. 
+
+### Tracts Data
+
+```{r}
+
+library(tigris)
+counties=c("01","13","41","55","75","81","85","95","97")
+tracts <- tigris::tracts("CA", counties, class="sf", year=2010)
+tracts <- dplyr::select(tracts,TRACTCE10)
+tracts <- dplyr::rename(tracts,tract = TRACTCE10)
+tracts <- sf::st_transform(tracts, crs=26910)
+detach("package:tigris", unload=TRUE)
+
+knitr::kable(table(st_is_valid(tracts)))
+
+tracts$tract_area <- st_area(tracts)
+```
+
+See methods for more detail. 
+
+### Intersection of TAZ and Tracts
+
+Based on a ratio of overlap cutoff of 0.15. 
+
+See methods for more detail. 
+
+```{r}
+intersection_df <- st_intersection(tracts,taz1454)
+intersection_df$intersection_area <- st_area(intersection_df)
+
+intersection_df$intersection_ratio <- intersection_df$intersection_area/intersection_df$tract_area
+st_geometry(intersection_df) <- NULL
+
+valid_intersections_bool<- as.numeric(intersection_df$intersection_ratio)>.15
+
+valid_intersections <- intersection_df[valid_intersections_bool,]
+
+taz_zone_2010_dense <- dplyr::select(valid_intersections,taz,tract)
+
+knitr::kable(head(taz_zone_2010_dense))
+```
+
+Now we have a dataframe of accepted intersections based on our rule. Lets use it to build the sparse matrix. 
+
+### Build A Sparse Matrix
+
+```{r}
+taz_zone_2010_dense$num <- ave(taz_zone_2010_dense[['taz']], 
+              taz_zone_2010_dense[['tract']], 
+              FUN = seq_along)
+
+taz_zone_2010_dense$header_string <- 'rtaz'
+
+taz_zone_2010_sparse <- taz_zone_2010_dense %>% 
+  tidyr::unite("header_string", 
+                   header_string, 
+                   num) %>% 
+    tidyr::spread(header_string, taz)
+
+knitr::kable(head(taz_zone_2010_sparse))
+
+write_csv(taz_zone_2010_sparse,'Tract_zone_2010.csv')
+```
+
+
