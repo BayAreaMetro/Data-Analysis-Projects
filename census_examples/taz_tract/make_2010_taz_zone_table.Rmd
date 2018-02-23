@@ -26,6 +26,7 @@ We download and read TAZ Data from MTC's open data portal.
 library(sf)
 library(dplyr)
 library(readr)
+library(mapview)
 
 taz1454 <- st_read("https://opendata.arcgis.com/datasets/b85ba4d43f9843128d3542260d9a2f1f_0.geojson")
 
@@ -40,6 +41,8 @@ See methods for more detail.
 
 ### Tracts Data
 
+Also, Crop water out of tracts. Its not in the TAZ's and therefor messes with out ratios.
+
 ```{r}
 
 library(tigris)
@@ -49,6 +52,15 @@ tracts <- dplyr::select(tracts,TRACTCE10)
 tracts <- dplyr::rename(tracts,tract = TRACTCE10)
 tracts <- sf::st_transform(tracts, crs=26910)
 detach("package:tigris", unload=TRUE)
+
+knitr::kable(table(st_is_valid(tracts)))
+
+bay_water <- st_read("https://geo.nyu.edu/download/file/stanford-mb777jk0330-geojson.json")
+bay_water <- bay_water[st_is_valid(bay_water),]
+bay_water <- st_transform(bay_water, crs=26910)
+
+st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
+tracts <- st_erase(tracts,bay_water)
 
 knitr::kable(table(st_is_valid(tracts)))
 
@@ -68,15 +80,17 @@ intersection_df <- st_intersection(tracts,taz1454)
 intersection_df$intersection_area <- st_area(intersection_df)
 
 intersection_df$intersection_ratio <- intersection_df$intersection_area/intersection_df$tract_area
+
+intersection_df_sf <- intersection_df
 st_geometry(intersection_df) <- NULL
 
 valid_intersections_bool<- as.numeric(intersection_df$intersection_ratio)>.15
 
 valid_intersections <- intersection_df[valid_intersections_bool,]
 
-taz_zone_2010_dense <- dplyr::select(valid_intersections,taz,tract)
+tract_zone_2010_dense <- dplyr::select(valid_intersections,taz,tract)
 
-knitr::kable(head(taz_zone_2010_dense))
+knitr::kable(head(tract_zone_2010_dense))
 ```
 
 Now we have a dataframe of accepted intersections based on our rule. Lets use it to build the sparse matrix. 
@@ -84,21 +98,99 @@ Now we have a dataframe of accepted intersections based on our rule. Lets use it
 ### Build A Sparse Matrix
 
 ```{r}
-taz_zone_2010_dense$num <- ave(taz_zone_2010_dense[['taz']], 
-              taz_zone_2010_dense[['tract']], 
+tract_zone_2010_dense$num <- ave(tract_zone_2010_dense[['taz']], 
+              tract_zone_2010_dense[['tract']], 
               FUN = seq_along)
 
-taz_zone_2010_dense$header_string <- 'rtaz'
+tract_zone_2010_dense$header_string <- 'rtaz'
 
-taz_zone_2010_sparse <- taz_zone_2010_dense %>% 
+tract_zone_2010_sparse <- tract_zone_2010_dense %>% 
   tidyr::unite("header_string", 
                    header_string, 
                    num) %>% 
     tidyr::spread(header_string, taz)
 
-knitr::kable(head(taz_zone_2010_sparse))
+knitr::kable(head(tract_zone_2010_sparse))
 
-write_csv(taz_zone_2010_sparse,'Tract_zone_2010.csv')
+#write_csv(tract_zone_2010_sparse,'Tract_zone_2010.csv')
 ```
+
+### Check the Data
+
+1) all tracts have at least one TAZ associated with them 
+2) and vice-versa. 
+3) TAZs 1,3, and 4 seem to be missing from the table. 
+
+1) some tracts are entirely in the water. taz's are not. 
+
+```{r}
+tracts_not_in_table <- tracts[!(tracts$tract %in% tract_zone_2010_sparse$tract),]
+mapview(tracts_not_in_table)
+```
+
+2) All TAZ Should have a Tract
+
+```{r}
+taz_no_tract <- taz1454[!(taz1454$taz %in% tract_zone_2010_dense$taz),]$taz
+
+mapview(intersection_df_sf[intersection_df_sf$taz %in% taz_no_tract,])
+```
+
+3) 
+```{r}
+print(tract_zone_2010_dense[tract_zone_2010_dense$taz %in% c(1,3,4),])
+```
+
+Thats true. These did not meet the threshold of .15 proportion overlap. 
+
+So, the proportion of overlap rule is not a good one. 
+
+Let's look at which intersections are thrown out and then refine it to get things looking like 2000. 
+
+
+```{r}
+intersection_df_s <- intersection_df[,c('tract','taz')]
+
+intersection_df_s$tract <- as.integer(intersection_df_s$tract)
+tract_zone_2010_dense$tract <- as.integer(tract_zone_2010_dense$tract)
+
+compare_intersection_df <- left_join(intersection_df_s, tract_zone_2010_dense, by=c('tract','taz'),suffix=c('full_intersection','tz2010'))
+
+sum(as.vector((table(compare_intersection_df$header_string))))
+
+intersection_df_s$tract <- as.integer(intersection_df_s$tract)
+intersection_df_sf <- st_intersection(tracts,taz1454)
+intersection_df_sf$tract <- as.integer(intersection_df_sf$tract)
+intersection_df$intersection_area <- st_area(intersection_df_sf)
+
+just_2010_joins <- compare_intersection_df[!is.na(compare_intersection_df$header_string),]
+not_2010_joins <- compare_intersection_df[is.na(compare_intersection_df$header_string),]
+
+accepted_2010_as_sf <- right_join(intersection_df_sf,just_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','just_2010'))
+rejected_2010_as_sf <- right_join(intersection_df_sf,not_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','not_2010'))
+
+library(geojsonio)
+topojson_write(accepted_2010_as_sf,file="accepted_2010_as_sf.topojson",convert_wgs84 = TRUE)
+topojson_write(rejected_2010_as_sf,file="rejected_2010_as_sf.topojson",convert_wgs84 = TRUE)
+
+st <- st_simplify(rejected_2010_as_sf, dTolerance = 0)
+rejected_2010_as_sf$length_to_area_ratio <- as.numeric(st_length(st_cast(rejected_2010_as_sf,'MULTILINESTRING'))/st_area(rejected_2010_as_sf))
+                                                  
+library(sf)
+ggplot(rejected_2010_as_sf, aes(length_to_area_ratio)) +
+  geom_density() +
+    labs(title = "Rejected Geoms Length to Area")
+
+accepted_2010_as_sf$length_to_area_ratio <- as.numeric(st_length(st_cast(accepted_2010_as_sf,'MULTILINESTRING'))/st_area(accepted_2010_as_sf))
+
+q1 <- quantile(accepted_2010_as_sf$length_to_area_ratio, c(.01, .99))
+
+#throw out outlier geometries
+rejected_2010_as_sf <- rejected_2010_as_sf[rejected_2010_as_sf$length_to_area_ratio>q1[[1]] & rejected_2010_as_sf$length_to_area_ratio<q1[[2]],]
+
+topojson_write(rejected_2010_as_sf,file="rejected_2010_as_sf.topojson",convert_wgs84 = TRUE)
+
+```
+
 
 
