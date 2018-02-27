@@ -1,20 +1,21 @@
 ---
-title: "Make 2010 TAZ Zone Table"
+title: "Develop TAZ/Census Equivalency Table for 2010 based on 2000"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tigris)
+library(webshot)
+options(tigris_use_cache=TRUE)
+counties=c("01","13","41","55","75","81","85","95","97")
+tracts <- tigris::tracts("CA", counties, class="sf", year=2010)
 ```
 
 ## Goal
 
-Our goal will be to reproduce an equivalence table relating year 2010 Bay Area Census Tracts to MTC's
+Our goal will be to produce an equivalence table relating year 2010 Bay Area Census Tracts to MTC's
 Transportation Analysis Zones (TAZ).
-
-## Methods
-
-This script is only for outputting a lookup table. For a more detailed review of methods see 'reverse_engineer_tract_zone_2000_methods.Rmd"
 
 ## Data
 
@@ -22,12 +23,14 @@ We download and read TAZ Data from MTC's open data portal.
 
 ### TAZ Data
 
-```{r}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 library(sf)
 library(dplyr)
 library(readr)
 library(mapview)
+```
 
+```{r, message=FALSE, warning=FALSE, results='hide'}
 taz1454 <- st_read("https://opendata.arcgis.com/datasets/b85ba4d43f9843128d3542260d9a2f1f_0.geojson")
 
 taz1454 <- dplyr::select(taz1454,TAZ1454)
@@ -41,16 +44,12 @@ See methods for more detail.
 
 ### Tracts Data
 
-Also, Crop water out of tracts. Its not in the TAZ's and therefor messes with out ratios.
+Also, Crop water out of tracts. TAZ's do not use water. 
 
-```{r}
-
-library(tigris)
-counties=c("01","13","41","55","75","81","85","95","97")
-tracts <- tigris::tracts("CA", counties, class="sf", year=2010)
+```{r, message=FALSE, warning=FALSE, results='hide'}
 tracts <- dplyr::select(tracts,TRACTCE10)
 tracts <- dplyr::rename(tracts,tract = TRACTCE10)
-tracts <- sf::st_transform(tracts, crs=26910)
+tracts <- st_transform(tracts, crs=26910)
 detach("package:tigris", unload=TRUE)
 
 knitr::kable(table(st_is_valid(tracts)))
@@ -62,7 +61,7 @@ bay_water <- st_transform(bay_water, crs=26910)
 st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
 tracts <- st_erase(tracts,bay_water)
 
-knitr::kable(table(st_is_valid(tracts)))
+#knitr::kable(table(st_is_valid(tracts)))
 
 tracts$tract_area <- st_area(tracts)
 ```
@@ -71,33 +70,259 @@ See methods for more detail.
 
 ### Intersection of TAZ and Tracts
 
-Based on a ratio of overlap cutoff of 0.15. 
-
 See methods for more detail. 
 
-```{r}
+```{r, message=FALSE, results='hide', warning=FALSE}
+library(sf)
 intersection_df <- st_intersection(tracts,taz1454)
-intersection_df$intersection_area <- st_area(intersection_df)
-
-intersection_df$intersection_ratio <- intersection_df$intersection_area/intersection_df$tract_area
-
-intersection_df_sf <- intersection_df
-st_geometry(intersection_df) <- NULL
-
-valid_intersections_bool<- as.numeric(intersection_df$intersection_ratio)>.15
-
-valid_intersections <- intersection_df[valid_intersections_bool,]
-
-tract_zone_2010_dense <- dplyr::select(valid_intersections,taz,tract)
-
-knitr::kable(head(tract_zone_2010_dense))
+intersection_df$intersection_area <- as.numeric(st_area(intersection_df$geometry))
+intersection_df$intersection_ratio <- as.numeric(intersection_df$intersection_area/intersection_df$tract_area)
 ```
 
-Now we have a dataframe of accepted intersections based on our rule. Lets use it to build the sparse matrix. 
+## Methods for determining Equivalence
 
-### Build A Sparse Matrix
+### Determining Methods for the Year 2000 Lookup Table
+
+For a more detailed review of those methods see 'reverse_engineer_tract_zone_2000_methods.Rmd"
+
+### Topological Errors
+
+Transportation Analysis Zones (TAZ) and Tracts do note share a single topology (e.g. road network).
+
+For example, there are many instances in which TAZ boundaries are drawn 50 meters into a Census Tract. 
+
+This becomes clear when we look at a selection of the intersecting features on the map with very small areas relative to the length of their outer boundary.  
+
+```{r, warning=FALSE}
+intersection_df$length_to_area_ratio <- as.numeric(st_length(st_cast(intersection_df,'MULTILINESTRING'))/st_area(intersection_df))
+
+q1 <- quantile(intersection_df$length_to_area_ratio, c(.25,.5))
+
+intersection_df$definitely_a_sliver <- intersection_df$length_to_area_ratio>q1[2]
+intersection_df$probably_a_sliver <- intersection_df$length_to_area_ratio>q1[1]
+
+sliver_data <- intersection_df[intersection_df$definitely_a_sliver==TRUE,]
+
+sliver_sample <- sliver_data[sample(nrow(sliver_data), 200),]
+
+mapview(sliver_sample, color="red", map.types=c('Stamen.Toner.Light'))
+
+```
+
+These slivers of geometries that happen when we spatially intersect these two datasets. These slivers contain no information other than the fact that the geometries do not share a common topology. They account 
+
+We'll flag these on the table as an attribute so we can consider throwing these relationships out later.
+
+I played around with a few thresholds cartographically and .5 seems like a conservative cutoff for slivers of geometries that just based on drawing errors. Anything lower than .4 ends up with some slivers with houses in them. 
+
+### Areal Equivalence
+
+#### Minimum Proportion of Tract
+
+We looked at the year 2000 equivalence table to get an understanding of rules we might use to think of equivalence. 
+
+The first rule that seems reasonable based on a more detailed analysis of the methods used in 2000 was to say that if a TAZ made up 15% of the area of a tract or more then that TAZ was part of a set of TAZ's that were equivalent to the tract. 
+
+#### Ratio of TAZ area to Tract Area
+
+Lets take a look at a sample of which equivalencies would be tossed out for intersection using the .15 ratio of TAZ intersection area to Census Tract area method. 
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+intersection_df_smpl <- intersection_df[sample(nrow(intersection_df), 100),]
+valid_intersections_bool<- as.numeric(intersection_df_smpl$intersection_ratio)>.15
+
+tract_id <- intersection_df_smpl[!valid_intersections_bool,]$tract
+taz_id <- intersection_df_smpl[!valid_intersections_bool,]$taz
+
+tracts1 <- tracts[tracts$tract %in% tract_id,]
+taz1 <- taz1454[taz1454$taz %in% taz_id,]
+intersection1 <- intersection_df_smpl[!valid_intersections_bool,]
+```
+
+```{r, message=FALSE, warning=FALSE}
+mapview(tracts1, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+
+#mapshot(p1, "taz_ratio_of_tract_area_map.html", selfcontained = FALSE)
+
+```
+
+We have a number of instances in which the "Probably a Sliver" flag can be used to rule out relationships that are not substantive. 
+
+However, given that some Tracts have TAZ's within them that are less than 15% of the area of the Tract, there were TAZ's that were not matched to tracts based on this rule. (e.g. TAZ 1 and 3)
+
+Therefore the 15% of total ratio didn't capture all equivalence. 
+
+#### Sum of TAZ Areas Constitute the Area of a Tract
+
+So we tried a method for assessing equivalence that attempts to make sure the sum of the areas of the TAZ's that are "equivalent" to a Tract are equivalent to the area of the Tract. 
+
+Lets do the same and inspect which equivalencies be tossed out based on this for area equivalence definition.
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+library(dplyr)
+intersection_df_no_sliver <- intersection_df[!intersection_df$definitely_a_sliver==TRUE,]
+
+tracts_zones_area <- intersection_df_no_sliver %>% 
+  group_by(tract) %>% 
+  summarise(taz_area_by_tract = sum(intersection_area))
+
+tracts_temp <- tracts
+tracts_temp$tract <- as.integer(tracts_temp$tract)
+st_geometry(tracts_temp) <- NULL
+
+tracts_zones_area$tract <- as.integer(tracts_zones_area$tract)
+st_geometry(tracts_zones_area) <- NULL
+
+tracts_zones_area <- left_join(tracts_temp,tracts_zones_area, by="tract")
+
+tracts_zones_area$taz_area_over_tract_area <- as.numeric(tracts_zones_area$taz_area_by_tract)/as.numeric(tracts_zones_area$tract_area)
+```
+
+```{r, message=FALSE, warning=FALSE}
+print(summary(tracts_zones_area$taz_area_over_tract_area))
+
+q2 <- quantile(tracts_zones_area$taz_area_over_tract_area, c(.01,.99), na.rm=TRUE)
+
+tract_ids <- tracts_zones_area[(tracts_zones_area$taz_area_over_tract_area < q2[1] | 
+                     tracts_zones_area$taz_area_over_tract_area > q2[2]),]$tract
+
+taz_overlap_ids <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]$taz
+
+tracts1 <- tracts[tracts$tract %in% tract_ids,]
+taz1 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection1 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
+
+mapview(tracts1, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+```
+
+Some conclusions based on reviewing this map. 
+
+#### Topological Errors
+
+Many show evidence of a shifted coordinate system or transformation in the TAZ data that have made them hard to compare. These could be thrown out using the "probably a sliver" flag. 
+
+However, there are other kinds of instances in which we would throw out a valid intersection with the sum of constituent areas. Lets have a look at just examples of those. 
+
+```{r, message=FALSE, warning=FALSE}
+tract_ids_non_topological <- c(392200,252914,441523,403502)
+
+print(table(tract_ids_non_topological %in% tract_ids))
+
+tract_ids <- tract_ids_non_topological
+
+taz_overlap_ids <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]$taz
+
+tracts2 <- tracts[tracts$tract %in% tract_ids,]
+taz2 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection2 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
+
+mapview(tracts2, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz2, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection2, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+  
+#mapshot(p2, "sum_of_areas_map.html", selfcontained = FALSE)
+```
+
+##### Tracts can be smaller than a TAZ
+
+Others show areas where very large TAZ's have been drawn around tracts. So it seems like there is no consistent rule that TAZ's are always smaller than a tract. Sometimes, they are larger. 
+
+For example, Tract 441523, which is a tiny piece of TAZ 769. Similar situation for Tract 252914. 
+
+##### A TAZ can also Split a Tract in Half
+
+In other cases, a tract may have been split in half by a TAZ. For example, tract 403502, north of Lake Merritt in Oakland. Its almost split down the middle by TAZ 972.
+
+##### Conclusions
+
+Given that some Tracts are far smaller than their TAZ's, we can't say that in all cases the sum of the areas of a TAZ should match the area of a tract. 
+
+##### Year 2000 TAZ/Tract Lookup Data  
+
+One way to better understand what method we might use is to see how these particular tracts were dealt with in the year 2000 lookup. 
+
+First we have to grab year 2000 census data and intersect it with TAZ data. For this I use the same process as above, but change the year argument to the `tigris` package. 
+
+```{r, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(tigris_use_cache=TRUE)
+counties=c("01","13","41","55","75","81","85","95","97")
+tracts00 <- tigris::tracts("CA", counties, class="sf", year=2000)
+
+tracts00 <- dplyr::select(tracts00,TRACTCE00)
+tracts00 <- dplyr::rename(tracts00,tract = TRACTCE00)
+
+knitr::kable(table(tracts00$tract %in% tract_ids_non_topological))
+knitr::kable(table(tracts$tract %in% tract_ids_non_topological))
+```
+
+Apparently the tracts manually identified in the review process as instances of exceptions to our assumptions about equivalence above are new for the year 2010 census. 
+
+Its tempting to use the year 2000 table as a basis for lookups, and then just add new intersections based on new tracts from 2000 to 2010. 
+
+One potential shortcoming of this method is that there is one known errors in the year 2000 lookup table. 
+
+Tract 500300 was mapped to two TAZ's, one of which is not adjacent or near it. It was also not mapped to a TAZ that we would have expected it to be mapped to based on the ratio rule applied above. 
+
+So there is some degree (uknown how much) of error in that table. Nevertheless, it may be useful for comparison with whichever method we use. 
+
+It seems like the constituent areas definition has fewer false negatives than the ratio method. It may have more false positives, so we'll throw out tract/taz intersections that are "probably a sliver"
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+intersection_no_s <- intersection_df[intersection_df$probably_a_sliver==FALSE,]
+```
+
+Again, we will hand review based on the ratio of the taz's area to their tract. 
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+tracts_zones_area <- intersection_no_s %>% 
+  group_by(tract) %>% 
+  summarise(taz_area_by_tract = sum(intersection_area))
+
+tracts_temp <- tracts
+st_geometry(tracts_temp) <- NULL
+st_geometry(tracts_zones_area) <- NULL
+
+tracts_zones_area <- left_join(tracts_temp,tracts_zones_area, by="tract")
+
+tracts_zones_area$taz_area_over_tract_area <- as.numeric(tracts_zones_area$taz_area_by_tract)/as.numeric(tracts_zones_area$tract_area)
+
+q2 <- quantile(tracts_zones_area$taz_area_over_tract_area, c(.10,.90), na.rm=TRUE)
+
+tract_ids <- tracts_zones_area[(tracts_zones_area$taz_area_over_tract_area < q2[1] | 
+                     tracts_zones_area$taz_area_over_tract_area > q2[2]),]$tract
+
+taz_overlap_ids <- intersection_no_s[intersection_no_s$tract %in% tract_ids,]$taz
+
+tracts_w_taz_area <- left_join(tracts,tracts_zones_area, by='tract')
+
+tracts3 <- tracts_w_taz_area[tracts_w_taz_area$tract %in% tract_ids,]
+taz3 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection3 <- intersection_no_s[intersection_no_s$tract %in% tract_ids,]
+
+map3 <- mapview(tracts3, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz3, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection3, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+
+mapshot(map3, "review_area_outliers.html", selfcontained = FALSE)
+
+print(q2)
+
+```
+
+Finally, lets output a table in the expected sparse format.  
 
 ```{r}
+st_geometry(intersection_no_s) <- NULL
+
+tract_zone_2010_dense <- dplyr::select(intersection_no_s,taz,tract)
+
+knitr::kable(head(tract_zone_2010_dense))
+
 tract_zone_2010_dense$num <- ave(tract_zone_2010_dense[['taz']], 
               tract_zone_2010_dense[['tract']], 
               FUN = seq_along)
@@ -110,85 +335,9 @@ tract_zone_2010_sparse <- tract_zone_2010_dense %>%
                    num) %>% 
     tidyr::spread(header_string, taz)
 
-knitr::kable(head(tract_zone_2010_sparse))
+#knitr::kable(head(tract_zone_2010_sparse,n=20))
 
-#write_csv(tract_zone_2010_sparse,'Tract_zone_2010.csv')
-```
-
-### Check the Data
-
-1) all tracts have at least one TAZ associated with them 
-2) and vice-versa. 
-3) TAZs 1,3, and 4 seem to be missing from the table. 
-
-1) some tracts are entirely in the water. taz's are not. 
-
-```{r}
-tracts_not_in_table <- tracts[!(tracts$tract %in% tract_zone_2010_sparse$tract),]
-mapview(tracts_not_in_table)
-```
-
-2) All TAZ Should have a Tract
-
-```{r}
-taz_no_tract <- taz1454[!(taz1454$taz %in% tract_zone_2010_dense$taz),]$taz
-
-mapview(intersection_df_sf[intersection_df_sf$taz %in% taz_no_tract,])
-```
-
-3) 
-```{r}
-print(tract_zone_2010_dense[tract_zone_2010_dense$taz %in% c(1,3,4),])
-```
-
-Thats true. These did not meet the threshold of .15 proportion overlap. 
-
-So, the proportion of overlap rule is not a good one. 
-
-Let's look at which intersections are thrown out and then refine it to get things looking like 2000. 
-
-
-```{r}
-intersection_df_s <- intersection_df[,c('tract','taz')]
-
-intersection_df_s$tract <- as.integer(intersection_df_s$tract)
-tract_zone_2010_dense$tract <- as.integer(tract_zone_2010_dense$tract)
-
-compare_intersection_df <- left_join(intersection_df_s, tract_zone_2010_dense, by=c('tract','taz'),suffix=c('full_intersection','tz2010'))
-
-sum(as.vector((table(compare_intersection_df$header_string))))
-
-intersection_df_s$tract <- as.integer(intersection_df_s$tract)
-intersection_df_sf <- st_intersection(tracts,taz1454)
-intersection_df_sf$tract <- as.integer(intersection_df_sf$tract)
-intersection_df$intersection_area <- st_area(intersection_df_sf)
-
-just_2010_joins <- compare_intersection_df[!is.na(compare_intersection_df$header_string),]
-not_2010_joins <- compare_intersection_df[is.na(compare_intersection_df$header_string),]
-
-accepted_2010_as_sf <- right_join(intersection_df_sf,just_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','just_2010'))
-rejected_2010_as_sf <- right_join(intersection_df_sf,not_2000_joins,by=c('tract','taz'),suffix = c('intersection_df','not_2010'))
-
-library(geojsonio)
-topojson_write(accepted_2010_as_sf,file="accepted_2010_as_sf.topojson",convert_wgs84 = TRUE)
-topojson_write(rejected_2010_as_sf,file="rejected_2010_as_sf.topojson",convert_wgs84 = TRUE)
-
-st <- st_simplify(rejected_2010_as_sf, dTolerance = 0)
-rejected_2010_as_sf$length_to_area_ratio <- as.numeric(st_length(st_cast(rejected_2010_as_sf,'MULTILINESTRING'))/st_area(rejected_2010_as_sf))
-                                                  
-library(sf)
-ggplot(rejected_2010_as_sf, aes(length_to_area_ratio)) +
-  geom_density() +
-    labs(title = "Rejected Geoms Length to Area")
-
-accepted_2010_as_sf$length_to_area_ratio <- as.numeric(st_length(st_cast(accepted_2010_as_sf,'MULTILINESTRING'))/st_area(accepted_2010_as_sf))
-
-q1 <- quantile(accepted_2010_as_sf$length_to_area_ratio, c(.01, .99))
-
-#throw out outlier geometries
-rejected_2010_as_sf <- rejected_2010_as_sf[rejected_2010_as_sf$length_to_area_ratio>q1[[1]] & rejected_2010_as_sf$length_to_area_ratio<q1[[2]],]
-
-topojson_write(rejected_2010_as_sf,file="rejected_2010_as_sf.topojson",convert_wgs84 = TRUE)
+write_csv(tract_zone_2010_sparse,'Tract_zone_2010.csv')
 
 ```
 
