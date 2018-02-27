@@ -64,6 +64,7 @@ tracts <- st_erase(tracts,bay_water)
 #knitr::kable(table(st_is_valid(tracts)))
 
 tracts$tract_area <- st_area(tracts)
+taz1454$taz_area <- st_area(taz1454)
 ```
 
 See methods for more detail. 
@@ -105,7 +106,7 @@ sliver_data <- intersection_df[intersection_df$definitely_a_sliver==TRUE,]
 
 sliver_sample <- sliver_data[sample(nrow(sliver_data), 200),]
 
-mapview(sliver_sample, color="red", map.types=c('Stamen.Toner.Light'))
+mapview(sliver_sample, col.regions="red", map.types=c('Stamen.Toner.Light'))
 
 ```
 
@@ -140,9 +141,9 @@ intersection1 <- intersection_df_smpl[!valid_intersections_bool,]
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-mapview(tracts1, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(taz1, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(intersection1, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+mapview(tracts1, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
 
 #mapshot(p1, "taz_ratio_of_tract_area_map.html", selfcontained = FALSE)
 
@@ -166,7 +167,7 @@ intersection_df_no_sliver <- intersection_df[!intersection_df$definitely_a_slive
 
 tracts_zones_area <- intersection_df_no_sliver %>% 
   group_by(tract) %>% 
-  summarise(taz_area_by_tract = sum(intersection_area))
+  summarise(taz_area_by_tract = sum(taz_area))
 
 tracts_temp <- tracts
 tracts_temp$tract <- as.integer(tracts_temp$tract)
@@ -194,9 +195,9 @@ tracts1 <- tracts[tracts$tract %in% tract_ids,]
 taz1 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
 intersection1 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
 
-mapview(tracts1, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(taz1, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(intersection1, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+mapview(tracts1, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
 ```
 
 Some conclusions based on reviewing this map. 
@@ -220,9 +221,9 @@ tracts2 <- tracts[tracts$tract %in% tract_ids,]
 taz2 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
 intersection2 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
 
-mapview(tracts2, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(taz2, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(intersection2, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+mapview(tracts2, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz2, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection2, col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
   
 #mapshot(p2, "sum_of_areas_map.html", selfcontained = FALSE)
 ```
@@ -281,7 +282,7 @@ Again, we will hand review based on the ratio of the taz's area to their tract.
 ```{r, message=FALSE, warning=FALSE}
 tracts_zones_area <- intersection_no_s %>% 
   group_by(tract) %>% 
-  summarise(taz_area_by_tract = sum(intersection_area))
+  summarise(taz_area_by_tract = sum(taz_area))
 
 tracts_temp <- tracts
 st_geometry(tracts_temp) <- NULL
@@ -291,7 +292,7 @@ tracts_zones_area <- left_join(tracts_temp,tracts_zones_area, by="tract")
 
 tracts_zones_area$taz_area_over_tract_area <- as.numeric(tracts_zones_area$taz_area_by_tract)/as.numeric(tracts_zones_area$tract_area)
 
-q2 <- quantile(tracts_zones_area$taz_area_over_tract_area, c(.05,.95), na.rm=TRUE)
+q2 <- quantile(tracts_zones_area$taz_area_over_tract_area, c(.05,.80), na.rm=TRUE)
 
 tract_ids <- tracts_zones_area[(tracts_zones_area$taz_area_over_tract_area < q2[1] | 
                      tracts_zones_area$taz_area_over_tract_area > q2[2]),]$tract
@@ -304,9 +305,9 @@ tracts3 <- tracts_w_taz_area[tracts_w_taz_area$tract %in% tract_ids,]
 taz3 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
 intersection3 <- intersection_no_s[intersection_no_s$tract %in% tract_ids,]
 
-mapview(tracts3, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(taz3, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
-  mapview(intersection3, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+mapview(tracts3, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz3, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection3, col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
 
 print(q2)
 
