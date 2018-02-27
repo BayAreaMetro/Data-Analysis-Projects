@@ -278,7 +278,7 @@ intersection_no_s <- intersection_df[intersection_df$probably_a_sliver==FALSE,]
 
 Again, we will hand review based on the ratio of the taz's area to their tract. 
 
-```{r, message=FALSE, results='hide', warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 tracts_zones_area <- intersection_no_s %>% 
   group_by(tract) %>% 
   summarise(taz_area_by_tract = sum(intersection_area))
@@ -291,7 +291,7 @@ tracts_zones_area <- left_join(tracts_temp,tracts_zones_area, by="tract")
 
 tracts_zones_area$taz_area_over_tract_area <- as.numeric(tracts_zones_area$taz_area_by_tract)/as.numeric(tracts_zones_area$tract_area)
 
-q2 <- quantile(tracts_zones_area$taz_area_over_tract_area, c(.10,.90), na.rm=TRUE)
+q2 <- quantile(tracts_zones_area$taz_area_over_tract_area, c(.05,.95), na.rm=TRUE)
 
 tract_ids <- tracts_zones_area[(tracts_zones_area$taz_area_over_tract_area < q2[1] | 
                      tracts_zones_area$taz_area_over_tract_area > q2[2]),]$tract
@@ -304,11 +304,9 @@ tracts3 <- tracts_w_taz_area[tracts_w_taz_area$tract %in% tract_ids,]
 taz3 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
 intersection3 <- intersection_no_s[intersection_no_s$tract %in% tract_ids,]
 
-map3 <- mapview(tracts3, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+mapview(tracts3, color="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
   mapview(taz3, color="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
   mapview(intersection3, color="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
-
-mapshot(map3, "review_area_outliers.html", selfcontained = FALSE)
 
 print(q2)
 
