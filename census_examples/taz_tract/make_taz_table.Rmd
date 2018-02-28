@@ -1,0 +1,419 @@
+---
+title: "Develop TAZ/Census Equivalency Table"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tigris)
+library(webshot)
+options(tigris_use_cache=TRUE)
+counties=c("01","13","41","55","75","81","85","95","97")
+tracts <- tigris::tracts("CA", counties, class="sf", year=2010)
+blocks <- tigris::blocks("CA", counties, class="sf", year=2010)
+```
+
+## Goal
+
+Our goal will be to produce an equivalence table relating year 2010 Bay Area Census Tracts to MTC's
+Transportation Analysis Zones (TAZ).
+
+## Data
+
+We download and read TAZ Data from MTC's open data portal.
+
+### Packages
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+library(sf)
+library(dplyr)
+library(readr)
+library(mapview)
+```
+
+## Equivalence Definition
+
+Tracts can be smaller than a TAZ and TAZ's can be smaller than a tract. 
+
+Equivalence is a misnomer here. 
+
+The relationships, in terms of aereal units, are not equivalent in some cases. In some cases, a tract is called "equivalent" to a tract when it is 1/20th the size of that TAZ. In other cases, a TAZ is called "equivalent" to a Tract when it is 1/20th the size of that Tract. 
+
+The goal here is to be able to look up, for any given Tract, (a) the TAZ that fully and completely circumscribes it, (b) that mostly circumscribes it, or finally, (c) the set of TAZ's that are within it. 
+
+The inverse is also true. For any given TAZ the user would also like to look up the: (a) Tracts that are completely within it, (b) Tract that is mostly within it, or (c) the Tract that completely circumscribes it. 
+
+### Groupings for the Above Definition in Year 2000 Data
+
+```{r, message=FALSE, warning=FALSE}
+library(readr)
+
+Tract_zone_2000 <- read_csv("https://s3-us-west-2.amazonaws.com/equivalence/Tract_zone_2000.csv")
+
+tract_zone_2000_dense <- reshape2::melt(Tract_zone_2000, id.vars = "Tract", na.rm=TRUE)
+
+number_of_equivalencies <- group_by(tract_zone_2000_dense, variable) %>%
+  summarize(count = n())
+
+total <- sum(number_of_equivalencies$count)
+
+number_of_equivalencies$percent <- round(number_of_equivalencies$count/total, digits=3)
+
+print(number_of_equivalencies)
+```
+
+If 2000 table is correct then we might expect a similar distribution of intersections. We can reference this later as a check. 
+
+## Method
+
+The easiest way to approach this problem is to do a full spatial intersection on the two lookup tables, throw out the intersections that are simply due to topological errors in the data, then build the lookup table. As a verification, we will also calculate the areas in both directions so that we can describe the relationship as type (a), (b), or (c), as described above. 
+
+We will calculate a few variables to help us understand the these relationships:
+
+## Data
+
+### Variables to Calculate
+
+These are in order of processing:
+
+taz:
+taz_area
+
+tract:
+crop out water
+tract_area
+join to 2000 equivalence match
+
+intersection_df:
+Throw out Topological Errors
+intersection_area
+length_to_area_ratio 
+
+tract:
+taz_area_by_tract
+taz_area_over_tract_area
+
+### TAZ
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+taz1454 <- st_read("https://opendata.arcgis.com/datasets/b85ba4d43f9843128d3542260d9a2f1f_0.geojson")
+
+taz1454 <- dplyr::select(taz1454,TAZ1454)
+taz1454 <- dplyr::rename(taz1454, taz = TAZ1454)
+
+taz1454 <- sf::st_transform(taz1454, crs=26910)
+
+taz1454$taz_area <- st_area(taz1454)
+```
+
+### Tracts
+
+#### Crop Water
+
+Crop water out of tracts. TAZ's do not use water. 
+
+We set EVAL to false on this because erasing water takes a long time. You can turn it on if you need to update the tracts or the water cut. 
+
+```{r, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+tracts <- dplyr::select(tracts,TRACTCE10)
+tracts <- dplyr::rename(tracts,tract = TRACTCE10)
+tracts <- st_transform(tracts, crs=26910)
+detach("package:tigris", unload=TRUE)
+
+knitr::kable(table(st_is_valid(tracts)))
+
+bay_water <- st_read("https://geo.nyu.edu/download/file/stanford-mb777jk0330-geojson.json")
+bay_water <- bay_water[st_is_valid(bay_water),]
+bay_water <- st_transform(bay_water, crs=26910)
+
+st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
+tracts <- st_erase(tracts,bay_water)
+
+setwd("~/Documents/Projects/Data-And-Visualization-Projects/census_examples/taz_tract")
+st_write(tracts,"tracts_minus_water.gpkg")
+```
+
+#### Tract Area
+
+```{r,message=FALSE, warning=FALSE, results='hide'}
+setwd("~/Documents/Projects/Data-And-Visualization-Projects/census_examples/taz_tract")
+tracts <- st_read(dsn="tracts_minus_water.gpkg")
+tracts$tract_area <- st_area(tracts)
+#knitr::kable(table(st_is_valid(tracts)))
+```
+
+#### Join 2010 Tracts to 2000 match
+
+Join the tracts to their equivalence table from the year 2000 for reference. 
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+library(readr)
+library(stringr)
+
+Tract_zone_2000 <- read_csv("https://s3-us-west-2.amazonaws.com/equivalence/Tract_zone_2000.csv")
+
+#tract from source (census) is not an integer but has been made one in this lookup. 
+#fix that. 
+Tract_zone_2000$Tract <-str_pad(as.character(Tract_zone_2000$Tract), width=6, side = 'left', pad = "0")
+
+tracts <- left_join(tracts, Tract_zone_2000, by=c("tract" = "Tract"))
+```
+
+### intersection_df
+
+Full spatial intersection of TAZ and Tracts
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+library(sf)
+intersection_df <- st_intersection(tracts,taz1454)
+
+intersection_df$intersection_area <- as.numeric(st_area(intersection_df))
+```
+
+#### Throw out Topological Errors
+
+Transportation Analysis Zones (TAZ) and Tracts do note share a single topology (e.g. road network).
+
+For example, there are many instances in which TAZ boundaries are drawn 50 meters into a Census Tract. 
+
+This becomes clear when we look at a selection of the intersecting features on the map with very small areas relative to the length of their outer boundary.  
+
+```{r, warning=FALSE}
+intersection_df$length_to_area_ratio <- as.numeric(st_length(st_cast(intersection_df,'MULTILINESTRING'))/st_area(intersection_df))
+
+q1 <- quantile(intersection_df$length_to_area_ratio, c(.25,.5))
+
+intersection_df$definitely_a_sliver <- intersection_df$length_to_area_ratio>q1[2]
+intersection_df$probably_a_sliver <- intersection_df$length_to_area_ratio>q1[1]
+
+sliver_data <- intersection_df[intersection_df$definitely_a_sliver==TRUE,]
+
+sliver_sample <- sliver_data[sample(nrow(sliver_data), 200),]
+
+mapview(sliver_sample, color="red", col.regions="red", map.types=c('Stamen.Toner.Light'))
+
+```
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+intersection_df_no_sliver <- intersection_df[!intersection_df$definitely_a_sliver==TRUE,]
+```
+
+These slivers of geometries that happen when we spatially intersect these two datasets. These slivers contain no information other than the fact that the geometries do not share a common topology.
+
+We'll flag these on the table as an attribute so we can consider throwing these relationships out before building our equivalence table.
+
+#### Sum of TAZ Areas Constitute the Area of a Tract
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+library(dplyr)
+
+tracts_zones_area <- intersection_df_no_sliver %>% 
+  group_by(tract) %>% 
+  summarise(taz_area_by_tract = sum(taz_area))
+
+tracts_temp <- tracts
+st_geometry(tracts_temp) <- NULL
+st_geometry(tracts_zones_area) <- NULL
+
+tracts_zones_area <- left_join(tracts_temp,tracts_zones_area, by="tract")
+
+tracts_zones_area$taz_area_over_tract_area <- as.numeric(tracts_zones_area$taz_area_by_tract)/as.numeric(tracts_zones_area$tract_area)
+
+tracts_zones_area <- dplyr::select(tracts_zones_area,tract,taz_area_by_tract,taz_area_over_tract_area)
+
+tracts <- left_join(tracts,tracts_zones_area)
+```
+
+#### Clean Up
+
+We should now have enough to build the table and some diagnostics about the kind of "equivalence" we are outputting for each tract. Lets clean up the environment first. 
+
+```{r}
+dataframes_to_keep <- c("tracts","taz1454","intersection_df")
+
+rm(list = ls()[!ls() %in% dataframes_to_keep])
+```
+
+#### Build the 2010 Equivalence Table
+
+The fastest way to do this is to only build the equivalence for new tracts, assuming the 2000 table is correct.
+
+In practice, there are errors in the 2000 lookup table that we may want to review. 
+
+But for now we'll just build relationships for the new tracts in order to understand how we're building this table. 
+
+'rtaz' is a column header from the year 2000 lookup table. If its not on the tract, then the tract hasn't already been mapped to a TAZ. 
+
+```{r}
+new_tracts <- tracts[is.na(tracts$rtaz1),]
+new_tract_ids <- new_tracts$tract
+length(new_tract_ids)
+```
+
+So we have 387 new tracts in 2010.  
+
+#### Substantial Matches  
+
+How do we decide which TAZ to match with which tract?
+
+We need to decide which intersections are substantial. As we stated at the beginning, a substantial TAZ/Tract relationship can be one of the following:
+
+For any given Tract: 
+(a) the TAZ that fully and completely circumscribes it, 
+(b) that mostly circumscribes it, or finally, 
+(c) the set of TAZ's that are within it. 
+
+Its easiest identify substantial relationships by process of elimination on the full spatial intersection of the data. 
+
+So first we will drop the "probably a sliver" spatial relationships. This includes "definitely a sliver" relationships. These are not relationships that fall in any of the above categories. 
+
+```{r, message=FALSE, warning=FALSE}
+intersection_df_no_sliver <- intersection_df[!intersection_df$probably_a_sliver==TRUE,]
+intersection_df_no_sliver <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% new_tract_ids,]
+dim(intersection_df_no_sliver)
+```
+
+That leaves us with about 500 relationships for for 300 tracts. 
+
+Lets first identify all tracts in sets (a) and (b) 
+
+These tracts should have an area of intersection with a given TAZ thats (very close to) equal to their area. We say "very close" because the topology errors here make full identity unlikely.    
+
+```{r}
+intersection_df_no_sliver$intersection_area_over_tract_area <- as.numeric(intersection_df_no_sliver$intersection_area)/as.numeric(intersection_df_no_sliver$tract_area) 
+summary(intersection_df_no_sliver$intersection_area_over_tract_area)
+print(table(intersection_df_no_sliver$intersection_area_over_tract_area>.70))
+```
+
+If we base our decision on 2000 data then we should expect about 96% of the Tracts to map to only 1 TAZ, which would be the relationship conditions defined as (a) and (b).
+
+Setting the intersection_area_over_tract_area ratio to 50% gets us to almost exactly that number. Lets be conservative and go with 70%
+
+Given that 2000 is our baseline, lets call those intersections acceptable and move on to the next set: (c). 
+
+```{r}
+intersection_type_a_b <- intersection_df_no_sliver[intersection_df_no_sliver$intersection_area_over_tract_area>.70,]
+
+tracts_left_id <- intersection_df_no_sliver[!intersection_df_no_sliver$tract %in% intersection_type_a_b$tract,]$tract
+length(tracts_left_id)
+```
+
+That leaves us just a handful of tracts left. 
+
+```{r}
+intersection_tracts_left <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tracts_left_id,]
+dim(intersection_tracts_left)
+```
+
+```{r}
+tract_ids <- tracts_left_id
+
+taz_overlap_ids <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]$taz
+
+tracts1 <- tracts[tracts$tract %in% tract_ids,]
+taz1 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection1 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
+```
+
+```{r}
+mapview(tracts1, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+```
+
+In looking at these it becomes apparent that many/most of these Tracts are equivalent to the TAZ's they intersect as a group. 
+
+#### TAZ/Block Equivalency
+
+It seems like the TAZ's which constitute a TAZ as a group are built directly from blocks. 
+
+For example:
+
+```{r}
+block_tract1 <- "061500"
+tract_ids <- block_tract1
+blocks_df <- blocks[blocks$TRACTCE10 %in% tract_ids,]
+
+taz_overlap_ids <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]$taz
+
+tracts1 <- tracts[tracts$tract %in% tract_ids,]
+taz1 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection1 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
+
+mapview(tracts1, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(blocks_df, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+```
+
+Or:
+
+```{r}
+block_tract1 <- "613900"
+tract_ids <- block_tract1
+blocks_df <- blocks[blocks$TRACTCE10 %in% tract_ids,]
+
+taz_overlap_ids <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]$taz
+
+tracts1 <- tracts[tracts$tract %in% tract_ids,]
+taz1 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection1 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
+
+mapview(tracts1, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(blocks_df, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+```
+
+We will say that this Tract is equivalent to the TAZ's that make it up. 
+
+#### TAZ larger than Tract
+
+Others are examples of where the TAZ is larger than the Tract. For example:
+
+```{r}
+cross_tract <- "505009"
+tract_ids <- cross_tract
+
+taz_overlap_ids <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]$taz
+
+tracts1 <- tracts[tracts$tract %in% tract_ids,]
+taz1 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection1 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
+
+mapview(tracts1, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+```
+
+We will say that this Tract is equivalent to the TAZ that covers it an extends further. 
+
+#### Tract Is Split by TAZ's
+
+In some cases the Tract seems to be split by a TAZ. 
+
+```{r}
+cross_tract <- "403502"
+tract_ids <- cross_tract
+blocks_df <- blocks[blocks$TRACTCE10 %in% tract_ids,]
+
+taz_overlap_ids <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]$taz
+
+tracts1 <- tracts[tracts$tract %in% tract_ids,]
+taz1 <- taz1454[taz1454$taz %in% taz_overlap_ids,]
+intersection1 <- intersection_df_no_sliver[intersection_df_no_sliver$tract %in% tract_ids,]
+
+mapview(tracts1, col.regions="green", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(taz1, col.regions="blue", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light')) +
+  mapview(intersection1, color="red", col.regions="red", alpha=0.8, map.types=c('Stamen.Toner.Light'))
+```
+
+We will say that this Tract is equivalent to the TAZ that makese up its majority. 
+
+
+
+
+
+
+

@@ -1,0 +1,211 @@
+---
+title: "Data Prep for Developing TAZ/Census Equivalency Tables"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tigris)
+library(sf)
+library(dplyr)
+library(mapview)
+library(readr)
+options(tigris_use_cache=TRUE)
+counties=c("01","13","41","55","75","81","85","95","97")
+tracts <- tigris::tracts("CA", counties, class="sf", year=2010)
+#blocks call is not strictly necessary but can be uncommented if desired
+#blocks <- tigris::blocks("CA", counties, class="sf", year=2010)
+```
+
+## Data Prep
+
+### Variables to Calculate
+
+These are in order of processing:
+  
+*taz:
+taz_area
+
+*tract:
+crop out water
+tract_area
+join to 2000 equivalence match
+
+*intersection_df:
+Throw out Topological Errors
+intersection_area
+length_to_area_ratio 
+
+*tract:
+taz_area_by_tract
+taz_area_over_tract_area
+
+### TAZ
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+taz1454 <- st_read("https://opendata.arcgis.com/datasets/b85ba4d43f9843128d3542260d9a2f1f_0.geojson")
+
+taz1454 <- dplyr::select(taz1454,TAZ1454)
+taz1454 <- dplyr::rename(taz1454, taz = TAZ1454)
+
+taz1454 <- sf::st_transform(taz1454, crs=26910)
+
+taz1454$taz_area <- st_area(taz1454)
+```
+
+### Tracts
+
+#### Crop Water
+
+Crop water out of tracts. TAZ's do not use water. 
+
+We set EVAL to false on this because erasing water takes a long time. You can turn it on if you need to update the tracts or the water cut. 
+
+```{r, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+tracts <- dplyr::select(tracts,TRACTCE10)
+tracts <- dplyr::rename(tracts,tract = TRACTCE10)
+tracts <- st_transform(tracts, crs=26910)
+detach("package:tigris", unload=TRUE)
+
+knitr::kable(table(st_is_valid(tracts)))
+
+bay_water <- st_read("https://geo.nyu.edu/download/file/stanford-mb777jk0330-geojson.json")
+bay_water <- bay_water[st_is_valid(bay_water),]
+bay_water <- st_transform(bay_water, crs=26910)
+
+st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
+tracts <- st_erase(tracts,bay_water)
+
+setwd("~/Documents/Projects/Data-And-Visualization-Projects/census_examples/taz_tract")
+st_write(tracts,"tracts_minus_water.gpkg")
+st_write(st_as_sf(blocks),"blocks.gpkg")
+```
+
+#### Tract Area
+
+```{r,message=FALSE, warning=FALSE, results='hide'}
+setwd("~/Documents/Projects/Data-And-Visualization-Projects/census_examples/taz_tract")
+tracts <- st_read(dsn="tracts_minus_water.gpkg")
+tracts$tract_area <- st_area(tracts)
+#knitr::kable(table(st_is_valid(tracts)))
+```
+
+#### Join 2010 Tracts to 2000 match
+
+Join the tracts to their equivalence table from the year 2000 for reference. 
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+library(readr)
+library(stringr)
+
+Tract_zone_2000 <- read_csv("https://s3-us-west-2.amazonaws.com/equivalence/Tract_zone_2000.csv")
+
+#tract from source (census) is not an integer but has been made one in this lookup. 
+#fix that. 
+Tract_zone_2000$Tract <-str_pad(as.character(Tract_zone_2000$Tract), width=6, side = 'left', pad = "0")
+
+tracts <- left_join(tracts, Tract_zone_2000, by=c("tract" = "Tract"))
+```
+
+### intersection_df
+
+Full spatial intersection of TAZ and Tracts
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+library(sf)
+intersection_df <- st_intersection(tracts,taz1454)
+
+intersection_df$intersection_area <- as.numeric(st_area(intersection_df))
+```
+
+#### Flag Topological Errors
+
+Transportation Analysis Zones (TAZ) and Tracts do note share a single topology (e.g. road network).
+
+For example, there are many instances in which TAZ boundaries are drawn 50 meters into a Census Tract. 
+
+This becomes clear when we look at a selection of the intersecting features on the map with very small areas relative to the length of their outer boundary.  
+
+```{r, warning=FALSE}
+intersection_df$length_to_area_ratio <- as.numeric(st_length(st_cast(intersection_df,'MULTILINESTRING'))/st_area(intersection_df))
+
+q1 <- quantile(intersection_df$length_to_area_ratio, c(.25,.5))
+
+intersection_df$definitely_a_sliver <- intersection_df$length_to_area_ratio>q1[2]
+intersection_df$probably_a_sliver <- intersection_df$length_to_area_ratio>q1[1]
+
+sliver_data <- intersection_df[intersection_df$definitely_a_sliver==TRUE,]
+
+sliver_sample <- sliver_data[sample(nrow(sliver_data), 200),]
+
+mapview(sliver_sample, color="red", col.regions="red", map.types=c('Stamen.Toner.Light'))
+
+```
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+intersection_df_no_sliver <- intersection_df[!intersection_df$definitely_a_sliver==TRUE,]
+```
+
+These slivers of geometries that happen when we spatially intersect these two datasets. These slivers contain no information other than the fact that the geometries do not share a common topology.
+
+We'll flag these on the table as an attribute so we can consider throwing these relationships out before building our equivalence table.
+
+#### Sum of TAZ Areas Constitute the Area of a Tract
+
+```{r, message=FALSE, results='hide', warning=FALSE}
+tracts_zones_area <- intersection_df_no_sliver %>% 
+  group_by(tract) %>% 
+  summarise(taz_area_by_tract = sum(taz_area))
+
+tracts_temp <- tracts
+st_geometry(tracts_temp) <- NULL
+st_geometry(tracts_zones_area) <- NULL
+
+tracts_zones_area <- left_join(tracts_temp,tracts_zones_area, by="tract")
+
+tracts_zones_area$taz_area_over_tract_area <- as.numeric(tracts_zones_area$taz_area_by_tract)/as.numeric(tracts_zones_area$tract_area)
+
+tracts_zones_area <- dplyr::select(tracts_zones_area,tract,taz_area_by_tract,taz_area_over_tract_area)
+
+tracts <- left_join(tracts,tracts_zones_area)
+```
+
+### Year 2000 Lookup Table
+
+We put read this from a versioned S3 bucket. It was received in an Asana task. 
+
+```{r, message=FALSE, warning=FALSE}
+
+Tract_zone_2000 <- read_csv("https://s3-us-west-2.amazonaws.com/equivalence/Tract_zone_2000.csv")
+
+#make the integer tract back into a string (census standard)
+Tract_zone_2000$Tract <-str_pad(as.character(Tract_zone_2000$Tract), width=6, side = 'left', pad = "0")
+
+intersection_df_s <- intersection_df[,c('tract','taz')]
+
+tract_zone_2000_dense <- reshape2::melt(Tract_zone_2000, id.vars = "Tract")
+
+names(tract_zone_2000_dense) <- c('tract','string','taz')
+
+year_2000_intersection_df <- left_join(intersection_df_s, tract_zone_2000_dense, by=c('tract','taz'),suffix=c('full_intersection','tz2000'))
+
+```
+
+If 2000 table is correct then we might expect a similar distribution of intersections. We can reference this later as a check. 
+
+#### Clean Up
+
+We should now have enough to build the table and some diagnostics about the kind of "equivalence" we are outputting for each tract. Lets clean up the environment first. Then write these out to a dataframe so we don't have to run the above again. 
+
+```{r}
+dataframes_to_keep <- c("tracts","taz1454","intersection_df","blocks","Tract_zone_2000","year_2000_intersection_df")
+
+rm(list = ls()[!ls() %in% dataframes_to_keep])
+
+setwd("~/Box/DataViz\ Projects/Data\ Analysis\ and\ Visualization/census_examples/taz_tract/data")
+st_write(year_2000_intersection_df, "intersection_df_2000.gpkg", delete_layer=TRUE)
+st_write(tracts, "tracts.gpkg", delete_layer=TRUE)
+st_write(taz1454, "taz1454.gpkg", delete_layer=TRUE)
+st_write(intersection_df, "intersection_df.gpkg", delete_layer=TRUE)
+#st_write(blocks, "blocks.gpkg")
+```
