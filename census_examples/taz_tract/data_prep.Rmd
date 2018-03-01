@@ -1,5 +1,5 @@
 ---
-title: "Data Prep for Developing TAZ/Census Equivalency Tables"
+title: "Data Prep for Developing Equivalency Tables"
 output: html_document
 ---
 
@@ -10,11 +10,6 @@ library(sf)
 library(dplyr)
 library(mapview)
 library(readr)
-options(tigris_use_cache=TRUE)
-counties=c("01","13","41","55","75","81","85","95","97")
-tracts <- tigris::tracts("CA", counties, class="sf", year=2010)
-#blocks call is not strictly necessary but can be uncommented if desired
-#blocks <- tigris::blocks("CA", counties, class="sf", year=2010)
 ```
 
 ## Data Prep
@@ -59,15 +54,22 @@ taz1454$taz_area <- st_area(taz1454)
 
 Crop water out of tracts. TAZ's do not use water. 
 
-We set EVAL to false on this because erasing water takes a long time. You can turn it on if you need to update the tracts or the water cut. 
+```{r, eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
+options(tigris_use_cache=TRUE)
+counties1<-c("01","13","41","55","75","81","85","95","97")
+tracts <- tigris::tracts("CA", counties1, class="sf", year=2010)
+tracts00 <- tigris::tracts("CA", counties1, class="sf", year=2000)
+#blocks call is not strictly necessary but can be uncommented if desired
+#blocks <- tigris::blocks("CA", counties1, class="sf", year=2010)
+detach("package:tigris", unload=TRUE)
 
-```{r, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 tracts <- dplyr::select(tracts,TRACTCE10)
 tracts <- dplyr::rename(tracts,tract = TRACTCE10)
 tracts <- st_transform(tracts, crs=26910)
-detach("package:tigris", unload=TRUE)
 
-knitr::kable(table(st_is_valid(tracts)))
+tracts00 <- dplyr::select(tracts00,TRACTCE00)
+tracts00 <- dplyr::rename(tracts00,tract = TRACTCE00)
+tracts00 <- st_transform(tracts00, crs=26910)
 
 bay_water <- st_read("https://geo.nyu.edu/download/file/stanford-mb777jk0330-geojson.json")
 bay_water <- bay_water[st_is_valid(bay_water),]
@@ -76,17 +78,25 @@ bay_water <- st_transform(bay_water, crs=26910)
 st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
 tracts <- st_erase(tracts,bay_water)
 
-setwd("~/Documents/Projects/Data-And-Visualization-Projects/census_examples/taz_tract")
+st_erase = function(x, y) st_difference(x, st_union(st_combine(y)))
+tracts00 <- st_erase(tracts00,bay_water)
+
+setwd("~/Box/DataViz\ Projects/Data\ Analysis\ and\ Visualization/census_examples/taz_tract/data")
+tracts$tract_area <- st_area(tracts)
+tracts00$tract_area <- st_area(tracts00)
+
 st_write(tracts,"tracts_minus_water.gpkg")
-st_write(st_as_sf(blocks),"blocks.gpkg")
+st_write(tracts00,"tracts_minus_water00.gpkg")
+
+#st_write(st_as_sf(blocks),"blocks.gpkg")
 ```
 
-#### Tract Area
+This is an optional way to read the water cut tracts with evaluation set to false. 
 
-```{r,message=FALSE, warning=FALSE, results='hide'}
-setwd("~/Documents/Projects/Data-And-Visualization-Projects/census_examples/taz_tract")
+```{r,eval=FALSE,message=FALSE, warning=FALSE, results='hide'}
+setwd("~/Box/DataViz\ Projects/Data\ Analysis\ and\ Visualization/census_examples/taz_tract/data")
+tracts00 <- st_read(dsn="tracts_minus_water00.gpkg")
 tracts <- st_read(dsn="tracts_minus_water.gpkg")
-tracts$tract_area <- st_area(tracts)
 #knitr::kable(table(st_is_valid(tracts)))
 ```
 
@@ -181,7 +191,9 @@ Tract_zone_2000 <- read_csv("https://s3-us-west-2.amazonaws.com/equivalence/Trac
 #make the integer tract back into a string (census standard)
 Tract_zone_2000$Tract <-str_pad(as.character(Tract_zone_2000$Tract), width=6, side = 'left', pad = "0")
 
-intersection_df_s <- intersection_df[,c('tract','taz')]
+intersection_df_s <- st_intersection(tracts00,taz1454)
+
+intersection_df_s <- intersection_df_s[,c('tract','taz')]
 
 tract_zone_2000_dense <- reshape2::melt(Tract_zone_2000, id.vars = "Tract")
 
@@ -203,9 +215,13 @@ dataframes_to_keep <- c("tracts","taz1454","intersection_df","blocks","Tract_zon
 rm(list = ls()[!ls() %in% dataframes_to_keep])
 
 setwd("~/Box/DataViz\ Projects/Data\ Analysis\ and\ Visualization/census_examples/taz_tract/data")
+write_csv(Tract_zone_2000, "Tract_zone_2000.csv")
 st_write(year_2000_intersection_df, "intersection_df_2000.gpkg", delete_layer=TRUE)
 st_write(tracts, "tracts.gpkg", delete_layer=TRUE)
 st_write(taz1454, "taz1454.gpkg", delete_layer=TRUE)
+
+intersection_df$probably_a_sliver <- as.numeric(intersection_df$probably_a_sliver)
+intersection_df$definitely_a_sliver <- as.numeric(intersection_df$definitely_a_sliver)
 st_write(intersection_df, "intersection_df.gpkg", delete_layer=TRUE)
 #st_write(blocks, "blocks.gpkg")
 ```
