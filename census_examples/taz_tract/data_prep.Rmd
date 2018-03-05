@@ -54,7 +54,7 @@ taz1454$taz_area <- st_area(taz1454)
 
 Crop water out of tracts. TAZ's do not use water. 
 
-```{r, eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
+```{r, eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 options(tigris_use_cache=TRUE)
 counties1<-c("01","13","41","55","75","81","85","95","97")
 tracts <- tigris::tracts("CA", counties1, class="sf", year=2010)
@@ -93,7 +93,7 @@ st_write(tracts00,"tracts_minus_water00.gpkg")
 
 This is an optional way to read the water cut tracts with evaluation set to false. 
 
-```{r,eval=FALSE,message=FALSE, warning=FALSE, results='hide'}
+```{r,eval=TRUE,message=FALSE, warning=FALSE, results='hide'}
 setwd("~/Box/DataViz\ Projects/Data\ Analysis\ and\ Visualization/census_examples/taz_tract/data")
 tracts00 <- st_read(dsn="tracts_minus_water00.gpkg")
 tracts <- st_read(dsn="tracts_minus_water.gpkg")
@@ -218,6 +218,7 @@ setwd("~/Box/DataViz\ Projects/Data\ Analysis\ and\ Visualization/census_example
 write_csv(Tract_zone_2000, "Tract_zone_2000.csv")
 st_write(year_2000_intersection_df, "intersection_df_2000.gpkg", delete_layer=TRUE)
 st_write(tracts, "tracts.gpkg", delete_layer=TRUE)
+st_write(tracts00, "tracts00.gpkg", delete_layer=TRUE)
 st_write(taz1454, "taz1454.gpkg", delete_layer=TRUE)
 
 intersection_df$probably_a_sliver <- as.numeric(intersection_df$probably_a_sliver)
