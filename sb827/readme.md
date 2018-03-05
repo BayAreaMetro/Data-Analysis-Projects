@@ -9,3 +9,9 @@ please see [here](https://medium.com/@Scott_Wiener/sb-827-amendments-strengtheni
 ### scripts
 - get_data_827_feb_2018_amendments.r
 - make_boundary.r
+
+### draft data processing example
+
+example [here](https://bayareametro.github.io/Data-And-Visualization-Projects/sb827/sb827_amendment_example.html)
+
+
