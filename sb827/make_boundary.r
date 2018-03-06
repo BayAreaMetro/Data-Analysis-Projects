@@ -1,7 +1,7 @@
 library(sf)
 setwd("~/Documents/Projects/mtc/Data-And-Visualization-Projects/sb827")
-major_stops_827_1_2_mile <- st_read("major_stops_827_1_2_mile.geojson")
-stops_on_corridors_1_4_mile <- st_read("stops_on_corridors_1_4_mile.geojson")
+major_stops_827_1_2_mile <- st_read("major_stops_1_2_mile.geojson")
+stops_on_corridors_1_4_mile <- st_read("bus_stops_on_high_frequency_corridors_1_4_mile.geojson")
 
 major_stops_827_1_2_mile <- st_transform(major_stops_827_1_2_mile, crs=26910)
 stops_on_corridors_1_4_mile <- st_transform(stops_on_corridors_1_4_mile, crs=26910)
