@@ -6,6 +6,14 @@ This is a summary of some analysis tasks. Some of these will be addressed here o
 
 What *streets* within a transit rich zone (1/2 mile from a major transit stop and within ¼ mile of a high-quality transit corridor (AKA TPA eligible areas <http://mtc.maps.arcgis.com/home/webmap/viewer.html?useExisting=1&layers=165d990e3d1341c4942b79e526eafe0f>) would be subject to maximum heights at 85 feet, 55 feet and 45 feet?
 
+relevant definitions from [the proposed bill](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201720180SB827):
+
+### An eligible applicant shall be exempt from local maximum height limits as follows:
+
+1. If the transit-rich housing project is within a one-quarter mile radius of either a major transit stop or a stop on a high-quality transit corridor, the maximum height limitation shall not be less than 85 feet, except in cases where a parcel facing a street that is less than 70 feet wide from property line to property line, in which case the maximum height shall not be less than 55 feet. If the project is exempted from the local maximum height limitation, the maximum height limitation for a transit-rich housing project shall be 85 feet or 55 feet, as provided in this paragraph.
+2. If the transit-rich housing project is within one-half mile of a major transit stop, but does not meet the criteria specified in paragraph (1), any maximum height limitation shall not be less than 55 feet, except in cases where a parcel facing a street that is less than 70 feet wide from property line to property line, in which case the maximum height shall not be less than 45 feet. If the project is exempted from the local maximum height limitation, the maximum height limitation for a transit-rich housing project shall be 55 feet or 45 feet, as provided in this paragraph.
+3. For purposes of this subdivision, if a parcel has street frontage on two or more different streets, the maximum height limitation pursuant to this subdivision shall be based on the widest street.
+
 ## Zoning
 
 Overlay that with the existing height maximums. 
