@@ -37,3 +37,25 @@ nw_sf_more_than_2 <- nw_sf_s[nw_sf_s$LANES>2,]
 nw_sf_more_than_2_random <- nw_sf_more_than_2[sample(nrow(nw_sf_more_than_2), 200), ]
 
 mapview(nw_sf_more_than_2_random)
+
+nw_sf_827 <- st_read("nw_in_boundaries_more_than_0_lane.gpkg")
+st_crs(nw_sf_827) = 26910
+
+nw_sf_827 <- st_transform(nw_sf_827, crs=4326)
+
+st_write(nw_sf_827, "nw_in_boundaries.geojson")
+
+nw2 <- group_by(nw_sf_827,LANES) %>% 
+  summarise(geog = st_union(geom))
+
+nw2 <- st_transform(nw_sf_827, crs=4326)
+st_write(nw2,"road_network_in_827_boundaries.geojson")
+
+nw.g <- nw_sf_827 %>% group_by(LANES)
+
+df3 <- nw.g %>% summarise(geog = st_union(geom))
+
+library(mapview)
+mapview(df3)
+
+st_write(df3,"road_network_in_827_boundaries.shp")
