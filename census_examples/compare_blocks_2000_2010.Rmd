@@ -1,0 +1,57 @@
+---
+title: "compare_blocks_2000_to_2010_bay_area"
+author: "Tom Buckley"
+date: "3/16/2018"
+output:
+  html_document:
+    toc: true
+    theme: united
+    toc_depth: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tigris)
+library(mapview)
+library(dplyr)
+library(sf)
+
+options(tigris_class = "sf")
+options(tigris_use_cache=TRUE)
+counties1<-c("01","75","81","95","97")
+blocks10 <- tigris::blocks("CA", counties1, class="sf", year=2010)
+blocks00 <- tigris::blocks("CA", counties1, class="sf", year=2000)
+```
+
+## Goal 
+
+Describe the stability of Census Blocks in the bay area over time. 
+
+## Count Block ID's shared in 2000 and 2010
+
+```{r}
+table(blocks10$GEOID10 %in% blocks00$BLKIDFP00)
+
+table(blocks00$BLKIDFP00 %in% blocks10$GEOID10)
+```
+
+## Compare Sample of Geometries
+
+```{r, echo=FALSE, include=FALSE}
+blocks10_not_in_00 <- blocks10[!blocks10$GEOID10 %in% blocks00$BLKIDFP00,]
+blocks00_not_in_10 <- blocks00[!blocks00$BLKIDFP00 %in% blocks10$GEOID10,]
+
+blocks10_not_in_00_s <- sample_n(blocks10_not_in_00, 200)
+
+(mat = st_intersects(blocks00_not_in_10, blocks10_not_in_00_s, sparse = FALSE))
+v1 <- apply(mat, 1, any)
+
+blocks00_not_in_10_s_intersect_10 <- blocks00_not_in_10[v1,]
+```
+
+```{r}
+mapview(blocks00_not_in_10_s_intersect_10, col.regions="green", alpha=0.8) +
+mapview(blocks10_not_in_00_s, col.regions="blue", alpha=0.8)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
