@@ -8,11 +8,9 @@ Modified version of [this Amazon Machine Image](http://www.louisaslett.com/RStud
 
 ## Scripts 
 
-Where we modified the AMI above, we used the scripts in this directory. 
+Where we modified the AMI above, we used the `minimal_setup.sh` 
 
 ## Data Transfer
 
 The server has an interface to MTC's Box accounts through the [boxr](https://github.com/brendan-r/boxr) package. 
-
-
 
