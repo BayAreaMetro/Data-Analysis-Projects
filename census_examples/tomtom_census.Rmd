@@ -1,0 +1,158 @@
+---
+title: "Characterize Census 2010 TIGER and TomTom Relationships For Analysis"
+output:
+  html_document:
+    toc: true
+    theme: united
+    toc_depth: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tigris)
+library(sf)
+library(dplyr)
+library(mapview)
+library(readr)
+```
+
+## Goal
+
+Relate TomTom Census geometries to standard census geometries (TIGER), in order to understand any differences that may affect how MTC visualizes and analyzes statutory, demographic, and other data. 
+
+MTC D&V supports the use of TomTom geometries and often receives requests related to TIGER based geometries, for example from land use, travel model, and economic development and forecasting outputs, as well as various Federal and statutory requirements. 
+
+This document is a limited attempt to describe how TomTom's geometries relate to federal geometries by attribute and geometry.  
+
+### Notes from the TomTom Docs:
+
+A text string search for "Census" in the many files included in the TomTom documentation revealed limited information on when Federal TIGER geometries were sourced, and none on how they were modified. 
+
+A selection of what was found is below:
+
+"Census Administrative Place (USA)
+Census Administrative Places include Incorpo- rated Places, Consolidated Cities and Census Designated Places (CDP). CDPs are U.S. Census Bureau designated population centers. All definitions with this bit value are from Census 2000 and are not actively updated by TomTom."
+-"Locality_index_1-5_ds_fs_v_1-0-7"
+
+The documentation (from 2016) seem to indicate that the block data might be based on the year 2000 US Census:
+
+See [here](http://gis.mtc.ca.gov/home/TomTom_UserGuide/index.html#data_content_shape_osl/other_named_areas/other_named_areas.html) for more detail.
+
+So lets look at the geometries for the year 2000 tracts directly from TIGER and compare those to see if there are differences that might affect analysis and representation of these data. 
+
+### Year 2000 or 2010 TIGER geometries?
+
+#### Demonstrate that the ids for year for 2016 data is TIGER 2010
+
+First we load the tract data from the US Census for the Bay Area Counties. 
+
+```{r}
+options(tigris_class = "sf")
+options(tigris_use_cache=TRUE)
+counties1<-c("01","13","41","55","75","81","85","95","97")
+tracts00 <- tigris::tracts("CA", counties1, class="sf", year=2000)
+detach("package:tigris", unload=TRUE)
+```
+
+Next we load Census tracts from TomTom.
+
+```{r}
+tracts_tt <- st_read("/Volumes/s256_/equivalencies/db.gdb",layer="tt_oa01")
+```
+
+Map the GEOID's in Census to TomTom Format
+
+```{r}
+tracts_tt$CODE <- as.character(tracts_tt$CODE)
+
+tracts00$tt_code <- paste0("840",tracts00$CTIDFP00)
+```
+
+Check that they share the same geoids (for every tract geoid in the bay, tomtom should have a tract geoid)
+
+```{r}
+table(tracts00$tt_code %in% tracts_tt$CODE)
+```
+
+So there seem to be 200 tracts in the census bay area data that are not in the tomtom data. 
+
+Lets look at them on a map
+
+```{r}
+tracts00_not_in_tt <- tracts00[!tracts00$tt_code %in% tracts_tt$CODE,]
+
+mapview(tracts00_not_in_tt)
+```
+
+Lets try 2010 tract data to see if thats what the TomTom Tract data are based on. 
+
+```{r}
+library(tigris)
+options(tigris_class = "sf")
+options(tigris_use_cache=TRUE)
+counties1<-c("01","13","41","55","75","81","85","95","97")
+tracts10 <- tigris::tracts("CA", counties1, class="sf", year=2010)
+detach("package:tigris", unload=TRUE)
+```
+
+```{r}
+tracts10$tt_code <- paste0("840",tracts10$GEOID10)
+```
+
+```{r}
+table(tracts10$tt_code %in% tracts_tt$CODE)
+```
+
+All of the tract ids in the Bay Area TIGER data for 2010 are in the TomTom Tracts. 
+
+So TomTom Tracts are from 2010, which makes sense. 
+
+Lets clean up the 2000 Tracts. And rename the census tracts, since now we'll just work with 2010, census and tomtom. 
+
+We also subset tomtom tracts to just bay area. 
+
+```{r}
+rm(tracts00)
+rm(tracts00_not_in_tt)
+tracts_census <- tracts10
+rm(tracts10)
+tracts_tt <- tracts_tt[tracts_tt$CODE %in% tracts_census$tt_code,]
+```
+
+#### Characterize the Geometric Relationship Between TomTom and TIGER
+
+As we can see in the map above, TomTom geometries for Census Tracts (and other areas, such as blocks), are slightly different from the TIGER geometries. Lacking documentation on these differences, all we can do is speculate that TomTom represents Census geometries differently in order to integrate them with other data that they provide (such as street center-lines). 
+
+Lets describe the differences in geometries by area so that we have a sense of the scope of the differences. 
+
+```{r}
+tracts_tt <- st_transform(tracts_tt, crs=26910)
+tracts_census <- st_transform(tracts_census, crs=26910)
+
+tracts_tt$area_tomtom <- st_area(tracts_tt)
+tracts_census$area_census <- st_area(tracts_census)
+
+tracts_tt_area <- tracts_tt %>% select(CODE,area_tomtom)
+
+tracts_census_area <- tracts_census %>% select(tt_code,area_census)
+
+tracts_areas_comparison <- left_join(as.data.frame(tracts_census_area), as.data.frame(tracts_tt_area), by=c('tt_code'='CODE'))
+
+tracts_areas_comparison$tt_area_over_census <- tracts_areas_comparison$area_tomtom/tracts_areas_comparison$area_census
+
+summary(tracts_areas_comparison$tt_area_over_census)
+
+library(ggplot2)
+
+qplot(as.numeric(tracts_areas_comparison$tt_area_over_census),
+      geom="histogram",
+      binwidth = 0.001,  
+      main = "Histogram for TomTom/Census Tract Area Relationship", 
+      xlab = "Area of TomTom Tract divided by area of TIGER Tract",  
+      xlim=c(.9,1.1))
+```
+
+Looks like the differences are normally distributed and not far off from 1. Good to know! This means we can largely use TomTom Tracts and TIGER Tracts interchangeably. 
+
+However, given these slight errors in geometry, we should be sure to make joins based on the ID's of the geometries, rather than the geometries themselves. 
+

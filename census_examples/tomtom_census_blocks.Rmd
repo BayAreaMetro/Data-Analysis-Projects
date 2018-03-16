@@ -1,0 +1,53 @@
+### Block Data
+
+Below we go through a quick review of the difference between blocks in TomTom and TIGER. 
+
+In summary, what we find is that the TomTom blocks throw out blocks that are in medians and roads. 
+
+```{r, include=FALSE, echo=FALSE}
+library(tigris)
+options(tigris_class = "sf")
+options(tigris_use_cache=TRUE)
+blocks_census <- tigris::blocks("CA", counties1, class="sf", year=2010)
+detach("package:tigris", unload=TRUE)
+
+blocks_tt <- st_read("equivalencies/db.gdb",layer="tt_oa03")
+```
+
+```{r}
+blocks_tt$CODE <- as.character(blocks_tt$CODE)
+blocks_census$tt_code <- paste0("840",blocks_census$GEOID10)
+table(blocks_census$tt_code %in% blocks_tt$CODE)
+```
+
+TomTom data are missing around 2k blocks. 
+
+Lets look at a random sample of them on a map.
+
+```{r}
+blocks_census_not_in_tt <- blocks_census[!blocks_census$tt_code %in% blocks_tt$CODE,]
+
+mapview(sample_n(blocks_census_not_in_tt, 500))
+```
+
+The blocks in census that are not in TomTom are those in medians and roadways. 
+
+For the blocks that are in both census and TomTom, how different are their geometries?
+
+Lets look at a sample to get a sense visually. 
+
+```{r}
+blocks_census_sample <- sample_n(blocks_census, 100)
+
+blocks_tt_sample <- blocks_tt[blocks_tt$CODE %in% blocks_census_sample$tt_code,]
+```
+
+```{r}
+mapview(blocks_tt_sample, col.regions="green", alpha=0.8) +
+  mapview(blocks_census_sample, col.regions="blue", alpha=0.8)
+```
+
+
+
+
+
