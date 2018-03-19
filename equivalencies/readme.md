@@ -133,7 +133,7 @@ Travel Model 2 Geographies are based on axioms that will allow for easy comparis
 
 # Across Regional Data Products
 
-MTC, ABAG, and other (e.g. Air District) are produce areas based on transit, land use, and other features. Below we outline what some of these features are and how they relate to one another.  
+MTC and ABAG produce areas based on transit, land use, and other features. Below we outline what some of these features are and how they relate to one another.  
 
 Priority:
 
