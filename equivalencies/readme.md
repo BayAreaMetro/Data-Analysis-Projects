@@ -93,7 +93,7 @@ Some use cases for these relationships are:
 
 ## Census & TomTom
 
-### Attributes/Dimensions
+### Source Year & Number of Blocks
 
 TomTom's "other areas" Census tracts and blocks are from the 2010 Census. 
 
@@ -101,7 +101,7 @@ The Blocks data from TomTom have about ~2000 fewer blocks than the Census 2010 b
 
 ### Geometries
 
-Census TIGER and TomTom geometries are *slightly* different for each feature
+Census TIGER and TomTom geometries are *slightly* different for each feature. In short, this means their equivalency is based on the GEOID of the geography. 
 
 In practice, this means that calculations of things like population density (denominator of area) will yield slightly different results across these two data sets, with the same (non-geometric) attribute information. 
 
@@ -125,7 +125,7 @@ MTC has defined, for Year 2000 and 2010 Census Tracts, the following formal spat
 - (b) roughly the same as the TAZ, and
 - (c) larger than the TAZ. 
 
-See [here](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/equivalencies/taz_tract) for more detail. 
+See [here](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/equivalencies/taz_tract) for more detail on how we built equivalency tables for these geometries for one use case. 
 
 ### Travel Model 2
 
@@ -133,7 +133,7 @@ Travel Model 2 Geographies are based on axioms that will allow for easy comparis
 
 # Across Regional Data Products
 
-MTC and ABAG produce areas based on transit, land use, and other features. Below we outline what some of these features are and how they relate to one another.  
+MTC and ABAG produce areas based on transit, land use, and other features. Below we outline what some of these features are. In the future, time allowing, we will develop equivalencies between these. 
 
 Priority:
 
