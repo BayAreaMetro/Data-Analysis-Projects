@@ -17,6 +17,10 @@ dbClearResult(res)
 nw_db <- tbl(pg, "nw_lanes_ops_ewkt")
 nw_df <- as.data.frame(nw_db)
 
+res <- dbSendQuery(pg, 'DROP VIEW tbuckley.nw_lanes_ops_ewkt;')
+dbFetch(res)
+dbClearResult(res)
+
 library(sf)
 nw_sf <- st_as_sf(nw_df, wkt="shape_ewkt")
 
@@ -67,6 +71,10 @@ v1 <- apply(mat, 1, any)
 nw_sf_sum_sample_san_ramon <- nw_sf_sum[v1,]
 
 st_write(nw_sf_sum_sample_san_ramon, "nw_sf_sum_sample_san_ramon.gpkg", driver="GPKG")
+
+
+
+
 
 ###write to redshift
 ###
