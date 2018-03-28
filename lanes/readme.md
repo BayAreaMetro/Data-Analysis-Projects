@@ -13,7 +13,7 @@ Output summary lane information from several TomTom tables.
 
 ## Environment
 
-[MTC R Studio Server AMI](https://console.aws.amazon.com/ec2/home?region=us-west-2#launchAmi=ami-318c1249)
+[MTC R Studio Server AMI](https://console.aws.amazon.com/ec2/home?region=us-west-2#launchAmi=ami-2dfa6155)
 
 ## Outcome
 
