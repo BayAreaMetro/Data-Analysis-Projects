@@ -18,6 +18,10 @@ dbClearResult(res)
 nw_db <- tbl(pg, "nw_tmc_lanes_ewkt")
 nw_df <- as.data.frame(nw_db)
 
+res <- dbSendQuery(pg, 'DROP VIEW tbuckley.nw_tmc_lanes_ewkt;')
+dbFetch(res)
+dbClearResult(res)
+
 library(sf)
 nw_sf <- st_as_sf(nw_df, wkt="shape_ewkt")
 
