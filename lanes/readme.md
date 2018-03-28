@@ -19,9 +19,9 @@ Output summary lane information from several TomTom tables.
 
 Sample data are provided below, with an example map.
 
-[Map - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=21c03d5f81164bd89b1578dd25785d85)
-[Feature Class - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=bb0ef42996ff483c9fa2cfc44c981c9c)
-[Feature Class - Sample 2 - San Ramon](http://mtc.maps.arcgis.com/home/item.html?id=01eddb82b12b4682927a0e25e373e49e)
+- [Map - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=21c03d5f81164bd89b1578dd25785d85)
+- [Feature Class - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=bb0ef42996ff483c9fa2cfc44c981c9c)
+- [Feature Class - Sample 2 - San Ramon](http://mtc.maps.arcgis.com/home/item.html?id=01eddb82b12b4682927a0e25e373e49e)
 
 #### Metadata 
 
