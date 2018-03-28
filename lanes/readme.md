@@ -17,13 +17,23 @@ Output summary lane information from several TomTom tables.
 
 ## Outcome
 
-### Sample Data and Maps
+### Data and Maps
 
 Sample data are provided below, with an example map.
 
+#### Road Segments Grouped by Attributes
+
 - [Map - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=21c03d5f81164bd89b1578dd25785d85)
+- [FileGDB-Geospatial-Full Network](https://mtcdrive.box.com/s/s8widz2ag2v9umk8of45ost73116qlb9)
 - [Feature Class - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=bb0ef42996ff483c9fa2cfc44c981c9c)
 - [Feature Class - Sample 2 - San Ramon](http://mtc.maps.arcgis.com/home/item.html?id=01eddb82b12b4682927a0e25e373e49e)
+
+#### Road Segments Grouped by TMCID 
+
+- [CSV File-Attributes Only](https://mtcdrive.box.com/s/gly2zcjo5abj5ow02wsuosla77lmzue9)
+- [FileGDB-Geospatial-Full Network](https://mtcdrive.box.com/s/swt592xtohzoh7o0l6gktyvlrrxry8og)
+- [Feature Class - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=ccdeea77c66242c881aed3869d228510)
+- [Feature Class - Sample 2 - San Ramon](http://mtc.maps.arcgis.com/home/item.html?id=e4bc7f1246b7435e93c28aa3d17ae438)
 
 #### Metadata 
 
