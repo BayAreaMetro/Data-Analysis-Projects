@@ -8,6 +8,8 @@ Output summary lane information from several TomTom tables.
 
 - [lanes_summary.sql](lanes_summary.sql) - Used to create a summary view of lanes based on joining a number of TomTom table together on GISDB3
 - [lanes_summary.R](lanes_summary.R) - Executes the SQL above, and pulls the data to group by and union geometries, then output main table and data samples for Alameda and San Ramon. 
+- [lanes_summary_by_tmc.sql](lanes_summary.sql) - Used to create a summary view of lanes based on joining a number of TomTom table together on GISDB3
+- [lanes_summary_tmcid.R](lanes_summary.R) - Executes the SQL above, and pulls the data to group by and union geometries, then output main table and data samples for Alameda and San Ramon. 
 
 ## Environment
 
