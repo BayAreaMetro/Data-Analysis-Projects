@@ -27,8 +27,8 @@ Sample data are provided below, with an example map.
 
 Descriptions of column names and uses can be found in the documentation below:
 
-[Roads](https://mtcdrive.box.com/s/e8g0xuyr8w1pa69d9fcoc8usm6hfpe0j)
-[Routing](https://mtcdrive.box.com/s/wdtp9k3rtjnx694fhn0avlccu9xf7kiz)
+- [Roads](https://mtcdrive.box.com/s/e8g0xuyr8w1pa69d9fcoc8usm6hfpe0j)
+- [Routing](https://mtcdrive.box.com/s/wdtp9k3rtjnx694fhn0avlccu9xf7kiz)
 
 ### All Data
 
