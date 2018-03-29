@@ -20,3 +20,12 @@ The AMI is private to DV staff and is in the US-West-Oregon region: [ami-2dfa615
 ## Scripts 
 
 Where we modified the AMI above, we used the scripts in this dir. 
+
+should be run roughly in this order:
+
+```
+update_r.sh
+gdal_filegdb_setup.sh
+odbc_setup.sh
+install_packages.R
+```
