@@ -8,3 +8,4 @@ sudo odbcinst -i -d -f /usr/share/psqlodbc/odbcinst.ini.template
 sudo odbcinst -i -s -l  -n sample-dsn-name -f /usr/share/doc/odbc-postgresql/examples/odbc.ini.template
 #Now modify /etc/odbc.ini according to your DB:
 sudo nano /etc/odbc.ini
+sudo Rscript install_db_packages.R
