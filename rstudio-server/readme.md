@@ -27,5 +27,5 @@ should be run roughly in this order:
 update_r.sh
 gdal_filegdb_setup.sh
 odbc_setup.sh
-install_packages.R
+install_db_packages.R
 ```
