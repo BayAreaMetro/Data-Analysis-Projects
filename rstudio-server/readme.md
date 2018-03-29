@@ -6,7 +6,7 @@ R studio Server is an Open Source web application that delivers [R Studio](https
 
 ## Background
 
-We modified [this Amazon Machine Image](http://www.louisaslett.com/RStudio_AMI/) to add support for database adapters, multiple users, and a scaleable machine. 
+We modified [this Amazon Machine Image](http://www.louisaslett.com/RStudio_AMI/) to add support for database adapters, and multiple users.
 
 Highlights:
 
