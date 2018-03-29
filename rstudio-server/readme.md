@@ -15,8 +15,7 @@ Highlights:
 - ESRI FileGDB support through the Geospatial Data Abstraction Library
 - Box support through the boxr package. 
 
-The machine can be launched as an EC2 instance through the EC2 launch panel. 
-Select the following AMI (e.g. under "my AMI's" or search for it):
+The AMI is private to DV staff and is in the US-West-Oregon region: (ami-2dfa6155)[https://console.aws.amazon.com/ec2/home?region=us-west-2#launchAmi=ami-2dfa6155]
 
 ## Scripts 
 
