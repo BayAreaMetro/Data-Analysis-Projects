@@ -15,7 +15,7 @@ Highlights:
 - ESRI FileGDB support through the Geospatial Data Abstraction Library
 - Box support through the boxr package. 
 
-The AMI is private to DV staff and is in the US-West-Oregon region: (ami-2dfa6155)[https://console.aws.amazon.com/ec2/home?region=us-west-2#launchAmi=ami-2dfa6155]
+The AMI is private to DV staff and is in the US-West-Oregon region: [ami-2dfa6155](https://console.aws.amazon.com/ec2/home?region=us-west-2#launchAmi=ami-2dfa6155)
 
 ## Scripts 
 
