@@ -31,6 +31,9 @@ Sample data are provided below, with an example map.
 #### Road Segments Grouped by TMCID 
 
 - [CSV File-Attributes Only](https://mtcdrive.box.com/s/gly2zcjo5abj5ow02wsuosla77lmzue9)
+
+**Provide a description of the key attributes in this file**
+
 - [FileGDB-Geospatial-Full Network](https://mtcdrive.box.com/s/swt592xtohzoh7o0l6gktyvlrrxry8og)
 - [Feature Class - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=ccdeea77c66242c881aed3869d228510)
 - [Feature Class - Sample 2 - San Ramon](http://mtc.maps.arcgis.com/home/item.html?id=e4bc7f1246b7435e93c28aa3d17ae438)
