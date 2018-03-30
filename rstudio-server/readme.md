@@ -15,16 +15,15 @@ Highlights:
 - ESRI FileGDB support through the Geospatial Data Abstraction Library
 - Box support through the boxr package. 
 
-The AMI is private to DV staff and is in the US-West-Oregon region: [ami-2dfa6155](https://console.aws.amazon.com/ec2/home?region=us-west-2#launchAmi=ami-2dfa6155)
+The AMI is private to DV staff and is in the US-West-Oregon region: [ami-7f8e1407](https://console.aws.amazon.com/ec2/home?region=us-west-2#launchAmi=ami-7f8e1407)
 
 ## Scripts 
 
 Where we modified the AMI above, we used the scripts in this dir. 
 
-should be run roughly in this order:
+These are rough notes for setting up the server. We expect a user to ssh in and follow along with them as a rough guide. 
 
 ```
-update_r.sh
 gdal_filegdb_setup.sh
 odbc_setup.sh
 install_db_packages.R
