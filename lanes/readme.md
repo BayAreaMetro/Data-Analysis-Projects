@@ -24,9 +24,8 @@ Sample data are provided below, with an example map.
 #### Road Segments Grouped by Attributes
 
 *See Metadata links for attribute descriptions*
-- [Map - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=21c03d5f81164bd89b1578dd25785d85)
+- [Map - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/webmap/viewer.html?webmap=a1021afbcc904557b038c59a8b983346)
 - [FileGDB-Geospatial-Full Network](https://mtcdrive.box.com/s/s8widz2ag2v9umk8of45ost73116qlb9)
-- [Feature Class - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/item.html?id=bb0ef42996ff483c9fa2cfc44c981c9c)
 
 #### Road Segments Grouped by TMCID 
 
