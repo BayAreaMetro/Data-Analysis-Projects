@@ -10,6 +10,7 @@ lanes,Number of Lanes,NW,N,NL
 ramp,Ramp,NW,N,6E
 fow,Form of Way,NW,N,FW
 kph,average speed (estimate),NW,,N
+mph,average speed (estimate),NW,,N
 speedcat,SpeedCategory,NW,N,3S
 partstruc,Part of a Structure,NW,N,7X
 dividertyp,Lane Divider Type,LL,N,7D
