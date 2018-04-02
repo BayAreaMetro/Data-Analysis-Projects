@@ -30,7 +30,9 @@ Sample data are provided below, with an example map.
 
 #### Road Segments Grouped by TMCID 
 
+- [Data Dictionary](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/lanes/lanes_data_dictionary.csv) - Brief descriptions of the field names in the table below 
 - [CSV File-Attributes Only](https://mtcdrive.box.com/s/gly2zcjo5abj5ow02wsuosla77lmzue9)
+
 
 **Provide a description of the key attributes in this file**
 
