@@ -1,0 +1,23 @@
+header,name,table source,type,code
+rdstmc,RDS/TMCCode,RD,C,RD
+frc,Functional Road Class,NW,N,FC
+name,Street Name,nw,C,6T
+shieldnum,Route Shield Number,NW,C,RV
+freeway,Freeway,NW,N,FY
+tollrd,Toll Road,NW,C,TR
+oneway,Direction of Traffic Flow,NW,C,DF
+lanes,Number of Lanes,NW,N,NL
+ramp,Ramp,NW,N,6E
+fow,Form of Way,NW,N,FW
+kph,average speed (estimate),NW,,N
+speedcat,SpeedCategory,NW,N,3S
+partstruc,Part of a Structure,NW,N,7X
+dividertyp,Lane Divider Type,LL,N,7D
+direction,Lane Direction Category,LD,N,7E
+lanetyp,Lane Type,LI,N,EV
+singoc,Single Occupancy Allowed ,LI,N,OO
+minvehoc,Minimum Vehicle Occupancy,LI,N,MO
+payment,Payment Method,PM,N,TW
+laneend,Lane End,LE,N,LN
+feattyp,Maneuver feature type,ln,,
+nw_minutes_sum,travel time (estimate),nw,N,
