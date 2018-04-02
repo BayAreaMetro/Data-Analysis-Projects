@@ -30,9 +30,7 @@ Sample data are provided below, with an example map.
 
 #### Road Segments Grouped by TMCID 
 
-- [Data Dictionary](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/lanes/lanes_data_dictionary.csv) - Brief descriptions of the field names in the table below 
 - [CSV File-Attributes Only](https://mtcdrive.box.com/s/gly2zcjo5abj5ow02wsuosla77lmzue9)
-
 
 **Provide a description of the key attributes in this file**
 
@@ -44,8 +42,15 @@ Sample data are provided below, with an example map.
 
 Descriptions of column names and uses can be found in the documentation below:
 
+##### Summary by Attribute
+
+- [Detailed Data Dictionary (select attributes](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/lanes/detailed_lanes_data_dictionary.md)
+- [Data Dictionary](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/lanes/lanes_data_dictionary.csv) - Brief descriptions of the field names in the table below 
+
+##### Detailed TomTom Documents 
 - [Roads](https://mtcdrive.box.com/s/e8g0xuyr8w1pa69d9fcoc8usm6hfpe0j)
 - [Routing](https://mtcdrive.box.com/s/wdtp9k3rtjnx694fhn0avlccu9xf7kiz)
+
 
 ### All Data
 
