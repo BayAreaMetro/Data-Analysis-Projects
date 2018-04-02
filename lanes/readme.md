@@ -45,7 +45,7 @@ Descriptions of column names and uses can be found in the documentation below:
 ##### Summary by Attribute
 
 - [Detailed Data Dictionary (select attributes)](detailed_lanes_data_dictionary.md)
-- [Data Dictionary](lanes_data_dictionary.csv) - Brief descriptions of the field names in the table below 
+- [Summary Data Dictionary](lanes_data_dictionary.csv) - Brief descriptions of the field names in the table below 
 
 ##### Detailed TomTom Documents 
 - [Roads](https://mtcdrive.box.com/s/e8g0xuyr8w1pa69d9fcoc8usm6hfpe0j)
