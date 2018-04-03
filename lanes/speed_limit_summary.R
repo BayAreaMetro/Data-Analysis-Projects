@@ -24,7 +24,7 @@ library(sf)
 nw_sf <- st_as_sf(nw_df, wkt="shape_ewkt")
 
 ####group by 
-nw_sf_sum <- nw_sf %>%
+nw_sf_speed_limit_all_vars <- nw_sf %>%
   group_by(rdstmc,
            speed,
            speedtyp,
@@ -34,4 +34,12 @@ nw_sf_sum <- nw_sf %>%
   as.data.frame() %>%
   st_as_sf()
 
-st_write(nw_sf_sum, "nw_sum.gpkg", driver="GPKG")
+st_write(nw_sf_speed_limit_all_vars, "nw_sf_speed_limit_all_vars.gpkg", driver="GPKG")
+
+nw_sf_speed_limit_simple <- nw_sf_speed_limit_all_vars %>%
+  group_by(rdstmc) %>% 
+  summarise(avg_speed=mean(speed),speed_count=n()) %>%
+  as.data.frame() %>%
+  st_as_sf()
+
+st_write(nw_sf_speed_limit_simple, "nw_sf_speed_limit_simple.gpkg", driver="GPKG")
