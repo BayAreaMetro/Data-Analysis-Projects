@@ -1,15 +1,16 @@
 # Summarize Road Network Information in TomTom
 
-## Goal
-
-Output summary lane information from several TomTom tables. 
-
 ## Scripts
 
-- [lanes_summary.sql](lanes_summary.sql) - Used to create a summary view of lanes based on joining a number of TomTom table together on GISDB3
-- [lanes_summary.R](lanes_summary.R) - Executes the SQL above, and pulls the data to group by and union geometries, then output main table and data samples for Alameda and San Ramon. 
-- [lanes_summary_by_tmc.sql](lanes_summary.sql) - Used to create a summary view of lanes based on joining a number of TomTom table together on GISDB3
-- [lanes_summary_tmcid.R](lanes_summary.R) - Executes the SQL above, and pulls the data to group by and union geometries, then output main table and data samples for Alameda and San Ramon. 
+- [lanes_summary.sql](lanes_summary.sql) - Summarize number of lanes, average speed, and other variables for road networks
+- [lanes_summary.R](lanes_summary.R) - Summarize number of lanes, average speed, and other variables on road networks
+
+- [lanes_summary_tmcid.R](lanes_summary.R) - Summarize number of lanes, average speed, and other variables by TMC ID
+- [lanes_summary_by_tmc.sql](lanes_summary.sql) - Summarize number of lanes, average speed, and other variables by TMC ID 
+
+- [speed_limit_summary.R](speed_limit_summary.R) - Summarize speed limits by TMC ID
+- [speed_limit_summary.sql](speed_limit_summary.sql) - Summarize speed limits by TMC ID
+- [make_route_id_to_tmc_to_speed_limit_lookup.R](make_route_id_to_tmc_to_speed_limit_lookup.R) - Join TMC speed limit data to Highway Route ID's
 
 ## Environment
 
@@ -21,16 +22,21 @@ Output summary lane information from several TomTom tables.
 
 Sample data are provided below, with an example map.
 
-#### Road Segments Grouped by Attributes
+#### Lanes Summary grouped by Attributes
 
 *See Metadata links for attribute descriptions*
 - [Map - Sample 1 - Oakland/Emeryville](http://mtc.maps.arcgis.com/home/webmap/viewer.html?webmap=a1021afbcc904557b038c59a8b983346)
 - [FileGDB-Geospatial-Full Network](https://mtcdrive.box.com/s/s8widz2ag2v9umk8of45ost73116qlb9)
 
-#### Road Segments Grouped by TMCID 
+#### Lanes Summary Grouped by TMCID 
 
 *See Metadata links for attribute descriptions*
 - [Excel File-Attributes Only](https://mtcdrive.box.com/s/9owxcra21xoq7smqask4u65pn2ibbqzr)
+
+#### Speed Limit Summary grouped by TMCID 
+
+*See detailed description in metadata section attribute descriptions*
+- [Excel File-Attributes Only](https://mtcdrive.box.com/s/l3d4hsp3urua9ujacuhv6y20cf8pn0ic)
 
 #### Metadata 
 
