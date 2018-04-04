@@ -1,12 +1,23 @@
 # Summarize Road Network Information in TomTom
 
+## Data Sources
+
+-[TomTom 2016/12 Data](https://github.com/BayAreaMetro/DataServices/tree/master/TomTom%20Base%20Map)
+-[Freeway TMC List](https://mtcdrive.box.com/s/u4xs9976gq1ga1qiofj5vj5dfewgfj8i)
+
 ## Scripts
+
+### Lanes Summary grouped by Attributes
 
 - [lanes_summary.sql](lanes_summary.sql) - Summarize number of lanes, average speed, and other variables for road networks
 - [lanes_summary.R](lanes_summary.R) - Summarize number of lanes, average speed, and other variables on road networks
 
+#### Lanes Summary Grouped by TMCID 
+
 - [lanes_summary_tmcid.R](lanes_summary.R) - Summarize number of lanes, average speed, and other variables by TMC ID
 - [lanes_summary_by_tmc.sql](lanes_summary.sql) - Summarize number of lanes, average speed, and other variables by TMC ID 
+
+#### Speed Limit Summary grouped by TMCID 
 
 - [speed_limit_summary.R](speed_limit_summary.R) - Summarize speed limits by TMC ID
 - [speed_limit_summary.sql](speed_limit_summary.sql) - Summarize speed limits by TMC ID
