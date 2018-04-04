@@ -2,8 +2,8 @@
 
 ## Data Sources
 
--[TomTom 2016/12 Data](https://github.com/BayAreaMetro/DataServices/tree/master/TomTom%20Base%20Map)
--[Freeway TMC List](https://mtcdrive.box.com/s/u4xs9976gq1ga1qiofj5vj5dfewgfj8i)
+- [TomTom 2016/12 Data](https://github.com/BayAreaMetro/DataServices/tree/master/TomTom%20Base%20Map). 
+- [Freeway TMC List](https://mtcdrive.box.com/s/u4xs9976gq1ga1qiofj5vj5dfewgfj8i). 
 
 ## Scripts
 
