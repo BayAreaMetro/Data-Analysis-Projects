@@ -1,0 +1,203 @@
+---
+title: "Make Predominance Tables from Census by Race"
+output: 
+  html_document:
+    toc: true
+---
+
+```{r} 
+library(dplyr)
+```
+
+# Goal
+
+Build Predominant Ethnicity Tables using ACS 2016 (ACS5).
+
+Put together tables to make a map like [this](https://nation.maps.arcgis.com/apps/OnePane/splash/index.html?appid=602849530f5d4b6781ba37393144728c).
+
+Below we define the variables in the legend of that map for reference. They are a collection of racial and ethnic groups that are surveyed by the U.S. Census. 
+
+```{r}
+race_legend <- c('African American',
+                 'Asian',
+                 'Hispanic',
+                 'Native American',
+                 'Pacific Islander',
+                 'White',
+                 '2 or More Races')
+```
+
+Taking a look at the map, it doesn't appear that the authors found any tracts in which "2 or More Races" was a majority, so we might consider removing that from the table outcome alltogether. 
+
+# Data Sources
+
+US Census Bureau. Below we use the `tidycensus` R package to fetch data. We also looked at using the `censusapi` package. The advantages of `tidycensus` are that it returns geometries as well as attributes and it is more widely used. 
+
+First lets set county FIPS codes of interest. Then we'll read our census API key from a text file in a Box folder. 
+
+```{r}
+library(tidycensus)
+
+counties=c("01","13","41","55","75","81","85","95","97")
+
+censuskey = readLines("~/Box/DataViz Projects/Data Analysis and Visualization/ACS_examples/keys/census1")
+
+census_api_key(censuskey)
+```
+
+We've already identified 2 tables that are of interest to us, so we get the variable names for those tables from the load_variables function. This will save us the trouble of assigning variable names later. 
+
+```{r}
+race_table_id <- "C02003"
+latino_by_race_table_id <- "B03002"
+
+acs_vars <- load_variables(2016, "acs5", cache = FALSE)
+
+latino_by_race_variables <- dplyr::filter(acs_vars, grepl(latino_by_race_table_id,name))
+
+race_variables <- dplyr::filter(acs_vars, grepl(race_table_id,name))
+```
+
+Lets look at which of the variables we could use to recreate the legend from the map. 
+
+```{r}
+knitr::kable(latino_by_race_variables)
+knitr::kable(race_variables)
+```
+
+We can clean up the variable labels to make them shorter/more usable in a legend. 
+
+```{r}
+library(stringr)
+race_variables$label <- str_replace(race_variables$label, "Estimate!!Total!!", "")
+race_variables$label <- str_replace(race_variables$label, "Estimate!!Total", "")
+latino_by_race_variables$label <- str_replace(latino_by_race_variables$label, "Estimate!!Total!!", "")
+latino_by_race_variables$label <- str_replace(latino_by_race_variables$label, "Estimate!!Total", "")
+```
+
+```{r}
+knitr::kable(latino_by_race_variables)
+knitr::kable(race_variables)
+```
+
+At this point, we could select just the variables of interest from the legend above, or we could calculate the predominant group for each geography. Since the predominance calculation doesn't require us to to remove any variables, we can just calculate it for all of them. 
+
+We'll do it for the latino_by_race table, at the census tract level. 
+
+First lets get the data from census. 
+
+```{r}
+latino_race_table <- get_acs(geography = "tract", 
+                 table = latino_by_race_table_id,
+                 state = "CA", county=counties,
+                 year=2016,
+                 survey = "acs5", 
+                 geometry=TRUE,
+                 summary_var = "B03002_001")
+```
+
+ACS data are not meant to be counts but estimates. Some estimates have margins of error that are greater than the estimate. When (carto)graphically represented, estimates with large margins of error may be misleading, distracting and relatively meaningless. 
+
+So, we'll calculate the coefficient of variation for each geographic unit in order to give us a lever to remove them. An example use of a coefficient of variation is: "if you have an estimate of 80 +/- 20, the CV for the estimate is 15.2% (the sampling error represents slightly more than 15% of the estimate)" - [source]((http://regionalequityatlas.org/toolkit/analyzing-margins-of-error-and-coefficients-of-variation)
+
+```{r}
+latino_race_table$coef_vrtn <- (((latino_race_table$moe/1.645)/latino_race_table$estimate)*100)
+hist(latino_race_table$coef_vrtn, breaks=100)
+```
+
+At the geographic unit of the tract, we can see that there are many measures of ethnic or racial identity with a coefficient of variation greater than 30 percent. 
+
+Since our focus is on the estimate of the predominant ethnic or racial identity in each geographic unit, lets calculate the predominant identities for each geographic unit. Then we can look at the sampling error for those predominant identities. 
+
+There are a few variables that we know will be predominant in this table for all tracts that we are not interested in representing as a predominant identity. They are: 
+1) total population (B03002_001E)
+2) non hispanic population (B03002_002E)
+
+We'll have to remove these from the table before we calculate predominance. 
+
+```{r}
+big_totals <- c('B03002_001','B03002_002')
+
+latino_race_table_no_totals <- latino_race_table %>% filter(!grepl(paste(big_totals,
+                                                    collapse="|"),variable))
+```
+
+```{r}
+predominant_identity_table <- latino_race_table_no_totals %>%
+      group_by(GEOID) %>%
+      arrange(desc(estimate)) %>%
+      filter(row_number()==1)
+```
+
+Lets add population to the table so we can get "a percent of total" population for each predominant group. 
+
+```{r}
+predominant_identity_table$percent_of_total <- predominant_identity_table$estimate/predominant_identity_table$summary_est
+head(predominant_identity_table)
+```
+
+So now all thats left for making the predominance map is to give the variables (e.g. B03002_001) better labels. We can take those off the variables tables. 
+
+```{r}
+latino_by_race_variables$variable <- stringr::str_sub(latino_by_race_variables$name, start=1, end=-2)
+predominant_identity_table <- predominant_identity_table %>% 
+  left_join(latino_by_race_variables, by="variable") %>%
+  select(-c(name,concept))
+```
+
+We can also check again on the margin of error/coefficient of variation now that we've selected predominany identities. 
+
+```{r}
+hist(predominant_identity_table$coef_vrtn, breaks=100)
+```
+
+The margins of error here are much lower and we can probably just work with all the measurements for all tracts.  
+
+# Outcome 
+
+Below we'll write the table out to CSV, GeoJSON, and GeoPackage 
+
+```{r}
+library(sf)
+predominant_identity_table_sf <- st_as_sf(predominant_identity_table)
+st_write(predominant_identity_table_sf,"predominant_identity_table.gpkg",driver = "GPKG")
+st_write(predominant_identity_table_sf,"predominant_identity_table.geojson",driver = "GeoJSON")
+st_write(predominant_identity_table_sf,"predominant_identity_table.csv",driver = "CSV")
+```
+
+# Appendix
+
+## Due Diligence
+
+Have we used all of the relevant race variables and tables? What might we have missed?
+
+```{r, eval=FALSE}
+race_vars <- c('African American',
+               'Asian',
+               'Hispanic',
+               'Native American',
+               'Pacific Islander',
+               'White',
+               '2 or More Races')
+
+all_race_vars_detail <- dplyr::filter(acs_vars, grepl(paste(race_vars,collapse="|"),label))
+```
+
+There are a bunch of tables and variables that could be relevant here and we could explore them with Census experts. 
+
+## Census Block Groups
+
+We could apply the same steps from above to the block group by changing the "geography" specification to "block group", as we see in the call below. 
+
+It would be important to watch the Margin of Error in measurements at this geography. 
+
+```{r, eval=FALSE}
+latino_race_table_bg <- get_acs(geography = "block group", 
+                 table = latino_by_race_table_id,
+                 state = "CA", county=counties,
+                 year=2016,
+                 output="wide",
+                 survey = "acs5", 
+                 geometry=TRUE)
+```
+
