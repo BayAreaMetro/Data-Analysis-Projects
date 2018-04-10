@@ -15,11 +15,6 @@ This is a collection of links to projects to extract, transform, and load data.
 
 ##### Transit 
 
-[Regional Transit Database](https://github.com/MetropolitanTransportationCommission/RegionalTransitDatabase)   
-Source: Transit Operators (via MTC 511)    
-Input: [Google Transit Feed Specification](https://developers.google.com/transit/gtfs/) Text Files    
-Output: Multiple, Bus Frequency by Geometry    
-Dependencies: ~SQL Server~, Python, R, GDAL
 
 ##### Sub-Projects  
 - [State of California Code Transit Service Definition Areas](legislative_transit_data.md) 
