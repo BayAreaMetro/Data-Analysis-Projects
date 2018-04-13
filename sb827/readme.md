@@ -16,15 +16,26 @@
 [The proposed bill](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201720180SB827).
 
 # february amendment :
+
 please see [here](https://medium.com/@Scott_Wiener/sb-827-amendments-strengthening-demolition-displacement-protections-4ced4c942ac9)
-
-# Streets
-
-What *streets* within a transit rich zone (1/2 mile from a major transit stop and within ¼ mile of a high-quality transit corridor (AKA TPA eligible areas <http://mtc.maps.arcgis.com/home/webmap/viewer.html?useExisting=1&layers=165d990e3d1341c4942b79e526eafe0f>) would be subject to maximum heights at 85 feet, 55 feet and 45 feet?
 
 ## Street Widths as Derived from Street Data
 
 Data are available [here](http://mtc.maps.arcgis.com/home/item.html?id=74876cd626354abe90f49d66f447e530&jobid=6cb68df9-4498-413c-84e9-82bb31d58d1d), output by [get_street_data.r](get_street_data.r). 
+
+# april amendment :
+
+## environment
+
+(MTC R Studio Server)[https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/rstudio-server]
+
+## methods
+
+To reproduce, follow the instructions in the root level readme [at this commit](https://github.com/BayAreaMetro/gtfsr/tree/d395b0f398e77cf2320d4f6fb00e18dd0c08f909)
+
+## data
+
+Bus stops for [Amendments 1, 2, and 3](https://mtcdrive.app.box.com/folder/48675468387) are in this box folder
 
 # Transit Stops and Associated Areas
 
