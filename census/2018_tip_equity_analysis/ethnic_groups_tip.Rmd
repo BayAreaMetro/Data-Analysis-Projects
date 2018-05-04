@@ -188,8 +188,7 @@ We will need to keep an eye on the margins of error for these variables.
 Lets drop those observations with a coefficient of variation that is more than %100 of the estimate
 
 ```{r}
-ethnicity_table <- ethnicity_table[ethnicity_table$short_label != "",]
-hist(ethnicity_table$coef_vrt/ethnicity_table$estimate, breaks=100)
+ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt/ethnicity_table$estimate>100,]
 ```
 
 Now we need to spread each geographic unit across a column, since the eventual output/unit of observation is a geography. 
@@ -201,11 +200,10 @@ ethnicity_table <- ethnicity_table %>%
   distinct(GEOID, short_label, above_average_flag, .keep_all = TRUE)
 
 ethnicity_table <- ethnicity_table[!is.na(ethnicity_table$short_label),]
-ethnicity_table_wide <- ethnicity_table %>% spread(short_label,above_average_flag)
+ethnicity_table_wide <- ethnicity_table %>% tidyr::spread(short_label,above_average_flag)
 ethnicity_table_wide[is.na(ethnicity_table_wide)] <- FALSE
 
 #drop random additional empty column
-ethnicity_table_wide <- ethnicity_table_wide[,c(-6)]
 ```
 
 
@@ -214,7 +212,7 @@ ethnicity_table_wide <- ethnicity_table_wide[,c(-6)]
 Below we'll write the table out to CSV.  
 
 ```{r}
-write_csv(ethnicity_table_wide,"above_average_enthnic_and_racial_groups_by_tract.csv")
+write_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.csv")
 
 ```
 
