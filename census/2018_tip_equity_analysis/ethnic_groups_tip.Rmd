@@ -1,0 +1,220 @@
+---
+title: "Ethnic Groups (TIP)"
+output: 
+  html_document:
+    toc: true
+---
+
+```{r} 
+library(dplyr)
+library(readr)
+```
+
+# Goal
+
+Flag tracts where these groups are above regional average. 
+
+- Asian 
+- Black or African American
+- Hispanic or Latino
+- Other Racial / Ethnic Minority 
+
+Create layers for all ethnic groups where ethnic group population percentages are above the regional average.
+
+# Data Sources
+
+US Census Bureau. Below we use the `tidycensus` R package to fetch data. We also looked at using the `censusapi` package. The advantages of `tidycensus` are that it returns geometries as well as attributes and it is more widely used. 
+
+First lets set county FIPS codes of interest. Then we'll read our census API key from a text file in a Box folder. 
+
+```{r}
+library(tidycensus)
+
+counties=c("01","13","41","55","75","81","85","95","97")
+
+censuskey = readLines("~/Box/DataViz Projects/Data Analysis and Visualization/ACS_examples/keys/census1")
+
+census_api_key(censuskey)
+```
+
+We've already identified an ethnicity table that is of interest to us, so we get the variable names for those tables from the load_variables function. This will save us the trouble of assigning variable names later. 
+
+```{r}
+latino_by_race_table_id <- "B03002"
+
+acs_vars <- load_variables(2016, "acs5", cache = FALSE)
+
+latino_by_race_variables <- dplyr::filter(acs_vars, grepl(latino_by_race_table_id,name))
+
+```
+
+Lets look at which of the variables we could use to recreate the legend from the map. 
+
+```{r}
+knitr::kable(head(latino_by_race_variables))
+```
+
+We can clean up the variable labels to make them shorter/more usable in a legend. 
+
+```{r}
+library(stringr)
+latino_by_race_variables$label <- str_replace(latino_by_race_variables$label, "Estimate!!Total!!", "")
+latino_by_race_variables$label <- str_replace(latino_by_race_variables$label, "Estimate!!Total", "")
+latino_by_race_variables$label <- str_replace(latino_by_race_variables$label, "!!", "-")
+```
+
+```{r}
+knitr::kable(head(latino_by_race_variables))
+```
+
+At this point, we could select just the variables of interest from the legend above, or we could calculate whether any group is above its regional average for each geography. 
+
+First lets get the data from census. 
+
+Lets get the average for all for the region. 
+
+```{r}
+latino_race_table_county <- get_acs(geography = "county", 
+                 table = latino_by_race_table_id,
+                 state = "CA", county=counties,
+                 year=2016,
+                 survey = "acs5", 
+                 geometry=TRUE,
+                 summary_var = "B03002_001")
+```
+
+Lets sum the observations by variable, get proportion for them, and then join them to the descriptive variable names and have a look.  
+
+```{r}
+regional_summary <- latino_race_table_county %>% group_by(variable) %>%
+  summarise(regional_estimate=sum(estimate),
+            regional_moe=moe_sum(moe, estimate))
+
+regional_summary[regional_summary$variable=="B03002_001",]
+regional_summary$total <- regional_summary[regional_summary$variable=="B03002_001",]$regional_estimate
+regional_summary$percent_of_total <- regional_summary$regional_estimate/regional_summary$total
+
+latino_by_race_variables$name <- stringr::str_sub(latino_by_race_variables$name, start=1, end=-2)
+regional_summary <- regional_summary %>% 
+  left_join(latino_by_race_variables, by=c("variable"="name")) %>%
+  select(-concept)
+
+knitr::kable(regional_summary)
+```
+
+Now we will get the same data by tract.  
+
+```{r}
+ethnic_groups_tracts <- get_acs(geography = "tract", 
+                 table = latino_by_race_table_id,
+                 state = "CA", county=counties,
+                 year=2016,
+                 survey = "acs5", 
+                 geometry=TRUE,
+                 summary_var = "B03002_001")
+```
+
+
+ACS data are not meant to be counts but estimates. Some estimates have margins of error that are greater than the estimate. When (carto)graphically represented, estimates with large margins of error may be misleading, distracting and relatively meaningless. 
+
+So, we'll calculate the coefficient of variation for each geographic unit in order to give us a lever to remove them. An example use of a coefficient of variation is: "if you have an estimate of 80 +/- 20, the CV for the estimate is 15.2% (the sampling error represents slightly more than 15% of the estimate)" - [source]((http://regionalequityatlas.org/toolkit/analyzing-margins-of-error-and-coefficients-of-variation)
+
+```{r}
+ethnic_groups_tracts$coef_vrtn <- (((ethnic_groups_tracts$moe/1.645)/ethnic_groups_tracts$estimate)*100)
+hist(ethnic_groups_tracts$coef_vrtn, breaks=100)
+```
+
+At the geographic unit of the tract, we can see that there are many measures of ethnic or racial identity with a coefficient of variation greater than 30 percent. 
+
+There is one variables that we know is not a minorities in the table. It is: 
+1) total population (B03002_001E)
+
+We'll have to remove it from the table. 
+
+```{r}
+big_totals <- c('B03002_001')
+
+ethnic_groups_tracts <- ethnic_groups_tracts %>% filter(!grepl(paste(big_totals,
+                                                    collapse="|"),variable))
+```
+
+Now we flag any tracts that are above their regional proportion for the group.
+
+```{r}
+ethnic_groups_tracts$percent_of_total <- ethnic_groups_tracts$estimate/ethnic_groups_tracts$summary_est
+
+ethnicity_table <- ethnic_groups_tracts %>% 
+  left_join(regional_summary, by=c("variable"), suffix=c('.t','.r')) %>%
+  mutate(above_average_flag = percent_of_total.t>percent_of_total.r) %>%
+  select(-NAME,-total)
+
+
+write_csv(ethnicity_table,"ethnicity_table_detailed_tidy.csv")
+```
+
+So now all thats left for making the table ready for mapping. 
+
+We will spread the ethnicities across as columns, setting the values equal to true or false for whether its greate than the regional average. 
+
+First we will group all ethnic and racial groups as needed. 
+
+Last round of mapping ethnic groups:
+- Asian (B03002_006)
+- Black or African American (B03002_004)
+- Hispanic or Latino (B03002_012)
+- Other Racial / Ethnic Minority (-B03002_002,-B03002_003,-everything else above)
+
+```{r}
+not_other <- c("B03002_001","B03002_002","B03002_003","B03002_012","B03002_004","B03002_006",
+               "B03002_013","B03002_014","B03002_015","B03002_016","B03002_017",
+               "B03002_018","B03002_019","B03002_020","B03002_021")
+
+ethnicity_table$short_label <- ""
+ethnicity_table[ethnicity_table$variable == "B03002_012",]$short_label <- "Hispanic or Latino"
+ethnicity_table[ethnicity_table$variable == "B03002_004",]$short_label <- "Black or African American"
+ethnicity_table[ethnicity_table$variable == "B03002_006",]$short_label <- "Asian"
+ethnicity_table[!ethnicity_table$variable %in% not_other,]$short_label <- "Other Racial / Ethnic Minority"
+```
+
+We can also check again on the margin of error/coefficient of variation now that we've simplified the labels.  
+
+```{r}
+ethnicity_table <- ethnicity_table[ethnicity_table$short_label != "",]
+hist(ethnicity_table$coef_vrt/ethnicity_table$estimate, breaks=100)
+```
+
+We will need to keep an eye on the margins of error for these variables. 
+
+Lets drop those observations with a coefficient of variation that is more than %100 of the estimate
+
+```{r}
+ethnicity_table <- ethnicity_table[ethnicity_table$short_label != "",]
+hist(ethnicity_table$coef_vrt/ethnicity_table$estimate, breaks=100)
+```
+
+Now we need to spread each geographic unit across a column, since the eventual output/unit of observation is a geography. 
+
+```{r}
+ethnicity_table <- ethnicity_table[,c('GEOID','short_label','above_average_flag')]
+ethnicity_table <- ethnicity_table[ethnicity_table$above_average_flag==TRUE,]
+ethnicity_table <- ethnicity_table %>% 
+  distinct(GEOID, short_label, above_average_flag, .keep_all = TRUE)
+
+ethnicity_table <- ethnicity_table[!is.na(ethnicity_table$short_label),]
+ethnicity_table_wide <- ethnicity_table %>% spread(short_label,above_average_flag)
+ethnicity_table_wide[is.na(ethnicity_table_wide)] <- FALSE
+
+#drop random additional empty column
+ethnicity_table_wide <- ethnicity_table_wide[,c(-6)]
+```
+
+
+# Outcome 
+
+Below we'll write the table out to CSV.  
+
+```{r}
+write_csv(ethnicity_table_wide,"above_average_enthnic_and_racial_groups_by_tract.csv")
+
+```
+
