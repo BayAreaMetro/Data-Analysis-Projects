@@ -188,7 +188,7 @@ We will need to keep an eye on the margins of error for these variables.
 Lets drop those observations with a coefficient of variation that is more than %100 of the estimate
 
 ```{r}
-ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt/ethnicity_table$estimate>100,]
+ethnicity_table <- ethnicity_table[!ethnicity_table$coef_vrt/ethnicity_table$estimate>100,]
 ```
 
 Now we need to spread each geographic unit across a column, since the eventual output/unit of observation is a geography. 
@@ -212,7 +212,9 @@ ethnicity_table_wide[is.na(ethnicity_table_wide)] <- FALSE
 Below we'll write the table out to CSV.  
 
 ```{r}
-write_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.csv")
+write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.csv")
+
+openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.xlsx")
 
 ```
 
