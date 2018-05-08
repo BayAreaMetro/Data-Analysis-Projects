@@ -117,7 +117,7 @@ ethnic_groups_tracts <- get_acs(geography = "tract",
 
 ACS data are not meant to be counts but estimates. Some estimates have margins of error that are greater than the estimate. When (carto)graphically represented, estimates with large margins of error may be misleading, distracting and relatively meaningless. 
 
-So, we'll calculate the coefficient of variation for each geographic unit in order to give us a lever to remove them. An example use of a coefficient of variation is: "if you have an estimate of 80 +/- 20, the CV for the estimate is 15.2% (the sampling error represents slightly more than 15% of the estimate)" - [source]((http://regionalequityatlas.org/toolkit/analyzing-margins-of-error-and-coefficients-of-variation)
+So, we'll calculate the coefficient of variation for each geographic unit in order to give us a lever to remove them. An example use of a coefficient of variation is: "if you have an estimate of 80 +/- 20, the CV for the estimate is 15.2% (the sampling error represents slightly more than 15% of the estimate)" - [source](http://regionalequityatlas.org/toolkit/analyzing-margins-of-error-and-coefficients-of-variation)
 
 ```{r}
 ethnic_groups_tracts$coef_vrtn <- (((ethnic_groups_tracts$moe/1.645)/ethnic_groups_tracts$estimate)*100)
@@ -185,15 +185,12 @@ hist(ethnicity_table$coef_vrt/ethnicity_table$estimate, breaks=100)
 
 We will need to keep an eye on the margins of error for these variables. 
 
-Lets drop those observations with a coefficient of variation that is more than %100 of the estimate
-
-```{r}
-ethnicity_table <- ethnicity_table[!ethnicity_table$coef_vrt/ethnicity_table$estimate>100,]
-```
+Lets drop those observations with a coefficient of variation that is more than %30 of the estimate
 
 Now we need to spread each geographic unit across a column, since the eventual output/unit of observation is a geography. 
 
 ```{r}
+ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt/ethnicity_table$estimate<30,]
 ethnicity_table <- ethnicity_table[,c('GEOID','short_label','above_average_flag')]
 ethnicity_table <- ethnicity_table[ethnicity_table$above_average_flag==TRUE,]
 ethnicity_table <- ethnicity_table %>% 
@@ -204,17 +201,28 @@ ethnicity_table_wide <- ethnicity_table %>% tidyr::spread(short_label,above_aver
 ethnicity_table_wide[is.na(ethnicity_table_wide)] <- FALSE
 
 #drop random additional empty column
+write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_coeff_var_30.csv")
+
+openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_coeff_var_30.xlsx")
 ```
 
+Lets also drop those observations with a coefficient of variation that is more than %15 of the estimate
 
-# Outcome 
-
-Below we'll write the table out to CSV.  
+Now we need to spread each geographic unit across a column, since the eventual output/unit of observation is a geography. 
 
 ```{r}
-write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.csv")
+ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt/ethnicity_table$estimate<30,]
+ethnicity_table <- ethnicity_table[,c('GEOID','short_label','above_average_flag')]
+ethnicity_table <- ethnicity_table[ethnicity_table$above_average_flag==TRUE,]
+ethnicity_table <- ethnicity_table %>% 
+  distinct(GEOID, short_label, above_average_flag, .keep_all = TRUE)
 
-openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.xlsx")
+ethnicity_table <- ethnicity_table[!is.na(ethnicity_table$short_label),]
+ethnicity_table_wide <- ethnicity_table %>% tidyr::spread(short_label,above_average_flag)
+ethnicity_table_wide[is.na(ethnicity_table_wide)] <- FALSE
 
+#drop random additional empty column
+write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_coeff_var_15.csv")
+
+openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_coeff_var_15.xlsx")
 ```
-
