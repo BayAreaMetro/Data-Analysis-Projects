@@ -144,12 +144,12 @@ Now we flag any tracts that are above their regional proportion for the group.
 ethnic_groups_tracts$percent_of_total <- ethnic_groups_tracts$estimate/ethnic_groups_tracts$summary_est
 
 ethnicity_table <- ethnic_groups_tracts %>% 
-  left_join(regional_summary, by=c("variable"), suffix=c('.t','.r')) %>%
+  left_join(as.data.frame(regional_summary), by=c("variable"), suffix=c('.t','.r')) %>%
   mutate(above_average_flag = percent_of_total.t>percent_of_total.r) %>%
   select(-NAME,-total)
 
 
-write_csv(ethnicity_table,"ethnicity_table_detailed_tidy.csv")
+#write_csv(ethnicity_table,"ethnicity_table_detailed_tidy.csv")
 ```
 
 So now all thats left for making the table ready for mapping. 
@@ -173,7 +173,7 @@ ethnicity_table$short_label <- ""
 ethnicity_table[ethnicity_table$variable == "B03002_012",]$short_label <- "Hispanic or Latino"
 ethnicity_table[ethnicity_table$variable == "B03002_004",]$short_label <- "Black or African American"
 ethnicity_table[ethnicity_table$variable == "B03002_006",]$short_label <- "Asian"
-ethnicity_table[!ethnicity_table$variable %in% not_other,]$short_label <- "Other Racial / Ethnic Minority"
+ethnicity_table[ethnicity_table$variable == "B03002_008",]$short_label <- "Other Racial / Ethnic Minority"
 ```
 
 We can also check again on the margin of error/coefficient of variation now that we've simplified the labels.  
@@ -201,9 +201,9 @@ ethnicity_table_wide <- ethnicity_table %>% tidyr::spread(short_label,above_aver
 ethnicity_table_wide[is.na(ethnicity_table_wide)] <- FALSE
 
 #drop random additional empty column
-write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_coeff_var_30.csv")
+write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_some_other.csv")
 
-openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_coeff_var_30.xlsx")
+openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_some_other.xlsx")
 ```
 
 Lets also drop those observations with a coefficient of variation that is more than %15 of the estimate
@@ -211,7 +211,7 @@ Lets also drop those observations with a coefficient of variation that is more t
 Now we need to spread each geographic unit across a column, since the eventual output/unit of observation is a geography. 
 
 ```{r}
-ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt/ethnicity_table$estimate<30,]
+ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt/ethnicity_table$estimate<100,]
 ethnicity_table <- ethnicity_table[,c('GEOID','short_label','above_average_flag')]
 ethnicity_table <- ethnicity_table[ethnicity_table$above_average_flag==TRUE,]
 ethnicity_table <- ethnicity_table %>% 
