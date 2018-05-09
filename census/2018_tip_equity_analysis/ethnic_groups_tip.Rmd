@@ -148,7 +148,6 @@ ethnicity_table <- ethnic_groups_tracts %>%
   mutate(above_average_flag = percent_of_total.t>percent_of_total.r) %>%
   select(-NAME,-total)
 
-
 #write_csv(ethnicity_table,"ethnicity_table_detailed_tidy.csv")
 ```
 
@@ -165,15 +164,13 @@ Last round of mapping ethnic groups:
 - Other Racial / Ethnic Minority (-B03002_002,-B03002_003,-everything else above)
 
 ```{r}
-not_other <- c("B03002_001","B03002_002","B03002_003","B03002_012","B03002_004","B03002_006",
-               "B03002_013","B03002_014","B03002_015","B03002_016","B03002_017",
-               "B03002_018","B03002_019","B03002_020","B03002_021")
+other <- c("B03002_005","B03002_007","B03002_008","B03002_009")
 
 ethnicity_table$short_label <- ""
 ethnicity_table[ethnicity_table$variable == "B03002_012",]$short_label <- "Hispanic or Latino"
 ethnicity_table[ethnicity_table$variable == "B03002_004",]$short_label <- "Black or African American"
 ethnicity_table[ethnicity_table$variable == "B03002_006",]$short_label <- "Asian"
-ethnicity_table[ethnicity_table$variable == "B03002_008",]$short_label <- "Other Racial / Ethnic Minority"
+ethnicity_table[ethnicity_table$variable %in% other,]$short_label <- "Other Racial / Ethnic Minority"
 ```
 
 We can also check again on the margin of error/coefficient of variation now that we've simplified the labels.  
@@ -190,7 +187,7 @@ Lets drop those observations with a coefficient of variation that is more than %
 Now we need to spread each geographic unit across a column, since the eventual output/unit of observation is a geography. 
 
 ```{r}
-ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt/ethnicity_table$estimate<30,]
+ethnicity_table <- ethnicity_table[ethnicity_table$coef_vrt<30,]
 ethnicity_table <- ethnicity_table[,c('GEOID','short_label','above_average_flag')]
 ethnicity_table <- ethnicity_table[ethnicity_table$above_average_flag==TRUE,]
 ethnicity_table <- ethnicity_table %>% 
@@ -201,10 +198,32 @@ ethnicity_table_wide <- ethnicity_table %>% tidyr::spread(short_label,above_aver
 ethnicity_table_wide[is.na(ethnicity_table_wide)] <- FALSE
 
 #drop random additional empty column
-write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_some_other.csv")
+write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.csv")
 
-openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract_some_other.xlsx")
+openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.xlsx")
 ```
+
+```{r}
+ethnic_groups_tracts_wide <- get_acs(geography = "tract", 
+                 table = latino_by_race_table_id,
+                 state = "CA", county=counties,
+                 year=2016,
+                 survey = "acs5", 
+                 geometry=TRUE,
+                 wide=TRUE,
+                 summary_var = "B03002_001")
+```
+
+```{r}
+left_join(ethnic_groups_tracts,ethnicity_table_wide, by=c(''=''))
+
+```
+
+
+#drop random additional empty column
+write_excel_csv(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.csv")
+
+openxlsx::write.xlsx(ethnicity_table_wide,"above_average_ethnic_and_racial_groups_by_tract.xlsx")
 
 Lets also drop those observations with a coefficient of variation that is more than %15 of the estimate
 
