@@ -1,0 +1,6 @@
+,Route #,DIR,Segment #,County,LOCATION,startTime,endTime,length (Miles),Segment Delay  (Veh-Hrs),Segment Delay  (Veh-Hrs)2,Rank,Source,VPHPL,Include in Default?,TMC ID,Column1,tmc,geometry,ADA,BACKRD,CARRIAGE,CHARGE,CONSTATUS,DYNSPEED,FEATTYP,FOW,FRC,FREEWAY,FT,F_BP,F_ELEV,F_JNCTID,F_JNCTTYP,ID,KPH,LANES,METERS,MINUTES,NAME,NAMELC,NAMETYP,NET2CLASS,NETBCLASS,NETCLASS,NTHRUTRAF,ONEWAY,PARTSTRUC,PJ,POSACCUR,PRIVATERD,PROCSTAT,RAMP,RDCOND,ROUGHRD,RTEDIR,RTEDIRVD,RTETYP,SHIELDNUM,SLIPRD,SOL,SPEEDCAT,STUBBLE,TOLLRD,TRANS,T_BP,T_ELEV,T_JNCTID,T_JNCTTYP,RDSTMC,TMCPATHID
+761,I-80,WB,2,CONTRA COSTA/ ALAMEDA/ SF,CA-4 to FREMONT ST,05:25:00,18:55:00,22.44,13599.0,13600.0,2.0,Default,1685.0,,105N04406,,105N04406,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+770,I-80,WB,3,ALAMEDA/ SF,W GRAND AVE to US-101,10:30:00,20:00:00,7.35,1792.0,1790.0,26.0,Default,1685.0,,105N04406,,105N04406,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+1267,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+1268,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+1269,,,,,,,,Regional Delay:,3538109.22,,,Default Value:,1684.642857142857,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
