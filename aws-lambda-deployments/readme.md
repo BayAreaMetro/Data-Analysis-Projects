@@ -2,10 +2,6 @@
 
 Document data processing scripts and packages deployed to AWS Lambda. 
 
-# Workflow
-
-## Environment already available (see Deployment Packages list)
-
 ### Example
 
 1) Update script in subdirectory (e.g. waze.py in `/waze-rss`)
