@@ -7,12 +7,9 @@ Document data processing scripts and packages deployed to AWS Lambda.
 - [Deployment-Packages](#deployment-packages)
 	- [Python-2.7](#python-27)
 		- [mssql-to-csv](#mssql-to-csv)
-			- [packages:](#packages)
 		- [vta_expresslanes.zip](#vta_expresslaneszip)
-			- [packages:](#packages-1)
 	- [Python-3.6](#python-36)
-		- [pandas-redshift-feedparser-geomet](#pandas-redshift-feedparser-geomet)
-		- [example: waze-redshift-2.zip](#example-waze-redshift-2zip)
+		- [waze-redshift-2.zip](#waze-redshift-2zip)
 - [Example](#example)
 
 <!-- /MarkdownTOC -->
@@ -28,7 +25,7 @@ Based on [this blog post](http://www.perrygeo.com/running-python-with-compiled-c
 
 Pulls a table from MSSSQL Server and outputs to a CSV in an s3 bucket. 
 
-##### packages:
+packages:
 - geomet (geojson)   
 - pandas.  
 - pymssql
@@ -37,7 +34,7 @@ Pulls a table from MSSSQL Server and outputs to a CSV in an s3 bucket.
 
 Logs status from the VTA expresslanes RSS feed. 
 
-##### packages:
+packages:
 
 - pandas    
 - pg8000 (postgres)  
@@ -48,7 +45,9 @@ We roughly followed [this guide](https://gist.github.com/niranjv/f80fc1f488afc49
 
 A rough sketch of how we set it up is in `install_python_3_aws_lambda_linux_v2.sh` in this directory. 
 
-#### [pandas-redshift-feedparser-geomet](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/pandas-redshift-feedparser-geomet.zip)
+#### [waze-redshift-2.zip](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/waze-redshift-2.zip)
+
+Based on: [pandas-redshift-feedparser-geomet](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/pandas-redshift-feedparser-geomet.zip)
 
 packages 
 - geomet (geojson)   
@@ -56,7 +55,6 @@ packages
 - pandas_redshift. 
 - psycopg2 (postgres)
 
-#### example: [waze-redshift-2.zip](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/waze-redshift-2.zip)
 
 Drops Waze RSS feed into redshift table. 
 
