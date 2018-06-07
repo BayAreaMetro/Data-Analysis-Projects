@@ -1,0 +1,27 @@
+sudo yum -y groupinstall development
+sudo yum -y install zlib-devel
+sudo yum -y install openssl-devel
+
+sudo yum install gcc openssl-devel bzip2-devel
+
+wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz
+tar xJf Python-3.6.0.tar.xz
+cd Python-3.6.0
+./configure
+make
+sudo make install
+cd ..
+rm Python-3.6.0.tar.xz
+sudo rm -rf Python-3.6.0
+
+curl -O https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py --user
+
+sudo pip install --upgrade virtualenv
+pip install --upgrade virtualenv
+pip install --upgrade virtualenv --user
+
+virtualenv -p python3 waze-redshift
+source waze-redshift/bin/activate
+
+#pip install geomet, etc
