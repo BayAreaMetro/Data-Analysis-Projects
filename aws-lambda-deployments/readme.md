@@ -12,6 +12,7 @@ Document data processing scripts and packages deployed to AWS Lambda.
 			- [packages:](#packages-1)
 	- [Python-3.6](#python-36)
 		- [pandas-redshift-feedparser-geomet](#pandas-redshift-feedparser-geomet)
+		- [example: waze-redshift-2.zip](#example-waze-redshift-2zip)
 - [Example](#example)
 
 <!-- /MarkdownTOC -->
@@ -55,7 +56,7 @@ packages
 - pandas_redshift. 
 - psycopg2 (postgres)
 
-example application: [waze-redshift-2.zip](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/waze-redshift-2.zip)
+#### example: [waze-redshift-2.zip](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/waze-redshift-2.zip)
 
 Drops Waze RSS feed into redshift table. 
 
