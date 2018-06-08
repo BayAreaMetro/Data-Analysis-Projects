@@ -47,6 +47,8 @@ A rough sketch of how we set it up is in `install_python_3_aws_lambda_linux_v2.s
 
 #### [waze-redshift-2.zip](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/waze-redshift-2.zip)
 
+Sample data [here](https://mtcdrive.app.box.com/folder/50163903907)
+
 Based on: [pandas-redshift-feedparser-geomet](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/pandas-redshift-feedparser-geomet.zip)
 
 packages 
