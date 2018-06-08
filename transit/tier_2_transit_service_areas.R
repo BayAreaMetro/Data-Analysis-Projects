@@ -20,6 +20,11 @@
 # Western Contra Costa Transit Authority (WestCAT)
 # Water Emergency Transportation Authority (WETA), including Alameda-Oakland and Vallejo Ferries
 
+if (!require(devtools)) {
+  install.packages('devtools')
+}
+devtools::install_github('BayAreaMetro/gtfsr')
+
 operators <- c('VN','WH','CC','RV','PE',
                '3D','MA','ST','SR','SO',
                'UC','FS','VC','WC','AT',
@@ -30,12 +35,13 @@ library(sf)
 library(dplyr)
 library(lubridate)
 library(readr)
+library(lwgeom)
 
 o511 <- read_csv("https://gist.githubusercontent.com/tbuckl/d49fa2c220733b0072fc7c59e0ac412b/raw/cff45d8c8dd2ea951b83c0be729abe72f35b13f7/511_orgs.csv")
 
 o511 <- o511[o511$PrivateCode %in% c(operators),]
 
-Sys.setenv(APIKEY511 = "YOURKEY")
+Sys.setenv(APIKEY511 = "1754c626-9421-4bf4-8ac4-37cf69e71904")
 api_key = Sys.getenv("APIKEY511")
 
 download_results <- apply(o511, 1, function(x) try(get_mtc_511_gtfs(x['PrivateCode'],api_key)))
@@ -59,7 +65,7 @@ save(download_results, file = "gtfs511_downloads.RData")
 process_results <- lapply(download_results, 
                           FUN=function(x) {
                             try(gtfs_as_sf(x))}
-                          )
+)
 
 is.error <- function(x) inherits(x, "try-error")
 is.gtfs.obj <- function(x) inherits(x, "gtfs")
@@ -76,15 +82,12 @@ st_write(merged_stops_sf_weekday,"merged_stops_sf_weekday.geojson",driver="GeoJS
 st_write(merged_routes_sf,"merged_routes_sf.geojson",driver="GeoJSON")
 st_write(merged_routes_sf_weekday,"merged_routes_sf_weekday.geojson",driver="GeoJSON")
 
-st_write(planner_buffer(merged_stops_sf),
-         "stops_sf_1_2.geojson",driver="GeoJSON")
-st_write(planner_buffer(merged_stops_sf_weekday),
-         "stops_sf_weekday_1_2.geojson",driver="GeoJSON")
+routes_sf_weekday_1_4_mile_buffer <- try(merge_gtfsr_dfs(process_results[processed_success],"routes_sf_weekday_1_4_mile_buffer"))
+routes_sf_1_4_mile_buffer <- try(merge_gtfsr_dfs(process_results[processed_success],"routes_sf_1_4_mile_buffer"))
+stops_sf_weekday_1_2_buffer <- try(merge_gtfsr_dfs(process_results[processed_success],"stops_sf_weekday_1_2_buffer"))
+stops_sf_1_2_mile_buffer <- try(merge_gtfsr_dfs(process_results[processed_success],"stops_sf_1_2_mile_buffer"))
 
-## need to try one of the suggestions from pwramsey here:
-# https://gis.stackexchange.com/questions/101639/postgis-st-buffer-breaks-because-of-no-forward-edges
-# st_write(planner_buffer(merged_routes_sf,dist="q"),
-#          "routes_sf_1_4.geojson",driver="GeoJSON")
-# st_write(planner_buffer(merged_routes_sf_weekday,dist="q"),
-#          "routes_sf_weekday_1_4.geojson",driver="GeoJSON")
-
+st_write(routes_sf_weekday_1_4_mile_buffer,"routes_sf_weekday_1_4_mile_buffer.geojson",driver="GeoJSON")
+st_write(routes_sf_1_4_mile_buffer,"routes_sf_1_4_mile_buffer.geojson",driver="GeoJSON")
+st_write(stops_sf_weekday_1_2_buffer,"stops_sf_weekday_1_2_buffer.geojson",driver="GeoJSON")
+st_write(stops_sf_1_2_mile_buffer,"stops_sf_1_2_mile_buffer.geojson",driver="GeoJSON")
