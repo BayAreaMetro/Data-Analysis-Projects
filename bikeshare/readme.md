@@ -4,6 +4,8 @@
 - [method](#method)
 - [outcome](#outcome)
 	- [interactives](#interactives)
+		- [Map Background](#map-background)
+		- [Map Label Background](#map-label-background)
 	- [plots](#plots)
 		- [South Bay](#south-bay)
 		- [East Bay](#east-bay)
@@ -24,9 +26,18 @@ Represent origins/destination pairs in plots for bay area bikeshare trips in 201
 
 ## interactives
 
+### Map Background
+
 - [South Bay](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/south_bay_bikeshare_trips.html)
 - [East Bay](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/east_bay_bikeshare_trips.html)
 - [San Francisco](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/west_bay_bikeshare_trips.html)
+
+### Map Label Background
+
+- [South Bay](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/south_bay_stamen_labels.html)
+- [East Bay](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/east_bay_stamen_labels.html)
+- [San Francisco](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/west_bay_stamen_labels.html)
+
 
 ## plots
 
