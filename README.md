@@ -10,7 +10,7 @@ This is a folder full of project documentation.
 
 folder name|description|
 ------|-----|
-[aws-lambda-deployments](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/aws)|deploy commonly used MTC Python scripts for ETL to AWS Lambda
+[aws-lambda-deployments](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/aws-lambda-deployments)|deploy commonly used MTC Python scripts for ETL to AWS Lambda
 [bikeshare](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/bikeshare)|make origin-destination maps for bay area bikeshare data with R
 [bridge-transactions](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/bridge-transactions)|ad-hoc projects on bridge transactions
 [census](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/census)|examples of outputting census data by geography and year
