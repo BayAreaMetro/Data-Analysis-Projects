@@ -46,11 +46,11 @@ See the [Script](https://github.com/BayAreaMetro/Data-And-Visualization-Projects
 
 #### East Bay  
 
-- [East Bay](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactiveseast_bay_bikeshare_trips.html)
+- [East Bay](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/east_bay_bikeshare_trips.html)
 
 #### San Francisco.  
 
-- [San Francisco](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactiveswest_bay_bikeshare_trips.html)
+- [San Francisco](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/west_bay_bikeshare_trips.html)
 
 ### Map Label Background (example)
 
