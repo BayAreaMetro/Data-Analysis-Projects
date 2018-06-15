@@ -6,7 +6,7 @@
 - [Origin Destination Visualization](#origin-destination-visualization)
 	- [Goal](#goal)
 	- [Methods](#methods)
-	- [interactives](#interactives)
+	- [Interactives](#interactives)
 	- [Map Background](#map-background)
 		- [South Bay](#south-bay)
 		- [East Bay](#east-bay)
@@ -14,7 +14,7 @@
 		- [Map Label Background \(example\)](#map-label-background-example)
 		- [East Bay](#east-bay-1)
 		- [San Francisco.](#san-francisco-1)
-	- [plots](#plots)
+	- [Plots](#plots)
 		- [South Bay](#south-bay-1)
 		- [East Bay](#east-bay-2)
 		- [San Francisco](#san-francisco-2)
@@ -47,7 +47,7 @@ We used ~1m trips from 2017-06 to 2018-08 to produce these.
 
 See the [Script](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/bikeshare/bikeshare_od_maps.R) for more detail. 
 
-### interactives
+### Interactives
 
 ** Note: These interactives do not work well in Safari **
 
@@ -80,7 +80,7 @@ See the [Script](https://github.com/BayAreaMetro/Data-And-Visualization-Projects
 
 - [San Francisco](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/west_bay_stamen_labels.html)
 
-### plots
+### Plots
 
 #### South Bay
 
