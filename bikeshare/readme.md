@@ -2,7 +2,7 @@
 
 - [Detailed Bikeshare Reports](#detailed-bikeshare-reports)
 	- [Report 1 - 2017-06 to 2017-12](#report-1---2017-06-to-2017-12)
-	- [Report 1 - 2018-01 to 2018-05](#report-1---2018-01-to-2018-05)
+	- [Report 2 - 2018-01 to 2018-05](#report-2---2018-01-to-2018-05)
 - [Origin Destination Visualization](#origin-destination-visualization)
 	- [Goal](#goal)
 	- [Methods](#methods)
@@ -30,7 +30,7 @@
 - [Report](https://exploratory.io/note/7030233012024040/9695549615814872)
 - [Exploratory Project-MTC Staff Only](https://mtcdrive.box.com/s/gh9nhfu0fuliht1ylvv3l92pxe9b88ly)
 
-### Report 1 - 2018-01 to 2018-05
+### Report 2 - 2018-01 to 2018-05
 
 - [Report](https://exploratory.io/note/5004203344506554/Bike-Share-January-May-2018-Summary-2716657760828263)
 - [Exploratory Project-MTC Staff Only](https://mtcdrive.box.com/s/h5n53sj727cui4c1bw2it0xmdr9wfbak)
