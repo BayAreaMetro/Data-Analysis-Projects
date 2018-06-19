@@ -14,7 +14,7 @@ Output tables of routes and stops for all operators from MTC511 GTFS Data.
 
 ## Count of stops and routes:
 
-| agency_name                                   | weekday | weekday_stops | routes | weekday_routes | 
+| agency_name                                   | all_stops | weekday_stops | all_routes | weekday_routes | 
 |-----------------------------------------------|---------|---------------|--------|----------------| 
 | AC Transit                                    | 5347    | 5271          | 154    | 151            | 
 | Alcatraz Hornblower Ferry                     | 2       | 2             | 2      | 2              | 
