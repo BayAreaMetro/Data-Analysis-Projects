@@ -9,7 +9,7 @@ library(readr)
 
 o511 <- read_csv("https://gist.githubusercontent.com/tbuckl/d49fa2c220733b0072fc7c59e0ac412b/raw/cff45d8c8dd2ea951b83c0be729abe72f35b13f7/511_orgs.csv")
 
-Sys.setenv(APIKEY511 = "1754c626-9421-4bf4-8ac4-37cf69e71904")
+Sys.setenv(APIKEY511 = "YOURKEY")
 api_key = Sys.getenv("APIKEY511")
 
 download_results <- apply(o511, 1, function(x) try(get_mtc_511_gtfs(x['PrivateCode'],api_key)))
