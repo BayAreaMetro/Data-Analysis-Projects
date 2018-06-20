@@ -3,3 +3,4 @@ sb827/major_stops.dbf
 sb827/major_stops.prj
 sb827/major_stops.shp
 sb827/major_stops.shx
+aws-lambda-deployments/waze-rss/*.zip
