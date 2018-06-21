@@ -21,3 +21,7 @@ The 2016 ACS data summarizing these data by tract (attached, from SI)
 ## methods
 
 The `get_data.R` script can be used to fetch data for 2015 ACS, but not 2016. 2016 Comes back without estimates. Perhaps they haven't been published to the API yet?
+
+## outcome 
+
+in this directory: [language_table_2016.csv](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/census/2018_language/language_table_acs_2016.csv)
