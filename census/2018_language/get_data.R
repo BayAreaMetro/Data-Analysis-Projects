@@ -10,18 +10,18 @@ censuskey = readLines("~/Box/DataViz Projects/Data Analysis and Visualization/AC
 
 census_api_key(censuskey)
 
-languages_table <- "B16001"
+languages_table <- "C16001"
 
 acs_vars <- load_variables(2016, "acs5", cache = FALSE)
 
 language_variables <- dplyr::filter(acs_vars, grepl(languages_table,name))
 
 shortnames <- c('Spanish', 'Chinese', 'Vietnamese', 'Tagalog', 'Korean')
-census_vars <- c('B16001_005',
-                 'B16001_077',
-                 'B16001_089',
-                 'B16001_101',
-                 'B16001_083')
+census_vars <- c('C16001_005',
+                 'C16001_023',
+                 'C16001_024',
+                 'C16001_029',
+                 'C16001_020')
 
 language_table <- get_acs(geography = "tract", 
                              variables = census_vars,
