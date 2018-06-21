@@ -32,7 +32,7 @@ Document past and present logging of Waze data
 
 #### fields
 
-[alerts](headers_v1.md)
+[headers_v1.md](headers_v1.md)
 
 ### 2018-05-23 to 2018-06-11
 
