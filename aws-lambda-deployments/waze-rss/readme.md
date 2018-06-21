@@ -66,7 +66,7 @@ Document past and present logging of Waze data
 
 ### notes
 
-`waze_rss_v2_1` added `title` variable (e.g. 'jam'). this information can also be derived from other fields (e.g. `reportating` == NULL for jams). 
+`waze_rss_v2_1` added `title` variable (e.g. 'jam'). this information can also be derived from other fields (e.g. `reportrating` == NULL for jams). 
 
 ## 2018-20-08 to present
 
