@@ -76,7 +76,7 @@ Document past and present logging of Waze data
 
 ### script
 
-[waze.py at commit 75e6eef7127001d74470fdc232524a8535751a32](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/75e6eef7127001d74470fdc232524a8535751a32/aws-lambda-deployments/waze-rss/waze.py)
+[waze.py at commit 12d12ae1](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/1d12ae1043a29af2a9b6cdc4d00d7420148438a6/aws-lambda-deployments/waze-rss/waze.py)
 
 ### fields
 
