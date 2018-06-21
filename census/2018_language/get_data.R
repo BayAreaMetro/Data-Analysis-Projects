@@ -19,7 +19,7 @@ language_variables <- dplyr::filter(acs_vars, grepl(languages_table,name))
 shortnames <- c('Spanish', 'Chinese', 'Vietnamese', 'Tagalog', 'Korean')
 census_vars <- c('C16001_005',
                  'C16001_023',
-                 'C16001_024',
+                 'C16001_026',
                  'C16001_029',
                  'C16001_020')
 
