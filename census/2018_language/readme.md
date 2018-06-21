@@ -20,7 +20,7 @@ The 2016 ACS data summarizing these data by tract (attached, from SI)
 
 ## methods
 
-The `get_data.R` script can be used to fetch data for 2015 ACS, but not 2016. 2016 Comes back without estimates. Perhaps they haven't been published to the API yet?
+The `get_data.R` script can be used to fetch data.
 
 ## outcome 
 
