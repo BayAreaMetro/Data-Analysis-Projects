@@ -45,8 +45,6 @@ See the [Script](https://github.com/BayAreaMetro/Data-And-Visualization-Projects
 
 ** We recommend Firefox of Chrome ** 
 
-### Map Background
-
 #### South Bay  
 
 - [South Bay](https://bayareametro.github.io/Data-And-Visualization-Projects/bikeshare/interactives/south_bay_bikeshare_trips.html)
