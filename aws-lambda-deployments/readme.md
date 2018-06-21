@@ -9,7 +9,7 @@ Document data processing scripts and packages deployed to AWS Lambda.
 		- [mssql-to-csv](#mssql-to-csv)
 		- [vta_expresslanes.zip](#vta_expresslaneszip)
 	- [Python-3.6](#python-36)
-		- [waze-redshift-2.zip](#waze-redshift-2zip)
+		- [waze-redshift-3.zip](#waze-redshift-3zip)
 - [Example](#example)
 
 <!-- /MarkdownTOC -->
@@ -45,7 +45,7 @@ We roughly followed [this guide](https://gist.github.com/niranjv/f80fc1f488afc49
 
 A rough sketch of how we set it up is in `install_python_3_aws_lambda_linux_v2.sh` in this directory. 
 
-#### [waze-redshift-2.zip](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-2/waze-redshift-2.zip)
+#### [waze-redshift-3.zip](https://s3-us-west-2.amazonaws.com/mtc-lambda-packages-west-3/waze-redshift-3.zip)
 
 Sample data [here](https://mtcdrive.app.box.com/folder/50163903907)
 
