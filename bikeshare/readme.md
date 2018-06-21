@@ -7,17 +7,9 @@
 	- [Goal](#goal)
 	- [Methods](#methods)
 	- [Interactives](#interactives)
-	- [Map Background](#map-background)
 		- [South Bay](#south-bay)
 		- [East Bay](#east-bay)
 		- [San Francisco.](#san-francisco)
-		- [Map Label Background \(example\)](#map-label-background-example)
-		- [East Bay](#east-bay-1)
-		- [San Francisco.](#san-francisco-1)
-	- [Plots](#plots)
-		- [South Bay](#south-bay-1)
-		- [East Bay](#east-bay-2)
-		- [San Francisco](#san-francisco-2)
 
 <!-- /MarkdownTOC -->
 
