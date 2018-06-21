@@ -32,7 +32,7 @@ language_table <- get_acs(geography = "tract",
 better_names_df <- tibble(variable = census_vars, language=shortnames)
 
 language_table_named <- left_join(language_table,better_names_df) %>%
-  select(GEOID,variable,estimate,language)
+  select(GEOID,estimate,language)
 
 language_table_wide <- language_table_named %>% spread(language, estimate)
 
