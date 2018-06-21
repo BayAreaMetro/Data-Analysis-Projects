@@ -43,7 +43,7 @@ See the [Script](https://github.com/BayAreaMetro/Data-And-Visualization-Projects
 
 ** Note: These interactives do not work well in Safari **
 
-** We recommend Firefox of Chrome ** 
+** We recommend Firefox or Chrome ** 
 
 #### South Bay  
 
