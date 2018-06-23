@@ -4,7 +4,7 @@ Develop a documented method for relating Transportation Analysis Zones to Census
 
 # Methods. 
 
-[make_taz_table.html](https://bayareametro.github.io/Data-And-Visualization-Projects/census_examples/taz_tract/make_taz_table.html)   
+[make_taz_table.Rmd](make_taz_table.Rmd)   
 
 # Outcome. 
 
@@ -12,6 +12,6 @@ Develop a documented method for relating Transportation Analysis Zones to Census
 
 # Appendix
 
-[reverse_engineer_tract_zone_2000_method.html](https://bayareametro.github.io/Data-And-Visualization-Projects/census_examples/taz_tract/reverse_engineer_tract_zone_2000_method.html)   
+[reverse_engineer_tract_zone_2000_method.Rmd](reverse_engineer_tract_zone_2000_method.Rmd)   
 
-[data_prep.html](https://bayareametro.github.io/Data-And-Visualization-Projects/census_examples/taz_tract/data_prep.html)   
+[data_prep.Rmd](data_prep.Rmd)   
