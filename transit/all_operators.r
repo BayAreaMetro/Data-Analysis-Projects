@@ -35,14 +35,14 @@ sf_stops <- lapply(download_results,
                      try(gtfs_as_sf_stops(x))}
 )
 
+sf_routes <- lapply(sf_stops, 
+                    FUN=function(x) {
+                      try(gtfs_as_sf_routes(x))}
+)
+
 sf_stops_buffer <- lapply(sf_stops, 
                           FUN=function(x) {
                             try(gtfs_as_sf_stops_buffer(x))}
-)
-
-sf_routes <- lapply(sf_stops_buffer, 
-                    FUN=function(x) {
-                      try(gtfs_as_sf_routes(x))}
 )
 
 sf_routes_buffer <- lapply(sf_routes, 
@@ -99,13 +99,13 @@ st_write(merged_routes_sf_weekday,"routes_weekday.shp",driver="ESRI Shapefile")
 
 df1 <- as.data.frame(merged_stops_sf) %>% 
             group_by(agency_name) %>% 
-            summarise(weekday = n())
+            summarise(all_stops = n())
 df2 <- as.data.frame(merged_stops_sf_weekday) %>% 
             group_by(agency_name) %>% 
             summarise(weekday_stops = n())
 df3 <- as.data.frame(merged_routes_sf) %>% 
             group_by(agency_name) %>% 
-            summarise(routes = n())
+            summarise(all_routes = n())
 df4 <- as.data.frame(merged_routes_sf_weekday) %>% 
             group_by(agency_name) %>% 
             summarise(weekday_routes = n())
