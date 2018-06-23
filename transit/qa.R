@@ -73,4 +73,3 @@ write_csv(summary_14_18,"summary_routes_14_18.csv")
 # 
 # agency_summaries <- lapply(layers_with_agency,function(x) {summarize_by_agency(x)})
 
-##combine by route to compare
