@@ -32,12 +32,12 @@ summary_routes_14 <- routes_bus_2014_df %>%
   group_by(agency_id) %>%
   summarise(count=n())
 
-summary_14_18 <- left_join(summary_routes_14,
+summary_14_18 <- full_join(summary_routes_14,
                            summary_routes_18, 
                            by="agency_id",
                            suffix=c(".14",".18"))
 
-write_csv(summary_14_18,"summary_routes_14_18.csv")
+write_csv(summary_14_18,"/Users/tommtc/Documents/Projects/BAM_github_repos/dv_temp/transit/summary_routes_14_18.csv")
 
 # stops_bus_2014 <- st_read("/Users/tommtc/Documents/Projects/BAM_github_repos/dv_temp/transit/rtd_backups.gdb", 
 #                layer="RTD_ROUTE_STOPS_BUS_MAR_2014_UTM_ADJUSTED_LOCATIONS")
