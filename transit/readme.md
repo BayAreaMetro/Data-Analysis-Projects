@@ -23,8 +23,8 @@ Output tables of routes and stops for all operators from MTC511 GTFS Data.
 
 ## Data
 
-[(Draft) Stops and Routes (Shapefile, GeoJSON)-2018](https://mtcdrive.box.com/v/june-2018-draft-1-transit-feat)
-[(Draft) Stops and Routes (Shapefile, GeoJSON)-2014](https://mtcdrive.box.com/s/d160lpolkbna0778kp938vt50jvkztj3)
+- [(Draft) Stops and Routes (Shapefile, GeoJSON)-2018](https://mtcdrive.box.com/v/june-2018-draft-1-transit-feat). 
+- [(Draft) Stops and Routes (Shapefile, GeoJSON)-2014](https://mtcdrive.box.com/s/d160lpolkbna0778kp938vt50jvkztj3)
 
 ## Summaries
 
