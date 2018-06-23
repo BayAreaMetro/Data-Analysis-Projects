@@ -11,7 +11,7 @@ rb14_routes <- routes_bus_2014 %>%
   group_by(CPT_AGENCYID,SCH_ROUTEDESIGNATOR) %>% 
   summarise()
 
-st_write(rb14_routes,"/Users/tommtc/Documents/Projects/BAM_github_repos/dv_temp/transit/rb14_routes.geojson")
+#st_write(rb14_routes,"/Users/tommtc/Documents/Projects/BAM_github_repos/dv_temp/transit/rb14_routes.geojson")
 
 routes18_sf <- st_read("/Users/tommtc/Documents/Projects/BAM_github_repos/dv_temp/transit/routes.json")
 
