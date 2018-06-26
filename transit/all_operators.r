@@ -66,14 +66,10 @@ ps_sf_routes <- vapply(sf_routes, is.gtfs.obj, logical(1))
 get.error.message <- function(x) {attr(x,"condition")$message}
 
 merged_stops_sf <- try(merge_gtfsr_dfs(sf_stops[ps_sf_stops],"stops_sf"))
-merged_stops_sf_weekday <- try(merge_gtfsr_dfs(sf_stops[ps_sf_stops],"stops_sf_weekday"))
 merged_routes_sf <- try(merge_gtfsr_dfs(sf_routes[ps_sf_routes],"routes_sf"))
-merged_routes_sf_weekday <- try(merge_gtfsr_dfs(sf_routes[ps_sf_routes],"routes_sf_weekday"))
 
 merged_stops_sf <- st_transform(merged_stops_sf, crs=26910)
-merged_stops_sf_weekday <- st_transform(merged_stops_sf_weekday, crs=26910)
 merged_routes_sf <- st_transform(merged_routes_sf, crs=26910)
-merged_routes_sf_weekday <- st_transform(merged_routes_sf_weekday, crs=26910)
 
 #this is necessary to clean up broken geometries for some providers
 #installation dependencies can be difficult
@@ -81,26 +77,19 @@ merged_routes_sf_weekday <- st_transform(merged_routes_sf_weekday, crs=26910)
 #they are urged to use the following website instead: http://mapshaper.org/
 library(rmapshaper)
 merged_routes_sf <- ms_simplify(merged_routes_sf, keep = 1, snap=TRUE)
-merged_routes_sf_weekday <- ms_simplify(merged_routes_sf_weekday, keep = 1, snap=TRUE)
 
 #####
 ##Write to disk
 #####
 
 st_write(merged_stops_sf,"stops.geojson",driver="GeoJSON")
-st_write(merged_stops_sf_weekday,"stops_weekday.geojson",driver="GeoJSON")
 st_write(merged_routes_sf,"routes.geojson",driver="GeoJSON")
-st_write(merged_routes_sf_weekday,"routes_weekday.geojson",driver="GeoJSON")
 
 st_write(merged_stops_sf,"stops.shp",driver="ESRI Shapefile")
-st_write(merged_stops_sf_weekday,"stops_weekday.shp",driver="ESRI Shapefile")
 st_write(merged_routes_sf,"routes.shp",driver="ESRI Shapefile")
-st_write(merged_routes_sf_weekday,"routes_weekday.shp",driver="ESRI Shapefile")
 
 st_write(merged_stops_sf,"stops.gpkg",driver="GPKG")
-st_write(merged_stops_sf_weekday,"stops_weekday.gpkg",driver="GPKG")
 st_write(merged_routes_sf,"routes.gpkg",driver="GPKG")
-st_write(merged_routes_sf_weekday,"routes_weekday.gpkg",driver="GPKG")
 
 #####
 ##Summary to CSV
@@ -109,19 +98,11 @@ st_write(merged_routes_sf_weekday,"routes_weekday.gpkg",driver="GPKG")
 df1 <- as.data.frame(merged_stops_sf) %>% 
   group_by(agency_name) %>% 
   summarise(all_stops = n())
-df2 <- as.data.frame(merged_stops_sf_weekday) %>% 
-  group_by(agency_name) %>% 
-  summarise(weekday_stops = n())
-df3 <- as.data.frame(merged_routes_sf) %>% 
+df2 <- as.data.frame(merged_routes_sf) %>% 
   group_by(agency_name) %>% 
   summarise(all_routes = n())
-df4 <- as.data.frame(merged_routes_sf_weekday) %>% 
-  group_by(agency_name) %>% 
-  summarise(weekday_routes = n())
 
-summary_df <- left_join(df1,df2, by="agency_name") %>% 
-  left_join(df3, by="agency_name") %>% 
-  left_join(df4, by="agency_name")
+summary_df <- left_join(df1,df2, by="agency_name")
 
 write_csv(summary_df,"transit_summary.csv")
 
