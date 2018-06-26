@@ -28,10 +28,7 @@ Output tables of routes and stops for all operators from MTC511 GTFS Data.
 
 - [AGOL - Routes 2018](https://mtc.maps.arcgis.com/home/item.html?id=066c3953405d4da1b3a9e62a0d961657)
 - [AGOL - Stops 2018](https://mtc.maps.arcgis.com/home/item.html?id=47f3befcc83e41008db55cbed81843ac)
-- [AGOL - Routes 2014]
-- [AGOL - Stops 2014]
-
-
+- [AGOL - Routes 2014](https://mtc.maps.arcgis.com/home/item.html?id=23a60c30a437499bb5e6dabcb18f5dce)
 
 ## Summaries
 
