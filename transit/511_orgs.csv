@@ -1,1 +1,35 @@
-
+Id,Name,OtherModes,PrimaryMode,PrivateCode,ShortName,SiriOperatorRef,WebSite
+AC Transit,AC Transit,,bus,AC,AC Transit,AC Transit,http://www.actransit.org
+Alcatraz Hornblower Ferry,Alcatraz Hornblower Ferry,,ferry,HF,Hornblower Alcatraz,,http://www.alcatrazcruises.com/index.aspx
+ACE Altamont Corridor Express,Altamont Corridor Express,,rail,CE,ACE,null,http://www.acerail.com/
+American Canyon Transit,American Canyon Transit,,bus,AY,American Canyon,,http://www.ridethevine.com/american-canyon-transit
+Angel Island Tiburon Ferry,Angel Island Tiburon Ferry,,ferry,AT,Angel Is Tiburon,,http://www.angelislandferry.com
+BART,BART,,rail,BA,BART,BART,http://www.bart.gov
+Blue & Gold Fleet,Blue & Gold Fleet,,ferry,BG,Blue & Gold,Blue & Gold,http://www.blueandgoldfleet.com/
+Caltrain,Caltrain,bus,rail,CT,Caltrain,Caltrain,http://www.caltrain.com/
+Capitol Corridor,Capitol Corridor,,rail,AM,Capitol Corridor,,http://www.capitolcorridor.org
+Commute.org,Commute.org,,bus,CM,Commute.org,Commute.org,
+CC,County Connection,,bus,CC,County Connection,County Connection,http://www.cccta.org/
+Dumbarton Express,Dumbarton Express,,bus,DE,Dumbarton,Dumbarton Express,http://www.dumbartonexpress.com
+Emery Go-Round,Emery Go-Round,,bus,EM,Emery Go-Round,,http://www.emerygoround.com
+Fairfield and Suisun Transit (FAST),Fairfield and Suisun Transit (FAST),,bus,FS,FAST,,http://www.fasttransit.org
+Golden Gate Ferry,Golden Gate Ferry,,ferry,GF,GG Ferry,Golden Gate Ferry,http://www.goldengateferry.org
+Golden Gate Transit,Golden Gate Transit,,bus,GG,GG Transit,Golden Gate Transit,http://www.goldengatetransit.org
+Marin Transit,Marin Transit,,bus,MA,Marin Transit,Marin Transit,http://www.marintransit.org/
+Petaluma Transit,Petaluma Transit,,bus,PE,Petaluma Transit,,http://cityofpetaluma.net/pubworks/transit-sub.html
+Rio Vista Delta Breeze,Rio Vista Delta Breeze,,bus,RV,Delta Breeze,,http://www.riovistacity.com/transit/
+SamTrans,SamTrans,,bus,SM,SamTrans,SamTrans,http://www.samtrans.com
+San Francisco Bay Ferry,San Francisco Bay Ferry,,ferry,SB,SF Bay Ferry,SF Bay Ferry,http://www.sanfranciscobayferry.com
+Santa Rosa CityBus,Santa Rosa CityBus,,bus,SR,SR CityBus,Santa Rosa CityBus,http://ci.santa-rosa.ca.us/departments/transit/CityBus/Pages/default.aspx
+SFMTA,SFMTA,"cableway,metro",bus,SF,SF Muni,SFMTA,http://www.sfmta.com/
+SMART,SMART,,rail,SA,SMART,SMART,http://www.sonomamarintrain.org/
+Soltrans,Soltrans,,bus,ST,Soltrans,,http://www.soltransride.com
+Sonoma County Transit,Sonoma County Transit,,bus,SO,Sonoma County,,http://www.sctransit.com
+Stanford Marguerite Shuttle,Stanford Marguerite Shuttle,,bus,MS,Stanford Marguerite,,http://transportation.stanford.edu/marguerite/
+TriDelta Transit,Tri Delta Transit,,bus,3D,Tri Delta Transit,Tri Delta Transit,http://www.trideltatransit.com
+Union City Transit,Union City Transit,,bus,UC,Union City,,http://www.uctransit.org
+Vacaville City Coach,Vacaville City Coach,,bus,VC,Vacaville City Coach,,http://www.citycoach.com/
+Vine (Napa County),Vine (Napa County),,bus,VN,Napa VINE,Vine (Napa County),http://www.ridethevine.com/vine
+VTA,VTA,metro,bus,SC,VTA,VTA,http://www.vta.org
+WestCAT,WestCAT,,bus,WC,WestCAT,WESTCAT,http://www.westcat.org
+Wheels,Wheels,,bus,WH,Wheels,LAVTA,http://www.wheelsbus.com
