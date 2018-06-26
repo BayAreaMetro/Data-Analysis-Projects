@@ -1,35 +1,35 @@
-agency_id,count.14,agency_name,count.18
-3D,17,Tri Delta Transit,19
-AB,1,NA,NA
-AC,151,AC Transit,104
-AY,1,NA,NA
-CC,61,County Connection,41
-CT,1,Caltrain,6
-DE,2,Dumbarton Express Consortium,2
-EM,3,Emery Go-Round,7
-FS,14,Fairfield and Suisun Transit,13
-GG,39,Golden Gate Transit,28
-MA,14,Marin Transit,28
-MS,18,Stanford Marguerite Shuttle,16
-PE,7,Petaluma Transit,12
-RV,2,Rio Vista Delta Breeze,2
-SC,79,VTA,86
-SF,72,San Francisco Municipal Transportation Agency,84
-SM,73,SamTrans,72
-SO,25,Sonoma County Transit,38
-SR,17,NA,NA
-ST,15,SolTrans,16
-UC,9,Union City Transit,9
-VC,6,Vacaville City Coach,6
-VN,13,Vine,12
-WC,15,WestCat (Western Contra Costa),15
-WH,37,Livermore Amador Valley Transit Authority,17
-YV,1,NA,NA
-AM,NA,Capitol Corridor Joint Powers Authority,2
-BA,NA,Bay Area Rapid Transit,6
-BG,NA,Blue & Gold Fleet,3
-CM,NA,Commute.org Shuttle,20
-GF,NA,Golden Gate Ferry,3
-HF,NA,Alcatraz Hornblower Ferry,2
-SA,NA,Sonoma Marin Area Rail Transit,1
-SB,NA,San Francisco Bay Ferry,5
+"agency_id","agency_name","count.14","count.18"
+"3D","Tri Delta Transit","17","19"
+"AB","NA","1","NA"
+"AC","AC Transit","151","104"
+"AY","NA","1","NA"
+"CC","County Connection","61","41"
+"CT","Caltrain","1","6"
+"DE","Dumbarton Express Consortium","2","2"
+"EM","Emery Go-Round","3","7"
+"FS","Fairfield and Suisun Transit","14","13"
+"GG","Golden Gate Transit","39","28"
+"MA","Marin Transit","14","28"
+"MS","Stanford Marguerite Shuttle","18","16"
+"PE","Petaluma Transit","7","12"
+"RV","Rio Vista Delta Breeze","2","2"
+"SC","VTA","79","86"
+"SF","San Francisco Municipal Transportation Agency","72","84"
+"SM","SamTrans","73","72"
+"SO","Sonoma County Transit","25","38"
+"SR","NA","17","NA"
+"ST","SolTrans","15","16"
+"UC","Union City Transit","9","9"
+"VC","Vacaville City Coach","6","6"
+"VN","Vine","13","12"
+"WC","WestCat (Western Contra Costa)","15","15"
+"WH","Livermore Amador Valley Transit Authority","37","17"
+"YV","NA","1","NA"
+"AM","Capitol Corridor Joint Powers Authority","NA","2"
+"BA","Bay Area Rapid Transit","NA","6"
+"BG","Blue & Gold Fleet","NA","3"
+"CM","Commute.org Shuttle","NA","20"
+"GF","Golden Gate Ferry","NA","3"
+"HF","Alcatraz Hornblower Ferry","NA","2"
+"SA","Sonoma Marin Area Rail Transit","NA","1"
+"SB","San Francisco Bay Ferry","NA","5"
