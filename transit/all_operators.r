@@ -107,4 +107,35 @@ summary_df <- left_join(df1,df2, by="agency_name")
 write_csv(summary_df,"transit_summary.csv")
 
 
+#compare to 2014 data
+
+routes_bus_2014 <- st_read("https://mtcdrive.box.com/shared/static/fw2sv73st1lpplfn4mgxjtjnlfr1geh8.json")
+
+routes_bus_2014_df <- routes_bus_2014
+st_geometry(routes_bus_2014_df) <- NULL
+
+merged_routes_df <- merged_routes_sf
+st_geometry(merged_routes_df) <- NULL
+
+summary_routes_18 <- merged_routes_df %>%
+  as_tibble() %>%
+  group_by(agency_id,agency_name) %>%
+  summarise(count=n())
+
+summary_routes_14 <- routes_bus_2014_df %>% 
+  as_tibble() %>%
+  rename(agency_id=CPT_AGENCYID) %>%
+  group_by(agency_id) %>%
+  summarise(count=n())
+
+summary_14_18 <- full_join(summary_routes_14,
+                           summary_routes_18, 
+                           by="agency_id",
+                           suffix=c(".14",".18"))
+
+write_csv(summary_14_18,
+          "summary_routes_14_18.csv")
+
+
+
 
