@@ -37,13 +37,6 @@ imported_success <- !vapply(download_results, is.error, logical(1))
 get.error.message <- function(x) {attr(x,"condition")$message}
 import_error_message <- vapply(download_results[!imported_success], get.error.message, "")
 
-is.error <- function(x) inherits(x, "try-error")
-is.gtfs.obj <- function(x) inherits(x, "gtfs")
-imported_success <- !vapply(download_results, is.error, logical(1))
-get.error.message <- function(x) {attr(x,"condition")$message}
-import_error_message <- vapply(download_results[!imported_success], get.error.message, "")
-
-
 o511['downloaded'] <- TRUE
 o511['imported'] <- imported_success
 o511['import_error_message'] <- ""
