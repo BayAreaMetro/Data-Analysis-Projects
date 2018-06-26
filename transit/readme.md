@@ -17,8 +17,6 @@ Output tables of routes and stops for all operators from MTC511 GTFS Data.
 
 [Script](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/transit/all_operators.r) - to produce stops and routes from GTFS data. 
 
-[QA](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/transit/qa.r) to check on routes and stops in data. 
-
 # Outcome
 
 ## Data
