@@ -20,7 +20,7 @@ Mostly:
 
 Also:
 - MTC Open Data
-- Transit.land
+- direct from operators (via transit land)
 
 # Method
 
