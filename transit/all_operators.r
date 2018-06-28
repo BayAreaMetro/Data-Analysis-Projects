@@ -71,6 +71,44 @@ merged_routes_sf <- try(merge_gtfsr_dfs(sf_routes[ps_sf_routes],"routes_sf"))
 merged_stops_sf <- st_transform(merged_stops_sf, crs=26910)
 merged_routes_sf <- st_transform(merged_routes_sf, crs=26910)
 
+#######
+##MANUAL FILL IN SR, YV, and AB
+## based on review at commit d4869e235cd9b04f1bdef1fa10c9672a7c614217 here:
+## https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/d4869e235cd9b04f1bdef1fa10c9672a7c614217/transit/summary_routes_14_18.csv
+#######
+
+#SR from transit.land (2018 source, unclear how tl got lines/routes, as direct link doesn't have them)
+#https://transit.land/feed-registry/operators/o-9qbdx-santarosacitybus
+sr <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qbdx-santarosacitybus&per_page=false")
+
+#pull AB (air bart) from 2014
+#pull YV off 2014
+#check on SR
+routes_bus_2014 <- st_read("https://mtcdrive.box.com/shared/static/x75g63rsh3ogwojkioz7dp49o3imh0f4.geojson")
+
+r2014 <- routes_bus_2014 %>% 
+  filter(CPT_AGENCYID=="YV"|CPT_AGENCYID=="AB")
+
+df1 <- st_as_sf(
+  tibble(
+    route_id = c("NA","NA"),
+    agency_id = r2014$CPT_AGENCYID,
+    agency_name = c("Air Bart (2014)","Vine (Yountville Trolley-2014)"),
+    geometry = r2014$geometry
+  )
+)
+
+df2 <- st_as_sf(
+  tibble(route_id = sr$name,
+         agency_id = rep("SR",length(sr$name)),
+         agency_name = rep("Santa Rosa (CityBus)",length(sr$name)),
+         geometry = sr$geometry
+  )
+)
+
+merged_routes_sf <- rbind(merged_routes_sf,df1)
+merged_routes_sf <- rbind(merged_routes_sf,df2)
+
 #this is necessary to clean up broken geometries for some providers
 #installation dependencies can be difficult
 #if the user has any issues installing the package
@@ -83,13 +121,13 @@ merged_routes_sf <- ms_simplify(merged_routes_sf, keep = 1, snap=TRUE)
 #####
 
 st_write(merged_stops_sf,"stops.geojson",driver="GeoJSON")
-st_write(merged_routes_sf,"routes.geojson",driver="GeoJSON")
+st_write(merged_routes_sf,"routes.geojson",driver="GeoJSON", delete_dsn = TRUE)
 
 st_write(merged_stops_sf,"stops.shp",driver="ESRI Shapefile")
-st_write(merged_routes_sf,"routes.shp",driver="ESRI Shapefile")
+st_write(merged_routes_sf,"routes.shp",driver="ESRI Shapefile", delete_dsn = TRUE)
 
 st_write(merged_stops_sf,"stops.gpkg",driver="GPKG")
-st_write(merged_routes_sf,"routes.gpkg",driver="GPKG")
+st_write(merged_routes_sf,"routes.gpkg",driver="GPKG", delete_dsn = TRUE)
 
 #####
 ##Summary to CSV
