@@ -15,7 +15,12 @@ Output tables of routes and stops for all operators from MTC511 GTFS Data.
 
 # Data Source
 
-MTC511 [GTFS data by operator](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/transit/511_orgs.csv).
+Mostly:
+- MTC511 [GTFS data by operator](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/transit/511_orgs.csv).
+
+Also:
+- MTC Open Data
+- Transit.land
 
 # Method
 
@@ -33,6 +38,4 @@ MTC511 [GTFS data by operator](https://github.com/BayAreaMetro/Data-And-Visualiz
 - [(Draft) AGOL - Routes 2014](https://mtc.maps.arcgis.com/home/item.html?id=7b60806da9f747de9c6c0d34ff65ae01)
 
 ## Summaries
-
-- [summary_stops_and_routes_2018.csv](summary_stops_and_routes_2018.csv)
 - [summary_routes_14_18.csv](summary_routes_14_18.csv)
