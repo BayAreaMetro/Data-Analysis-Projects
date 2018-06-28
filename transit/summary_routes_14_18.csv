@@ -3,11 +3,11 @@ agency_id,agency_name,count.14,count.18
 AB,Air Bart (2014),1,1
 AC,AC Transit,151,104
 AY,American Canyon (2014),1,1
-CC,County Connection,61,41
+CC,County Connection,61,43
 CT,Caltrain,1,6
 DE,Dumbarton Express Consortium,2,2
 EM,Emery Go-Round,3,7
-FS,Fairfield and Suisun Transit,14,13
+FS,Fairfield and Suisun Transit,14,16
 GG,Golden Gate Transit,39,28
 MA,Marin Transit,14,28
 MS,Stanford Marguerite Shuttle,18,16
@@ -26,8 +26,11 @@ WC,WestCat (Western Contra Costa),15,15
 WH,Livermore Amador Valley Transit Authority,37,17
 YV,Vine (Yountville Trolley-2014),1,1
 AM,Capitol Corridor Joint Powers Authority,NA,2
+AM,Amtrak,NA,15
+AT,Angel Island Tiburon Ferry,NA,1
 BA,Bay Area Rapid Transit,NA,6
 BG,Blue & Gold Fleet,NA,3
+CE,Altamont Commuter Rail,NA,9
 CM,Commute.org Shuttle,NA,20
 GF,Golden Gate Ferry,NA,3
 HF,Alcatraz Hornblower Ferry,NA,2
