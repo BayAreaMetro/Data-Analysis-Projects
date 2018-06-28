@@ -72,15 +72,8 @@ merged_stops_sf <- st_transform(merged_stops_sf, crs=26910)
 merged_routes_sf <- st_transform(merged_routes_sf, crs=26910)
 
 #######
-##MANUAL FILL IN SR, YV, and AB
-## based on review at commit d4869e235cd9b04f1bdef1fa10c9672a7c614217 here:
-## https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/d4869e235cd9b04f1bdef1fa10c9672a7c614217/transit/summary_routes_14_18.csv
+##MANUAL FILL IN SR, YV, AB, FS, CE, AM, AY
 #######
-
-#SR from transit.land (2018 source, unclear how tl got lines/routes, as direct link doesn't have them)
-#https://transit.land/feed-registry/operators/o-9qbdx-santarosacitybus
-sr <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qbdx-santarosacitybus&per_page=false")
-#ay <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qc14-americancanyontransit&per_page=false")
 
 #pull AB (air bart) from 2014
 #pull YV off 2014
@@ -102,14 +95,6 @@ df1 <- st_as_sf(
   )
 )
 
-df2 <- st_as_sf(
-  tibble(route_id = sr$name,
-         agency_id = rep("SR",length(sr$name)),
-         agency_name = rep("Santa Rosa (CityBus)",length(sr$name)),
-         geometry = sr$geometry
-  )
-)
-
 df3 <- st_as_sf(
   tibble(
     route_id = c("NA"),
@@ -119,9 +104,95 @@ df3 <- st_as_sf(
   )
 )
 
+#####
+#transitland
+#####
+#SR from transit.land (2018 source, unclear how tl got lines/routes, as direct link doesn't have them)
+#https://transit.land/feed-registry/operators/o-9qbdx-santarosacitybus
+sr <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qbdx-santarosacitybus&per_page=false")
+
+df2 <- st_as_sf(
+  tibble(route_id = sr$name,
+         agency_id = rep("SR",length(sr$name)),
+         agency_name = rep("Santa Rosa (CityBus)",length(sr$name)),
+         geometry = sr$geometry
+  )
+)
+
+cc <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9q9p-countyconnection&per_page=false")
+cc <- cc %>% filter(name=='250'|name=='ALAMOCR')
+
+ai <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9q8zmw-angelislandtiburonferry&per_page=false")
+
+fs <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qc-fairfieldandsuisuntransit&per_page=false")
+fs <- fs %>% filter(name=='7AT3'|name=='7BT'|name=='7AT')
+
+tl1 <- do.call('rbind',list(fs,ai,cc))
+
+df4 <- st_as_sf(
+  tibble(route_id = tl1$name,
+         agency_id = c('FS','FS','FS','AT','CC','CC'),
+         agency_name = tl1$operated_by_name,
+         geometry = tl1$geometry
+  )
+)
+
+######
+##commuter rail (mtc open data)
+######
+cr <- st_read("https://opendata.arcgis.com/datasets/a6512b81bd1b47a895bf18687e2600e6_0.geojson")
+cr <- cr %>% filter(operator=="Altamont Commuter Rail"|operator=="Amtrak")
+
+df5 <- st_as_sf(
+  tibble(route_id = c(rep("ACE",9),c(rep('amtrak',15))),
+         agency_id = c(rep('CE',9),rep('AM',15)),
+         agency_name = cr$operator,
+         geometry = cr$geometry
+  )
+)
+
+####
+##merge in
+####
+
 merged_routes_sf <- rbind(merged_routes_sf,df1)
 merged_routes_sf <- rbind(merged_routes_sf,df2)
 merged_routes_sf <- rbind(merged_routes_sf,df3)
+merged_routes_sf <- rbind(merged_routes_sf,df4)
+merged_routes_sf <- rbind(merged_routes_sf,df5)
+
+######
+##put route type on the data
+#####
+
+named_route_types_df <- tribble(
+  ~route_type_id, ~vehicle_type,
+  #--|--
+  0,'Tram', 
+  1,'Subway, Metro', 
+  2,'Rail', 
+  3,'Bus', 
+  4,'Ferry', 
+  5,'Cable car',
+  6,'Gondola',
+  7,'Funicular'
+)
+
+put_route_types_on_routes <- function(gtfsr_obj,named_route_types_df) {
+  gtfsr_obj[['routes_df']] %>% 
+    select(agency_id,route_id,route_type) %>%
+    left_join(named_route_types_df, by=c("route_type"="route_type_id")) %>%
+    select(agency_id,route_id,vehicle_type)
+}
+
+route_types_l <- lapply(download_results, 
+                        FUN=function(x) {
+                          try(put_route_types_on_routes(x,named_route_types_df))}
+)
+
+route_types_df <- bind_rows(route_types_l)
+
+merged_routes_sf <- left_join(merged_routes_sf,route_types_df)
 
 #this is necessary to clean up broken geometries for some providers
 #installation dependencies can be difficult
@@ -158,7 +229,6 @@ summary_df <- left_join(df1,df2, by="agency_name")
 
 write_csv(summary_df,"transit_summary.csv")
 
-
 #compare to 2014 data
 
 routes_bus_2014 <- st_read("https://mtcdrive.box.com/shared/static/x75g63rsh3ogwojkioz7dp49o3imh0f4.geojson")
@@ -189,7 +259,4 @@ summary_14_18 <- summary_14_18 %>% select(agency_id,agency_name,count.14,count.1
 
 write_csv(summary_14_18,
           "summary_routes_14_18.csv")
-
-
-
 
