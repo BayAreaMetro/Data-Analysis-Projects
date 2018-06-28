@@ -151,6 +151,10 @@ df5 <- st_as_sf(
   )
 )
 
+#drop the gtfs routes for amtrak
+merged_routes_sf <- merged_routes_sf %>% 
+  filter(!agency_id=='AM' & !agency_name=="Capitol Corridor Joint Powers Authority")
+
 ####
 ##merge in
 ####
