@@ -80,6 +80,7 @@ merged_routes_sf <- st_transform(merged_routes_sf, crs=26910)
 #SR from transit.land (2018 source, unclear how tl got lines/routes, as direct link doesn't have them)
 #https://transit.land/feed-registry/operators/o-9qbdx-santarosacitybus
 sr <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qbdx-santarosacitybus&per_page=false")
+ay <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qc14-americancanyontransit&per_page=false")
 
 #pull AB (air bart) from 2014
 #pull YV off 2014
@@ -106,8 +107,17 @@ df2 <- st_as_sf(
   )
 )
 
+df3 <- st_as_sf(
+  tibble(route_id = ay$name,
+         agency_id = rep("AY",length(ay$name)),
+         agency_name = rep("American Canyon",length(ay$name)),
+         geometry = ay$geometry
+  )
+)
+
 merged_routes_sf <- rbind(merged_routes_sf,df1)
 merged_routes_sf <- rbind(merged_routes_sf,df2)
+merged_routes_sf <- rbind(merged_routes_sf,df3)
 
 #this is necessary to clean up broken geometries for some providers
 #installation dependencies can be difficult
