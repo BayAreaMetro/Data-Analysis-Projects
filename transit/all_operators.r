@@ -9,7 +9,7 @@ library(readr)
 setwd("/home/shared/Data/transit")
 
 #we need to use 2 api keys b/c of api rate limits
-k511_1 <- ""
+k511_1 <- "1754c626-9421-4bf4-8ac4-37cf69e71904"
 k511_2 <- ""
 
 o511 <- read_csv("https://gist.githubusercontent.com/tbuckl/d49fa2c220733b0072fc7c59e0ac412b/raw/cff45d8c8dd2ea951b83c0be729abe72f35b13f7/511_orgs.csv")
@@ -80,7 +80,7 @@ merged_routes_sf <- st_transform(merged_routes_sf, crs=26910)
 #SR from transit.land (2018 source, unclear how tl got lines/routes, as direct link doesn't have them)
 #https://transit.land/feed-registry/operators/o-9qbdx-santarosacitybus
 sr <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qbdx-santarosacitybus&per_page=false")
-ay <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qc14-americancanyontransit&per_page=false")
+#ay <- st_read("https://transit.land/api/v1/routes.geojson?operated_by=o-9qc14-americancanyontransit&per_page=false")
 
 #pull AB (air bart) from 2014
 #pull YV off 2014
@@ -89,6 +89,9 @@ routes_bus_2014 <- st_read("https://mtcdrive.box.com/shared/static/x75g63rsh3ogw
 
 r2014 <- routes_bus_2014 %>% 
   filter(CPT_AGENCYID=="YV"|CPT_AGENCYID=="AB")
+
+ay <- routes_bus_2014 %>% 
+  filter(CPT_AGENCYID=="AY")
 
 df1 <- st_as_sf(
   tibble(
@@ -108,10 +111,11 @@ df2 <- st_as_sf(
 )
 
 df3 <- st_as_sf(
-  tibble(route_id = ay$name,
-         agency_id = rep("AY",length(ay$name)),
-         agency_name = rep("American Canyon",length(ay$name)),
-         geometry = ay$geometry
+  tibble(
+    route_id = c("NA"),
+    agency_id = ay$CPT_AGENCYID,
+    agency_name = c("American Canyon (2014)"),
+    geometry = ay$geometry
   )
 )
 
@@ -180,6 +184,8 @@ summary_14_18 <- full_join(summary_routes_14,
                            summary_routes_18, 
                            by="agency_id",
                            suffix=c(".14",".18"))
+
+summary_14_18 <- summary_14_18 %>% select(agency_id,agency_name,count.14,count.18)
 
 write_csv(summary_14_18,
           "summary_routes_14_18.csv")
