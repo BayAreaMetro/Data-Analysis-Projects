@@ -9,7 +9,7 @@ library(readr)
 setwd("/home/shared/Data/transit")
 
 #we need to use 2 api keys b/c of api rate limits
-k511_1 <- "1754c626-9421-4bf4-8ac4-37cf69e71904"
+k511_1 <- ""
 k511_2 <- ""
 
 o511 <- read_csv("https://gist.githubusercontent.com/tbuckl/d49fa2c220733b0072fc7c59e0ac412b/raw/cff45d8c8dd2ea951b83c0be729abe72f35b13f7/511_orgs.csv")
