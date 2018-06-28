@@ -144,7 +144,7 @@ cr <- st_read("https://opendata.arcgis.com/datasets/a6512b81bd1b47a895bf18687e26
 cr <- cr %>% filter(operator=="Altamont Commuter Rail"|operator=="Amtrak")
 
 df5 <- st_as_sf(
-  tibble(route_id = c(rep("ACE",9),c(rep('amtrak',15))),
+  tibble(route_id = c(rep("ACE",9),c(rep('Capitol Corridor Joint Powers Authority',15))),
          agency_id = c(rep('CE',9),rep('AM',15)),
          agency_name = cr$operator,
          geometry = cr$geometry
