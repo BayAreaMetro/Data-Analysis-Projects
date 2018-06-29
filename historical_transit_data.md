@@ -27,9 +27,3 @@ see [`/R/historical_routes/output_historical_routes_by_region.R`](https://github
 #### Stops and Frequencies
 
 see [`/rtd/process_cached_gtfs_for_points_and_frequencies.py`](https://github.com/BayAreaMetro/RegionalTransitDatabase/blob/f9359cd88d8879bb6fe348f20fed0db5a5d372e3/rtd/process_cached_gtfs_for_points_and_frequencies.py)
-
-### Outcome
-
-- [Routes, stops, and frequencies by Transit Provider from 2009 to 2017](https://github.com/BayAreaMetro/transit-data) 
-
-
