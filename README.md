@@ -17,6 +17,7 @@ folder name|description|
 [congested_segments](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/congested_segments)|make "congested segments" a cartographic file. 
 [equivalencies](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/equivalencies)|describe relationships between Travel Model 1, Census, and TomTom geographies
 [filelist](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/filelist)|for BayAreaMetro github repositories, list of files by their extension 
+[housing_capacity](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/housing_capacity)|summarise housing capacity as the difference between zoned units and observed units from parcels and census.  
 [housing_geocoding](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/housing_geocoding)|identify the location of permitted afforable housing projects in the bay area
 [lanes](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/lanes)|summarize Road Network Information in TomTom
 [postgis-parcels](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/postgis-parcels)|This is a guide to setting up a local parcel database.
