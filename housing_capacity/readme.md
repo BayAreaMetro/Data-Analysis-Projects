@@ -20,10 +20,9 @@ US Census ACS
 
 # outcome
 
-rewquested attributes are delivered at several geographies and summary levels:
+requested attributes are delivered at several geographies and summary levels:
 
-1) [block group geometries](https://mtcdrive.box.com/s/06xndbj4o49ca6aqifzm28czt42lo4j8)
+1) [block group geometries](https://mtcdrive.box.com/s/06xndbj4o49ca6aqifzm28czt42lo4j8) - this ended up being the right level of geographic abstraction, both for the user and for QA
 2) [simplified, projected parcels](https://mtcdrive.box.com/s/pm4butqccxs9g4j034ci7a8mmlq9ethi) - make it easier to user to summarise by arbitrary geographies
 3) [(draft) summary tables](https://mtcdrive.box.com/shared/static/9od4m6yfeb8nniatf7rl1fpb2vpnv2hy.zip) - these were a first pass--it turned out that the user found geographically referenced data more useful. 
  
-
