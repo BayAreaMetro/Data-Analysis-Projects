@@ -1,0 +1,59 @@
+---
+title: "Get May 2018 VTA Expresslane data"
+output:
+  github_document:
+    toc: true
+---
+
+## Goal 
+
+Get one month's worth of this VTA toll price data (e.g. May 2018)
+
+## Methods
+
+```{r}
+library(clpr)
+library(dplyr)
+library(readr)
+source("~/.keys/rs.R")
+rs <- connect_rs()
+```
+
+Get the data. 
+
+```{sql, connection=rs, output.var="exln"}
+SELECT pricing_module,
+message_module,
+convert_timezone('US/Pacific', time_checked) as time_checked,
+algorithm_mode, facility_id,
+interval_starting
+FROM "public"."vta_expresslanes_toll_status"
+where time_checked >= '05-01-2018'
+and time_checked < '06-01-2018'
+```
+
+Make date and time nice to read. 
+
+```{r}
+library(lubridate)
+exln$hour <- hour(exln$time_checked)
+exln$minute <- minute(exln$time_checked)
+exln$mday <- mday(exln$time_checked)
+exln$wday <- wday(exln$time_checked)
+knitr::kable(sample_n(exln,20))
+```
+
+Heads up check on time/pricing.
+
+```{r}
+plot(exln$hour,exln$pricing_module)
+```
+
+```{r}
+write_csv(exln,"may_2018_vta_expresslane_status.csv")
+```
+
+## Outcome 
+
+[may_2018_vta_expresslane_status.csv](may_2018_vta_expresslane_status.csv)
+
