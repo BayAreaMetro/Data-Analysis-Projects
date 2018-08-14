@@ -31,8 +31,8 @@ convert_timezone('US/Pacific', time_checked) as time_checked,
 algorithm_mode, facility_id,
 interval_starting
 FROM "public"."vta_expresslanes_toll_status"
-where time_checked >= '05-01-2018'
-and time_checked < '06-01-2018'
+where convert_timezone('US/Pacific', time_checked) >= '05-01-2018'
+and convert_timezone('US/Pacific', time_checked) < '06-01-2018'
 ```
 
 Make date and time nice to read.
@@ -47,11 +47,11 @@ knitr::kable(sample_n(exln,5))
 
 |      | pricing\_module | message\_module | time\_checked       | algorithm\_mode | facility\_id |  interval\_starting|  hour|  minute|  mday|  wday|
 |------|:----------------|:----------------|:--------------------|:----------------|:-------------|-------------------:|-----:|-------:|-----:|-----:|
-| 3129 | 0.50            | HOV 2+ NO TOLL  | 2018-05-04 08:37:53 | EL Speed        | FSE          |          1525448100|     8|      37|     4|     6|
-| 2165 | 0.50            | HOV 2+ NO TOLL  | 2018-05-07 15:22:53 | EL Speed        | CLW          |          1525731600|    15|      22|     7|     2|
-| 1866 |                 | OPEN TO ALL     | 2018-05-04 02:42:53 |                 | FSE          |          1525426800|     2|      42|     4|     6|
-| 3904 |                 | OPEN TO ALL     | 2018-05-07 03:32:53 |                 | FSE          |          1525689000|     3|      32|     7|     2|
-| 1906 |                 | OPEN TO ALL     | 2018-05-03 13:47:53 |                 | FSE          |          1525380300|    13|      47|     3|     5|
+| 533  |                 | OPEN TO ALL     | 2018-05-06 13:27:53 |                 | FSE          |          1525638300|    13|      27|     6|     1|
+| 2940 | 8.00            | HOV 2+ NO TOLL  | 2018-05-02 09:17:53 | EL Speed        | CLW          |          1525277700|     9|      17|     2|     4|
+| 2376 |                 | OPEN TO ALL     | 2018-05-06 06:47:53 |                 | CLW          |          1525614300|     6|      47|     6|     1|
+| 3506 |                 | OPEN TO ALL     | 2018-05-05 17:22:53 |                 | CLW          |          1525566000|    17|      22|     5|     7|
+| 3168 | 1.00            | HOV 2+ NO TOLL  | 2018-05-03 18:12:53 | EL Speed        | CLW          |          1525396200|    18|      12|     3|     5|
 
 Heads up check on time/pricing.
 

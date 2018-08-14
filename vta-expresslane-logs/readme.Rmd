@@ -29,8 +29,8 @@ convert_timezone('US/Pacific', time_checked) as time_checked,
 algorithm_mode, facility_id,
 interval_starting
 FROM "public"."vta_expresslanes_toll_status"
-where time_checked >= '05-01-2018'
-and time_checked < '06-01-2018'
+where convert_timezone('US/Pacific', time_checked) >= '05-01-2018'
+and convert_timezone('US/Pacific', time_checked) < '06-01-2018'
 ```
 
 Make date and time nice to read. 
