@@ -11,10 +11,11 @@ Get one month's worth of this VTA toll price data (e.g. May 2018)
 
 ## Methods
 
-```{r}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 library(clpr)
 library(dplyr)
 library(readr)
+library(lubridate)
 source("~/.keys/rs.R")
 rs <- connect_rs()
 ```
@@ -35,12 +36,11 @@ and time_checked < '06-01-2018'
 Make date and time nice to read. 
 
 ```{r}
-library(lubridate)
 exln$hour <- hour(exln$time_checked)
 exln$minute <- minute(exln$time_checked)
 exln$mday <- mday(exln$time_checked)
 exln$wday <- wday(exln$time_checked)
-knitr::kable(sample_n(exln,20))
+knitr::kable(sample_n(exln,5))
 ```
 
 Heads up check on time/pricing.

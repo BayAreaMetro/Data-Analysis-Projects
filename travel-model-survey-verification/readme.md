@@ -3,11 +3,12 @@
 - [goal:](#goal)
 - [methods](#methods)
 - [outcome:](#outcome)
-	- [fastrak transponder counts:](#fastrak-transponder-counts)
-		- [data:](#data)
-		- [graphic:](#graphic)
 	- [bart transfers:](#bart-transfers)
+		- [data:](#data)
+- [https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/travel-model-survey-verification/transponder_count.html](#httpsgithubcombayareametrodata-and-visualization-projectsblobmastertravel-model-survey-verificationtransponder_counthtml)
+	- [fastrak transponder counts:](#fastrak-transponder-counts)
 		- [data:](#data-1)
+		- [graphic:](#graphic)
 
 <!-- /MarkdownTOC -->
 
@@ -23,6 +24,14 @@ summarise transaction data to aid in travel survey validation
 
 ## outcome:
 
+### bart transfers:
+
+#### data: 
+
+See folder [here](https://mtcdrive.box.com/s/ezfcmilu08vyur3bou3h5hd14opqwf5r) - MTC Staff only.   
+
+##https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/travel-model-survey-verification/transponder_count.html
+
 ### fastrak transponder counts:
 
 #### data:
@@ -35,8 +44,3 @@ The geometries have been highly simplified for viewing speed and subset to only 
 
 ![transponder count](transponder_count.png) 
 
-### bart transfers:
-
-#### data: 
-
-See folder [here](https://mtcdrive.box.com/s/ezfcmilu08vyur3bou3h5hd14opqwf5r) - MTC Staff only.   
