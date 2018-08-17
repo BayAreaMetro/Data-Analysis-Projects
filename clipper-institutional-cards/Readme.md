@@ -1,19 +1,18 @@
----
-title: "Summarise Clipper Institutional Cards"
-author: "Tom Buckley"
-date: "8/14/2018"
-output:
-  github_document:
-    toc: true
----
+Summarise Clipper Institutional Cards
+================
+Tom Buckley
+8/14/2018
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+-   [Setup](#setup)
+-   [Goal](#goal)
+-   [Data Sources](#data-sources)
+-   [Methods](#methods)
+-   [Outcome](#outcome)
 
-## Setup
+Setup
+-----
 
-```{r, message=FALSE, warning=FALSE, results='hide'}
+``` r
 library(clpr)
 library(dplyr)
 library(dbplyr)
@@ -26,11 +25,12 @@ source("~/.keys/rs.R")
 rs <- connect_rs()
 ```
 
-## Goal 
+Goal
+----
 
 Output a table like this:
 
-```{r}
+``` r
 clipper_institutions_df <- tribble(
   ~institutional_type, ~count_of_cards,
   #--|--
@@ -42,26 +42,27 @@ clipper_institutions_df <- tribble(
 
 Keeping in mind that an even more useful table would include geography (e.g. zip) and card amounts:
 
-```{r, eval=FALSE}
+``` r
 named_route_types_df <- tribble(
   #--|--
   60,TRUE,card_id,zip,institution,count 
 )
 ```
 
-## Data Sources
+Data Sources
+------------
 
 DV Data Lake
 
-```{r}
+``` r
 source("~/.keys/rs.R")
 rs <- connect_rs()
 ```
 
+Methods
+-------
 
-## Methods
-
-```{r, eval=FALSE}
+``` r
 product_summary <- function(df1) {
   prod_summary <- df1 %>%
     group_by(product_description) %>%
@@ -70,8 +71,7 @@ product_summary <- function(df1) {
 }
 ```
 
-
-```{r, eval=FALSE}
+``` r
 start <- as.Date("10-02-16",format="%m-%d-%y")
 end   <- as.Date("10-08-16",format="%m-%d-%y")
 
@@ -89,7 +89,7 @@ for(i in seq_along(dates)){
 }
 ```
 
-## Outcome
+Outcome
+-------
 
-On Box [here (mtc staff only)](https://mtcdrive.app.box.com/folder/52534582479).  
-
+On Box [here (mtc staff only)](https://mtcdrive.app.box.com/folder/52534582479).
