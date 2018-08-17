@@ -15,6 +15,7 @@ folder name|description|
 [bridge-transactions](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/bridge-transactions)|ad-hoc projects on bridge transactions
 [census](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/census)|examples of outputting census data by geography and year
 [congested_segments](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/congested_segments)|make "congested segments" a cartographic file. 
+[clipper-institutional-cards](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/clipper-institutional-cards)|summary of clipper transactions by product type for 1 week in october 2016
 [equivalencies](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/equivalencies)|describe relationships between Travel Model 1, Census, and TomTom geographies
 [filelist](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/filelist)|for BayAreaMetro github repositories, list of files by their extension 
 [housing_capacity](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/housing_capacity)|summarise housing capacity as the difference between zoned units and observed units from parcels and census.  
