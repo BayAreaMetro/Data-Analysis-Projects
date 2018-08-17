@@ -93,3 +93,7 @@ Outcome
 -------
 
 On Box [here (mtc staff only)](https://mtcdrive.app.box.com/folder/52534582479).
+
+Further Work
+----------
+Potential product discount descriptions are [here](https://github.com/BayAreaMetro/clpr/blob/3450cdfbe2d97057ca669e6b8cb7c865e71c340c/documentation/potential_product_discounts.md)
