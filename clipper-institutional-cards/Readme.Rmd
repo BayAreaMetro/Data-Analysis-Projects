@@ -15,10 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 library(clpr)
 library(dplyr)
+library(dbplyr)
 library(readr)
 library(lubridate)
 library(DBI)
 library(RSQLite)
+library(readxl)
 source("~/.keys/rs.R")
 rs <- connect_rs()
 ```
@@ -46,44 +48,72 @@ named_route_types_df <- tribble(
 )
 ```
 
-```{r}
-#you can use ogr2ogr to clean csv and load to your favorite local db
-#e.g. : ogr2ogr -f SQLite fastrak.sqlite example_fastrak_file.csv
-clprdb <- dbConnect(RSQLite::SQLite(), "~/Data/clipper.sqlite")
-
-tbl1 <- tbl(clprdb,'Clipper_Accounts_Feb_2018v3')
-
-tbl2 <- tbl(clprdb,'clipper_profile')
-```
-
-```{r}
-brkl_card_id <- YLCARDNO
-
-brk_card <- tbl1 %>%
-  filter(card_serial_number==brkl_card_id)
-```
-
-not present because unregistered card. 
+## Data Sources
 
 Example institutional entries. Use these to look up "discounted" generally. 
 
-There may be errors/duplicates. From this folder on Box:
+These are also in the database, but require linking multiple tables. This spreadsheet provides us a quick check on whether we can eventually find any kinds of results related to these kind of discount cardfs in the database. From this folder on Box:
 
 https://mtcdrive.app.box.com/folder/37839075675
 
-INSTITUTION_ID	INSTITUTION_NAME	InstitutionID	operatorid	ContractID	ContractName
-244	UC Berkeley Class Pass	157	17	616	Standard ECO Pass
-245	The Homes at Central Park	157	17	618	University ECO Pass
-25	UC Berkeley	25	1	110	AC Transit EasyPass
+Download the full list of products [on box (mtc staff)](https://mtcdrive.box.com/s/ondfvfum44b40w3sya35eawqlfxfpa27). 
+
+We read just one of the sheets (see footnotes for more detail)
 
 ```{r}
-transactions <- dplyr::tbl(rs,
-                           dbplyr::in_schema("clipper",
-                                             "sfofaretransaction"))
+institutions2 <- read_excel('/Users/tommtc/Data/InstitutionID\ descriptions_Feb_2018.xls', sheet='Sheet1')
+```
 
-ks_trans <- transactions %>%
-  filter(applicationserialnumber %in% card_ids) %>%
-  as_tibble()
+We need to see if any of these values are available to us. They are not directly on the accounts table. 
+
+## Methods
+
+Contract ID is on the transactions table from 2016. So we may be able to use that. 
+
+```{r}
+date <- "2016-04-25"
+transactions_tbl <- day_of_transactions(rs,date)
+transactions_df <- as_tibble(transactions_tbl)
+```
+
+```{r}
+total_tr <- dim(transactions_df)[1]
+
+df_summary <- transactions_df %>% 
+  group_by(operatorid,contractid) %>% 
+  summarise(count = n()) %>%
+  select(operatorid,contractid,count)
 
 ```
 
+Now lets join this back to the spreadsheet. 
+
+```{r}
+product_metadata <-  
+  institutions2 %>% 
+  select(operatorid,ContractID,ContractName)
+```
+
+
+```{r}
+df_summary2 <- left_join(df_summary,
+                                    product_metadata,
+                                    by=c("operatorid"="operatorid",
+                                         "contractid"="ContractID"))
+
+df_summary2 <- df_summary2 %>% 
+  group_by(ContractName) %>% 
+  summarise(total = sum(count))
+
+knitr::kable(head(arrange(df_summary2,
+                          desc(total)),
+                  n=20))
+```
+
+OK, so this gives us a sense of proportion (the unit here is transactions, not cards, which is the ideal output), and we know that we can get a sense of discount-card transactions. 
+
+We also want to know transaction source zip code. We'll need to go back to the database for that. 
+
+*footnotes: 
+
+There might be some confusion about sheets in the institutions table "Sheet    1" (space exaggerated for clarity) Berkeley includes 2 entries, and the one with `institution ID:244` maps to the 'Standard ECO Pass'. While "Sheet1" (no space) maps `institution ID:244` to `AC Transit EasyPass`.
