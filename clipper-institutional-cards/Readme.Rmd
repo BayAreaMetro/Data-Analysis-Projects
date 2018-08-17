@@ -50,70 +50,39 @@ named_route_types_df <- tribble(
 
 ## Data Sources
 
-Example institutional entries. Use these to look up "discounted" generally. 
-
-These are also in the database, but require linking multiple tables. This spreadsheet provides us a quick check on whether we can eventually find any kinds of results related to these kind of discount cardfs in the database. From this folder on Box:
-
-https://mtcdrive.app.box.com/folder/37839075675
-
-Download the full list of products [on box (mtc staff)](https://mtcdrive.box.com/s/ondfvfum44b40w3sya35eawqlfxfpa27). 
-
-We read just one of the sheets (see footnotes for more detail)
+DV Data Lake
 
 ```{r}
-institutions2 <- read_excel('/Users/tommtc/Data/InstitutionID\ descriptions_Feb_2018.xls', sheet='Sheet1')
+source("~/.keys/rs.R")
+rs <- connect_rs()
 ```
 
-We need to see if any of these values are available to us. They are not directly on the accounts table. 
 
 ## Methods
 
-Contract ID is on the transactions table from 2016. So we may be able to use that. 
-
 ```{r}
-date <- "2016-04-25"
-transactions_tbl <- day_of_transactions(rs,date)
-transactions_df <- as_tibble(transactions_tbl)
-```
-
-```{r}
-total_tr <- dim(transactions_df)[1]
-
-df_summary <- transactions_df %>% 
-  group_by(operatorid,contractid) %>% 
-  summarise(count = n()) %>%
-  select(operatorid,contractid,count)
-
-```
-
-Now lets join this back to the spreadsheet. 
-
-```{r}
-product_metadata <-  
-  institutions2 %>% 
-  select(operatorid,ContractID,ContractName)
+product_summary <- function(df1) {
+  prod_summary <- df1 %>%
+    group_by(product_description) %>%
+    summarise(count=n_distinct(cardid_anony))
+  return(prod_summary)
+}
 ```
 
 
 ```{r}
-df_summary2 <- left_join(df_summary,
-                                    product_metadata,
-                                    by=c("operatorid"="operatorid",
-                                         "contractid"="ContractID"))
 
-df_summary2 <- df_summary2 %>% 
-  group_by(ContractName) %>% 
-  summarise(total = sum(count))
+start <- as.Date("10-02-16",format="%m-%d-%y")
+end   <- as.Date("10-08-16",format="%m-%d-%y")
 
-knitr::kable(head(arrange(df_summary2,
-                          desc(total)),
-                  n=20))
+dates <- seq(start, end, by="day")
+
+l_dfs <- lapply(dates, function(x) {
+  product_summary(get_product_description(day_of_transactions(rs,x)))
+})
+
+for(i in seq_along(dates)){
+  filename <- paste0("clpr-bart-prod-summary",dates[i],".xlsx")
+  try(writexl::write_xlsx(l_dfs[i],filename))
+}
 ```
-
-OK, so this gives us a sense of proportion (the unit here is transactions, not cards, which is the ideal output), and we know that we can get a sense of discount-card transactions. 
-
-We also want to know transaction source zip code. We'll need to go back to the database for that. 
-
-*footnotes: 
-
-There might be some confusion about sheets in the institutions table "Sheet    1" (space exaggerated for clarity) Berkeley includes 2 entries, and the one with `institution ID:244` maps to the 'Standard ECO Pass'. While "Sheet1" (no space) maps `institution ID:244` to `AC Transit EasyPass`.
