@@ -5,7 +5,6 @@
 - [outcome:](#outcome)
 	- [bart transfers:](#bart-transfers)
 		- [data:](#data)
-- [https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/travel-model-survey-verification/transponder_count.html](#httpsgithubcombayareametrodata-and-visualization-projectsblobmastertravel-model-survey-verificationtransponder_counthtml)
 	- [fastrak transponder counts:](#fastrak-transponder-counts)
 		- [data:](#data-1)
 		- [graphic:](#graphic)
@@ -29,8 +28,6 @@ summarise transaction data to aid in travel survey validation
 #### data: 
 
 See folder [here](https://mtcdrive.box.com/s/ezfcmilu08vyur3bou3h5hd14opqwf5r) - MTC Staff only.   
-
-##https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/travel-model-survey-verification/transponder_count.html
 
 ### fastrak transponder counts:
 
