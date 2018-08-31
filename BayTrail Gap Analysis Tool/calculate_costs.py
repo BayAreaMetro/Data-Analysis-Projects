@@ -1,3 +1,5 @@
+# authored by lohnes and wright
+
 import arcpy
 from arcpy import env
 import sys
