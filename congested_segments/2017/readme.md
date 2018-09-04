@@ -14,4 +14,4 @@ Use idioms in [congested_segments.R](congested_segments.R) and [congested_segmen
 # Outcome
 
 - [cs17.geojson](cs17.geojson) - congested segments identified as above.  
-- [congested_segments_map17.html](congested_segments_map17.html) - bundled html/js interactive leaflet map of the segments
+- [congested_segments_map17.html](congested_segments_map17.html) - bundled html/js interactive leaflet map of the segments - view as interactive map [here](https://cdn.rawgit.com/BayAreaMetro/Data-And-Visualization-Projects/master/congested_segments/2017/congested_segments_map17.html)
