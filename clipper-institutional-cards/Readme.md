@@ -12,6 +12,8 @@ Tom Buckley
 Setup
 -----
 
+Use the [R Markdown](Readme.Rmd) script to regenerate this readme and execute the code below. 
+
 ``` r
 library(clpr)
 library(dplyr)
