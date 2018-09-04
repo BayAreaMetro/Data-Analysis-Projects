@@ -26,7 +26,7 @@ folder name|description|
 [rstudio-server](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/rstudio-server)|This is a guide to setting up R Studio Server on Amazon AWS
 [sb827](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/sb827)|documentation of the various analytical requests and data for Senate Bill 827
 [transit](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/transit)|Ad-hoc Transit Project documentation
-[travel-model-survey-verification](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/travel-model-survey-verification)|Pull operational data for the Travel Model
+[travel-model-survey-verification](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/travel-model-survey-verification)|Pull operational data for the [Travel Model](https://github.com/BayAreaMetro/travel-model-two)
 [vta-expresslane-logs](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/vta-expresslane-logs)|VTA expresslane logs
 [assets](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/assets)|can ignore--for formatting
 
