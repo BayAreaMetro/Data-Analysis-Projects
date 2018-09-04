@@ -10,6 +10,7 @@ This is a folder full of project documentation.
 
 folder name|description|
 ------|-----|
+[BayTrail Gap Analysis](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/BayTrail%20Gap%20Analysis%20Tool)|used by Bay Trail staff to calculate construction costs
 [aws-lambda-deployments](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/aws-lambda-deployments)|deploy commonly used MTC Python scripts for ETL to AWS Lambda
 [bikeshare](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/bikeshare)|make origin-destination maps for bay area bikeshare data with R
 [bridge-transactions](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/bridge-transactions)|ad-hoc projects on bridge transactions
@@ -25,6 +26,7 @@ folder name|description|
 [rstudio-server](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/rstudio-server)|This is a guide to setting up R Studio Server on Amazon AWS
 [sb827](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/sb827)|documentation of the various analytical requests and data for Senate Bill 827
 [transit](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/transit)|Ad-hoc Transit Project documentation
+[travel-model-survey-verification](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/travel-model-survey-verification)|Pull operational data for the Travel Model
 [vta-expresslane-logs](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/vta-expresslane-logs)|VTA expresslane logs
 [assets](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/tree/master/assets)|can ignore--for formatting
 
