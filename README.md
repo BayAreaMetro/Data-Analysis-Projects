@@ -2,6 +2,10 @@
 
 This is a folder full of project documentation. 
 
+### A Note on Methods
+
+Based on observing how users copy and paste code to suit their specific purposes, most of the scripts in this directory were designed to walk users through usage of them, assuming that they would cut and paste code that was relevant to them. They are largely not intended to be executed directly. 
+
 ### Files
 - [State of California Code Transit Service Definition Areas](legislative_transit_data.md) 
 - [Routes, Stops, and Frequencies by Transit Provider from 2008 to 2017](historical_transit_data.md) 
