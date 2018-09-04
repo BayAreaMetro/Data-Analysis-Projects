@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Setup
 
+Use the [R Markdown](Readme.Rmd) script to regenerate this readme and execute the code below. 
+
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 library(clpr)
 library(dplyr)
@@ -27,6 +29,8 @@ rs <- connect_rs()
 ```
 
 ## Goal 
+
+Relevant [Asana task](https://app.asana.com/0/419691787840484/752192026822222)
 
 Output a table like this:
 
