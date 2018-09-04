@@ -14,6 +14,7 @@ Document data processing scripts and packages deployed to AWS Lambda.
 
 <!-- /MarkdownTOC -->
 
+See the [Example](#example) section at the bottom for an example of how to create a package based on one of these. 
 
 ## Deployment-Packages
 
