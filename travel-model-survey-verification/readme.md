@@ -19,6 +19,7 @@ summarise transaction data to aid in travel survey validation
 ## methods
 
 - [summarise-bart-transfers.R](summarise-bart-transfers.R)
+	- dependency: https://github.com/BayAreaMetro/clpr
 - [summarise-fastrak-ownership.R](summarise-fastrak-ownership.R)
 
 ## outcome:
