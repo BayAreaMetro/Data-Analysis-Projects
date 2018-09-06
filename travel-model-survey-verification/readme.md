@@ -23,6 +23,10 @@ summarise transaction data to aid in travel survey validation
 
 ## outcome:
 
+### main data folder:
+
+https://mtcdrive.app.box.com/folder/46782090566
+
 ### bart transfers:
 
 #### data: 
