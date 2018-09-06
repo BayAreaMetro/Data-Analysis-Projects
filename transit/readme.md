@@ -36,9 +36,10 @@ We found, in reviewing data pulled for present day (2018), and comparing it to 2
 
 These included: 
 - Air Bart (2014)
-- Vine (Yountville Trolley, 
-- American Canyon (2014), 
+- Vine (Yountville Trolley), 
+- American Canyon (2014) 
 - Santa Rosa (CityBus), 
+- Amtrak,
 - [specific routes on County Connection, Angel Island Ferry, and Fairfield Suisun transit](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/transit/all_operators.r#L122-L128), and 
 - [Altamont commuter rail](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/transit/all_operators.r#L122-L128)
 
