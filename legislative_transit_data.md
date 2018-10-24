@@ -1,4 +1,4 @@
-# Legislative Transit Data
+# Transit Data
 
 ## Purpose
 
