@@ -33,7 +33,7 @@
 
 [Legislation](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201720180SB827)
 
-1. It has average service intervals of no more than 15 minutes during the three peak hours between 6 a.m. to 10 a.m., inclusive, and the three peak hours between 3 p.m. and 7 p.m., inclusive, on Monday through Friday.
+1. It has average service intervals of no more than 15 minutes during the AM peak between 6 a.m. to 10 a.m., inclusive, and during the PM peak between 3 p.m. and 7 p.m., inclusive, on Monday through Friday.
 2. It has average service intervals of no more than 20 minutes during the hours of 6 a.m. to 10 p.m.., inclusive, on Monday through Friday.
 3. It has average intervals of no more than 30 minutes during the hours of 8 a.m. to 10 p.m., inclusive, on Saturday and Sunday.
 
