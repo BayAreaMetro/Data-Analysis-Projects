@@ -2,7 +2,7 @@
 
 ## Define the Problem Statement
 
-The purpose of this work is to define areas within 1/2 mile of rail stops and within 1/4 mile of high-quality bus corridors as defined by SB 50. 
+The purpose of this work is to define areas within 1/2 mile of major rail and ferry stops and within 1/4 mile of high-quality bus corridors as defined by SB 50. 
 
 ### Project Management 
 
