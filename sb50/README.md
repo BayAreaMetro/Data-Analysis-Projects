@@ -52,6 +52,7 @@ A parcel is not ineligible if it is either of the following:
 2.(A) A site excluded from the specified hazard zones by a local agency, pursuant to subdivision (b) of Section 51179.
 2.(B) A site that has adopted fire hazard mitigation measures pursuant to existing building standards or state fire mitigation measures applicable to the development.
 3. A parcel that is a contributing parcel within a historic district established by an ordinance of the local government that was in effect as of December 31, 2010. (NOT MAPPED)
+
 If the residential development is located within a county that has a population equal to or less than 600,000, the residential development satisfies all of the following additional requirements:
 1. The site satisfies the requirements specified in paragraph (2) of subdivision (a) of Section 65913.4.
 The site is not located within either of the following:
