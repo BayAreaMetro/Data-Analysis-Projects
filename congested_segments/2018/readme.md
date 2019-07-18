@@ -19,6 +19,10 @@ Where are the most congested Bay Area roadways? What are the vehicle hours of de
 - [Results](#results)
 
 ## Data Sources  
+
+- [congested segments excel document](https://github.com/BayAreaMetro/Data-And-Visualization-Projects/blob/master/congested_segments/2018/data/2018-Weekday-Summary.xlsx) - this is derived from INRIX data by MTC operations.  
+
+- [Spatial Data](https://inrix.sharepoint.com/:f:/g/Sales/Sales_Engineering/EhLr_r3avPFKgNhpMNb2X9IBXFW-2SmjmqKqIxbEoAgK9g?e=PT30Ht) - We pull this directly from INRIX: United_States__California_shapefile.zip.
  
 ## Analysis Parameters  
   
