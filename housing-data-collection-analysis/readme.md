@@ -9,7 +9,10 @@
 
 How much residential housing is being created on an annual basis in the Bay Area. How much of that housing is affordable. Are jurisdictions meeting their targets for the [Regional Housing Needs Allocation (RHNA)?](https://abag.ca.gov/our-work/housing/rhna-regional-housing-need-allocation). In order to answer these questions on a regular basis, ABAG has previously undertaken the collection of residential building permits from local jursidictions, geocoded them in order to provide spatial/location context, and analyzed the data to determing which permits fall within [Priority Development Areas (PDAs)](https://mtc.ca.gov/our-work/plans-projects/focused-growth-livable-communities/priority-development-areas), [Transit Priority Areas (TPAs)](http://opendata.mtc.ca.gov/datasets/d97b4f72543a40b2b85d59ac085e01a0_0) and [Housing Element Sites](http://www.hcd.ca.gov/community-development/housing-element/index.shtml). Data collected directly from jurisdictions by ABAG covered the years 2014-2017. 
 
+
 As of 2018, [HCD](http://www.hcd.ca.gov/) has provided a platform for collecting state-wide [Annual Progress Reports (APR)](http://www.hcd.ca.gov/community-development/housing-element/docs/Housing-Element-Annual-Progress-Report-Instructions-2018.pdf). This resulted in ABAG no longer having to collect data individually from local jurisdictions in the Bay Area, but instead waiting for HCD to complete it's data collection process, and then requesting the 2018 data from HCD. Since the data collected by HCD serves to address the requirement that local jurisdictions report their housing progress to the State annually, the 2018 data contains not just building permit data, but applications, entitlements, certificates of occupancy, preserved units and demolition data as well.
+
+A more detailed overview of this project from inception and moving forward can be found [HERE](https://mtcdrive.box.com/s/spw9bfsf12fsqi98u4226ju343q3xyq2)
 
 ### Data Sources
 
