@@ -60,7 +60,7 @@ The data were received from HCD as a single spreadsheet. In order to be able to 
 Unique identifiers were created for these tables to provide a means of cross-referencing records. In order to incorporate [data collected previously by ABAG](http://opendata.mtc.ca.gov/datasets/residential-building-permits-attributes) into the new table structure created by HCD, a data crosswalk was created.
 - [Data Crosswalk ABAG to HCD Building Permits](https://mtcdrive.box.com/s/ig7x1jbxk4316zkm27xlqa9bwtyl2eq0)
 
-The data were then cleaned and checked for duplicates. Duplicate APNs or addresses were flagged for review and then removed if necessary. In the case of building permits, duplicates reviewed from both the 2018 dataset and previous years to make sure jurisdictions did not report the same building permit multiple times in different years.
+The data were then cleaned and checked for duplicates. Duplicate APNs or addresses were flagged for review and then removed if necessary. In the case of building permits, duplicates were reviewed from both the 2018 dataset and previous years to make sure jurisdictions did not report the same building permit multiple times in different years.
 
 Finally, certificates of occupancy reported in 2018 were related to building permits from previous years where applicable. 
 
