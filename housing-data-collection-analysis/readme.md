@@ -14,7 +14,7 @@ As of 2018, [HCD](http://www.hcd.ca.gov/) has provided a platform for collecting
 ### Data Sources
 
 #### 2018 collection
-- [Source Data collected from HCD](https://mtcdrive.box.com/s/kmd4jx97ds2uwzibdhf2x3ks589u5aeh)
+- [Source Data received from HCD](https://mtcdrive.box.com/s/ttcb4omh8cu5xueq7xe7n5dfrvhngyqy)
 - [Report Mockup received from HCD upon request for a Data Dictionary](https://mtcdrive.box.com/s/gf8t1eg8lxqa3p32hts29u5ngshffs67)
 
 Reference:
