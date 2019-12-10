@@ -32,7 +32,7 @@ The purpose of this work is to define areas within 1/2 mile of major rail and fe
 
 ***Major Transit Stop***
 
-"Major transit stop" means a rail transit station or a ferry terminal that is a major transit stop pursuant to subdivision (b) of Section 21155 of the Public Resources Code. 
+"Major transit stop" means a rail transit station or a ferry terminal that is a major transit stop pursuant to subdivision (b) of [Section 21155 of the Public Resources Code](https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=PRC&division=13.&title=&part=&chapter=4.2.&article=). 
 
 ***High-Quality Bus Corridor***
 
