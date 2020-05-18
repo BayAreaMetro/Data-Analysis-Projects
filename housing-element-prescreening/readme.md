@@ -20,7 +20,7 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 
 
 | Factor/ Input | Source | Description | Unit of Analysis| In MDM (Yes/ No/ TBD) |
-|----------|------------|------|------|------|------|
+|----------|------------|------|------|------|
 |Community Resource Level/Opportunity(fair housing)| HCD/TCAC Opportunity Maps (built from census, other sources) | | tract | No  
 | Transit Access | MTC/ABAG Regional Transit Database; GTFS | | buffers | yes  
 | Job Proximity to Transit | | | | TBD  
@@ -28,7 +28,8 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 | Job Proximity to Transit | | | | TBD  
 | Job Proximity to Transit | | | | TBD  
 | Job Proximity to Transit | | | | TBD  
-## Analysis Parameters
+
+
 { Coordinate with DataViz Team Liaison }   
 
 Analysis parameters are definable, measurable, and can contain a constant or variable characteristic, dimension, property, or value, that is selected from a set of data (or population) because it is considered essential to understanding how to solve a problem. List the parameters that you think are required to solve this problem. Leave this blank if you are unsure of how to determine the analysis parameters for your project. The analyst assigned to the project will document this information.
