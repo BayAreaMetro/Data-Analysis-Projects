@@ -23,11 +23,8 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 |----------|------------|------|------|------|------|
 |Community Resource Level/Opportunity(fair housing)| HCD/TCAC Opportunity Maps (built from census, other sources) | | tract | No
 | Transit Access | MTC/ABAG Regional Transit Database; GTFS | | buffers | yes
-| Job Proximity to Transit | | | | TBD
-| Job Proximity to Transit | | | | TBD
-| Job Proximity to Transit | | | | TBD
-| Job Proximity to Transit | | | | TBD
-| Job Proximity to Transit | | | | TBD
+| Job Proximity to Transit | x | x | x | TBD
+| Job Proximity to Transit | x | x | x | TBD
 
 ## Analysis Parameters
 { Coordinate with DataViz Team Liaison }   
