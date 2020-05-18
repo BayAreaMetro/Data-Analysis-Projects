@@ -16,7 +16,7 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 
 [Asana Project Plan](https://app.asana.com/0/1175472246945284/1175472246945284) (Internal Staff Only)
 
-MTC Staffing Roles/ Responsibilities:  
+#### MTC Staffing Roles/ Responsibilities:  
 Project Management - Mark Shorett/ Heather Peters  
 DataViz Support (WebDev/ Data/ Analysis/ Mapping) - Michael Ziyambi (WebDev)/ Michael Smith (Data)/ Joshua Croff (Analysis/ Mapping)  
 
