@@ -40,13 +40,14 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 
 { Coordinate with DataViz Team Liaison }   
 
-Analysis parameters are definable, measurable, and can contain a constant or variable characteristic, dimension, property, or value, that is selected from a set of data (or population) because it is considered essential to understanding how to solve a problem. List the parameters that you think are required to solve this problem. Leave this blank if you are unsure of how to determine the analysis parameters for your project. The analyst assigned to the project will document this information.
+Analysis parameters are definable, measurable, and can contain a constant or variable characteristic, dimension, property, or value, that is selected from a set of data (or population) because it is considered essential to understanding how to solve a problem. List the parameters that you think are required to solve this problem. Leave this blank if you are unsure of how to determine the analysis parameters for your project. The analyst assigned to the project will document this information.  
+
 [let's discuss further]
 
-## Methodology applied to solve problem
+## Methodology applied to solve problem  
 { Coordinate with DataViz Team Liaison }   
 
-The analyst assigned to the project will document this information. The analyst will review the methodology (if applicable) with the project team to ensure that it meets the requirements and expectations of the solution or problem.
+The analyst assigned to the project will document this information. The analyst will review the methodology (if applicable) with the project team to ensure that it meets the requirements and expectations of the solution or problem.  
 
 ## Expected Outcomes (if any)?
 Provide your expectations (if any) for the results of this work. Your expectations will form the basis for deciding if the work is complete, or if we need to revisit the problem statement and/or refine the methodology used to solve the problem.
