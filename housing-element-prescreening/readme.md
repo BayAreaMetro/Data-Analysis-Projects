@@ -45,11 +45,12 @@ Analysis parameters are definable, measurable, and can contain a constant or var
 [let's discuss further]
 
 ## Methodology applied to solve problem  
+
 { Coordinate with DataViz Team Liaison }   
 
 The analyst assigned to the project will document this information. The analyst will review the methodology (if applicable) with the project team to ensure that it meets the requirements and expectations of the solution or problem.  
 
-## Expected Outcomes (if any)?
+## Expected Outcomes (if any)?  
 Provide your expectations (if any) for the results of this work. Your expectations will form the basis for deciding if the work is complete, or if we need to revisit the problem statement and/or refine the methodology used to solve the problem.
 
  1. Final preliminary input table (with sources, current availability, and actions needed to produce or acquire outstanding data noted)
@@ -64,5 +65,6 @@ Subsequent deliverables shown below contingent on input from additional staff an
  - Site Selection Tool 2.0
 
 ## Results  
-{ Coordinate with DataViz Team Liaison }  
+{ Coordinate with DataViz Team Liaison }   
+
 Determine how close the solution is to the expected outcome. If the solution is acceptable, the work will be considered complete. If the solution is unacceptable, we will need to refine the problem statement or the methodology implemented to find the solution.
