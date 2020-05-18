@@ -20,7 +20,7 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 **Project Management**:  
 Mark Shorett/ Heather Peters    
 
-**DataViz Support (WebDev/ Data/ Analysis/ Mapping/ QA-QC)**:    
+**DataViz Support**:    
 Michael Ziyambi (WebDev)/   
 Michael Smith (Data)/   
 Joshua Croff (Analysis/ Mapping)/   
