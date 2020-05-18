@@ -23,11 +23,19 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 |----------|------------|------|------|------|
 |Community Resource Level/Opportunity(fair housing)| HCD/TCAC Opportunity Maps (built from census, other sources) | | tract | No  
 | Transit Access | MTC/ABAG Regional Transit Database; GTFS | | buffers | yes  
-| Job Proximity to Transit | | | | TBD  
-| Job Proximity to Transit | | | | TBD  
-| Job Proximity to Transit | | | | TBD  
-| Job Proximity to Transit | | | | TBD  
-| Job Proximity to Transit | | | | TBD  
+| Transit Stops | | | | TBD  
+| Transit Routes | | | | TBD  
+| Job Proximity - Transit | | | | TBD  
+| Job Proximity - Auto | | | | TBD  
+| VMT | | | | TBD  
+| Low-income units at risk of conversion | | | | TBD  
+| Affordable Housing funding eligibility (e.g. LIHTC, AHSC) | | | | TBD  
+| Displacement Risk | | | | TBD  
+| Natural Hazard Risk | | | | TBD  
+| Infrastructure Access | | | | TBD  
+| Market strength/feasibility | | | | TBD  
+| San Mateo County fair housing assessment | | | | TBD  
+| Affirmatively Furthering Fair Housing Data and Mapping Tool (AFFH-T) | | | | TBD  
 
 
 { Coordinate with DataViz Team Liaison }   
