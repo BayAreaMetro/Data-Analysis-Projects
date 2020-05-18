@@ -25,16 +25,17 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 | Transit Access | MTC/ABAG Regional Transit Database; GTFS | | buffers | yes  
 | Transit Stops | | | | TBD  
 | Transit Routes | | | | TBD  
-| Job Proximity - Transit | | | | TBD  
-| Job Proximity - Auto | | | | TBD  
-| VMT | | | | TBD  
-| Low-income units at risk of conversion | | | | TBD  
-| Affordable Housing funding eligibility (e.g. LIHTC, AHSC) | | | | TBD  
-| Displacement Risk | | | | TBD  
-| Natural Hazard Risk | | | | TBD  
-| Infrastructure Access | | | | TBD  
-| Market strength/feasibility | | | | TBD  
-| San Mateo County fair housing assessment | | | | TBD  
+| Job Proximity - Transit | MTC Travel Model | | | TBD  
+| Job Proximity - Auto | MTC Travel Model | | | TBD  
+| VMT | MTC Travel Model | | | TBD  
+| Low-income units at risk of conversion | CHPC | | | TBD  
+| Affordable Housing funding eligibility (e.g. LIHTC, AHSC) | HCD; SGC
+	 | | | TBD  
+| Displacement Risk | UC-Berkeley/UDP | | | TBD  
+| Natural Hazard Risk |MTC; USGS liquefaction susceptibility; CAL FIRE FRAP LRA/SRA data; FEMA (flood zones), Alquist-Priolo Fault Zones (California Geological Survey) | | | TBD  
+| Infrastructure Access | TBD | | | TBD  
+| Market strength/feasibility | TBD - determining approach | | | TBD  
+| San Mateo County fair housing assessment |[SMCGOV](https://housing.smcgov.org/sites/housing.smcgov.org/files/_SMC%20Regional%20AFH%20Final%20Report%2020171002.pdf) | | | TBD  
 | Affirmatively Furthering Fair Housing Data and Mapping Tool (AFFH-T) | | | | TBD  
 
 
