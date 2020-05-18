@@ -28,7 +28,6 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 | Job Proximity to Transit | | | | TBD  
 | Job Proximity to Transit | | | | TBD  
 | Job Proximity to Transit | | | | TBD  
-
 ## Analysis Parameters
 { Coordinate with DataViz Team Liaison }   
 
