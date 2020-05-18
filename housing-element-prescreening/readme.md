@@ -36,7 +36,10 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 | Market strength/feasibility | TBD - determining approach | | | TBD  
 | San Mateo County fair housing assessment |[SMCGOV](https://housing.smcgov.org/sites/housing.smcgov.org/files/_SMC%20Regional%20AFH%20Final%20Report%2020171002.pdf) | | | TBD  
 | Affirmatively Furthering Fair Housing Data and Mapping Tool (AFFH-T) | | | | TBD  
+* See this note for Publishing Status explanation.  
 
+
+## Analysis Parameters
 
 { Coordinate with DataViz Team Liaison }   
 
