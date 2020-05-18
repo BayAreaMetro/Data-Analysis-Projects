@@ -63,6 +63,6 @@ Subsequent deliverables shown below contingent on input from additional staff an
  - Integration of additional functionality/modules (e.g. site feasibility scan and context-based policy toolkit)
  - Site Selection Tool 2.0
 
-## Results
-{ Coordinate with DataViz Team Liaison }
+## Results  
+{ Coordinate with DataViz Team Liaison }  
 Determine how close the solution is to the expected outcome. If the solution is acceptable, the work will be considered complete. If the solution is unacceptable, we will need to refine the problem statement or the methodology implemented to find the solution.
