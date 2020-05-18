@@ -1,4 +1,4 @@
-**Document Status: (Draft/Final)**  
+**Document Status: (Draft)**  
 
 # Housing Element Site Selection Pre-Screening Tool & Mapping
 
