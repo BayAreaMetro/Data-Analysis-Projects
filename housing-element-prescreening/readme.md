@@ -29,8 +29,7 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 | Job Proximity - Auto | MTC Travel Model | | | TBD  
 | VMT | MTC Travel Model | | | TBD  
 | Low-income units at risk of conversion | CHPC | | | TBD  
-| Affordable Housing funding eligibility (e.g. LIHTC, AHSC) | HCD; SGC
-	 | | | TBD  
+| Affordable Housing funding eligibility (e.g. LIHTC, AHSC) | HCD; SGC | | | TBD  
 | Displacement Risk | UC-Berkeley/UDP | | | TBD  
 | Natural Hazard Risk |MTC; USGS liquefaction susceptibility; CAL FIRE FRAP LRA/SRA data; FEMA (flood zones), Alquist-Priolo Fault Zones (California Geological Survey) | | | TBD  
 | Infrastructure Access | TBD | | | TBD  
