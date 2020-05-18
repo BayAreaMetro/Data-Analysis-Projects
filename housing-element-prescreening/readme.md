@@ -19,11 +19,11 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 #### MTC Staffing - Roles/ Responsibilities:  
 **Project Management**:  
 Mark Shorett/ Heather Peters  
-**DataViz Support (WebDev/ Data/ Analysis/ Mapping/ QA-QC)**:  
-Michael Ziyambi (WebDev)/ 
-Michael Smith (Data)/ 
-Joshua Croff (Analysis/ Mapping)/ 
-Vikrant Sood (QA/QC)  
+**DataViz Support (WebDev/ Data/ Analysis/ Mapping/ QA-QC)**:    
+Michael Ziyambi (WebDev)/   
+Michael Smith (Data)/   
+Joshua Croff (Analysis/ Mapping)/   
+Vikrant Sood (QA/QC)    
 
 ## Data Sources
 
