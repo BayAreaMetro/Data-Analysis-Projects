@@ -46,7 +46,7 @@ Vikrant Sood (QA/QC)
 | Infrastructure Access | TBD/ Mark Shorett (DS) | | | | TBD  
 | Market strength/feasibility | TBD - determining approach/ Mark Shorett (DS) | | | | TBD  
 | San Mateo County fair housing assessment |[SMCGOV](https://housing.smcgov.org/sites/housing.smcgov.org/files/_SMC%20Regional%20AFH%20Final%20Report%2020171002.pdf)/ Mark Shorett (DS) | | | | TBD  
-| Affirmatively Furthering Fair Housing Data and Mapping Tool (AFFH-T)/ Mark Shorett (DS) | |  || | TBD  
+| Affirmatively Furthering Fair Housing Data and Mapping Tool (AFFH-T)|Mark Shorett (DS) |  || | TBD  
 * See this note for Publishing Status explanation.  
 
 
