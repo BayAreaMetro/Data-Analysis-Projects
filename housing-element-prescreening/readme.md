@@ -22,7 +22,7 @@ Mark Shorett/ Heather Peters
 
 **DataViz Support**:    
 Michael Ziyambi (Web Design/ Application Development)/   
-Michael Smith (Data Collection/ Metadata)/ 
+Michael Smith (Data Collection/ Metadata)/  
 Eli Kaplan (Data Collection/ Data Analysis/ Mapping)/  
 Joshua Croff (Data Analysis/ Mapping)/  
 Kaya Tollas (Data Engineering/ Analysis Models)
