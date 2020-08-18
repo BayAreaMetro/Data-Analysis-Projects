@@ -18,14 +18,17 @@ Provide a map-based Housing Element Site Selection Tool to guide Bay Area local 
 
 #### MTC Staffing - Roles/ Responsibilities:  
 **Project Management**:  
-Mark Shorett/ Heather Peters    
+Somaya Abdelgany (Project Manager)  
+Mark Shorett (Lead Analysis)  
+Heather Peters (REAP Project Manager)     
 
 **DataViz Support**:    
 Michael Ziyambi (Web Design/ Application Development)/   
 Michael Smith (Data Collection/ Metadata)/  
 Eli Kaplan (Data Collection/ Data Analysis/ Mapping)/  
 Joshua Croff (Data Analysis/ Mapping)/  
-Kaya Tollas (Data Engineering/ Analysis Models)
+Kaya Tollas (Data Engineering/ Analysis Models)/  
+Christy Lefall (AFFH Data Collection and Review)/  
 Vikrant Sood (QA/QC)    
 
 ## Data Sources
