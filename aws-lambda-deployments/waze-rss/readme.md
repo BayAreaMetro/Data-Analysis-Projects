@@ -68,7 +68,7 @@ Document past and present logging of Waze data. Data is stored on the Data Lake 
 
 `waze_rss_v2_1` added `title` variable (e.g. 'jam'). this information can also be derived from other fields (e.g. `reportrating` == NULL for jams). 
 
-## 2018-20-08 to present
+## 2018-20-08 to 2019-05-10
 
 ### tablenames: 
 - waze.alerts_2018 
