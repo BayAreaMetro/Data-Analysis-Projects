@@ -22,7 +22,11 @@
 
 # Waze Logs by Date
 
-Document past and present logging of Waze data. Data is stored on the Data Lake in the dev schema.
+Document past and present logging of Waze data. 
+
+Data is stored on the Data Lake in the dev schema.
+
+Check out [this Asana task](https://app.asana.com/0/1204624815133243/1205381229290138) which contains some cleanup tasks that were performed by ehuang on **2023-09-06**.
 
 ## 2017-01-24 to 2018-05-23
 
