@@ -22,13 +22,13 @@
 
 # Waze Logs by Date
 
-Document past and present logging of Waze data
+Document past and present logging of Waze data. Data is stored on the Data Lake in the dev schema.
 
 ## 2017-01-24 to 2018-05-23
 
 ### tablenames 
 
-- traffic.waze_rss_v1 
+- waze.rss_v1 
 
 ### fields
 
@@ -37,8 +37,8 @@ Document past and present logging of Waze data
 ## 2018-05-23 to 2018-06-11
 
 ### tablenames: 
-- traffic.waze_rss_v1_5_alerts  
-- traffic.waze_rss_v1_5_jams 
+- waze.rss_v1_5_alerts  
+- waze.rss_v1_5_jams 
 
 ### script
 
@@ -53,8 +53,8 @@ Document past and present logging of Waze data
 ## 2018-06-06 to 2018-20-08
 
 ### tablenames: 
-- traffic.waze_rss_v2 
-- traffic.waze_rss_v2_1 
+- waze.rss_v2 
+- waze.rss_v2_1 
 
 ### script
 
